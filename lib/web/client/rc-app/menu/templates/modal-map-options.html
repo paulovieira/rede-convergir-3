@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <button type="button" class="close js-modal-cancel" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">Opções para o mapa "{{ name }}"</h4>
+</div>
+
+
+<div class="modal-body">
+    <form class="form-horizontal">
+
+        <div class="form-group">
+            <label for="opacity" class="col-sm-3 control-label">Opacidade (%)</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="opacity" value={{ opacity }}>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="zindex" class="col-sm-3 control-label">Z-Index</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="zindex" value={{ zindex }}>
+            </div>
+        </div>
+
+{#
+        <div class="form-group" style="margin-left: 22px;">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="js-bring-to-front"> 
+                    Sobrepôr (colocar este mapa em cima dos restantes mapas activos)
+                </label>
+            </div>
+        </div>
+#}
+
+        <div class="form-group" style="margin-left: 22px;" disabled>
+        Descarregar o ficheiro shape: <a style="margin-left: 5px; padding: 3px 12px;" class="btn btn-default disabled" href="#" role="button">Download</a>  (em breve)
+        </div>
+
+
+    </form>
+</div>
+
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary js-modal-update">Actualizar mapa</button>
+    <button type="button" class="btn btn-default js-modal-cancel">Cancelar</button>
+</div>

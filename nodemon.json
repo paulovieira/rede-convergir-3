@@ -1,0 +1,9 @@
+{
+	"ext": "js,html",
+    "delay": 200,
+	"ignore": [
+        "data/*", 
+        "database/sql/*", 
+        "database/populate_initial_data/*"
+    ]
+}

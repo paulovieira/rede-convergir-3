@@ -1,0 +1,97 @@
+html,
+body {
+    height: 100%;
+}
+
+
+#navbar-container {
+    xbackground-color: blue;
+    position: absolute;
+    top: 0px;
+    height: 52px;
+    width: 100%;
+}
+
+#map-container {
+    xbackground-color: green;
+    position: absolute;
+    top: 87px;
+    bottom: 0px;
+    width: 100%;
+}
+/*
+#footer-container {
+    xbackground-color: yellow;
+    position: absolute;
+    bottom: 0px;
+    height: 20px;
+    border: 1px #e7e7e7 solid;
+    xborder-color: black;
+    border-width: 1px 0px 0px 0px;
+    width: 100%;
+}
+*/
+.menu-container {
+
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255, 255, 255);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 6px;
+    /*position: absolute;
+    height: 100%;*/
+
+}
+
+.menu-icon {
+    font-size: 150%;
+    transition: all .20s ease;
+}
+
+.menu-icon:hover {
+    
+    transform: scale(1.10, 1.10);
+    /**/
+}
+
+.map-menu-open {
+    min-width: 700px;
+    height: 100%;
+ }
+
+
+ /* override bootstrap */
+/*
+ @media (min-width: 200px) {
+   .form-horizontal .control-label {
+     padding-top: 8px;
+     margin-bottom: 0;
+     text-align: right;
+   }
+ }
+
+
+ .icon-margin {
+    margin-right: 5px;
+ }
+
+ .icon-check {
+    color: green;
+ }
+
+ .icon-close {
+    
+    color: #ff6666;
+    color: #a60404;
+ }
+
+.attribute-title {
+    color: #3783a7;
+}
+*/
+
+
+
+
+

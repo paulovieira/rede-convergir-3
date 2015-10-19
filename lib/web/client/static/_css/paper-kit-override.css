@@ -1,0 +1,29 @@
+/* item in the navbar that is a dropdown-menu (use the same properties present in simple <li> in the navbar) */
+.navbar-default .navbar-nav > li > a:not(.btn) {
+
+    color: #66615B; 
+    padding: 0px 18px;
+    line-height: 36px;
+}
+
+
+/* add border to dropdown-menu*/
+.navbar-nav > li > .dropdown-menu {
+	border: 1px solid #bdbdbd;
+}
+
+@media (min-width: 768px) {
+
+	.navbar-nav > li > .dropdown-menu:before {
+	    border-bottom: 11px solid #bdbdbd;
+/*
+	    border-left: 11px solid transparent;
+	    border-right: 11px solid transparent;
+	    content: "";
+	    display: inline-block;
+	    position: absolute;
+	    right: 12px;
+	    top: -11px; 
+*/
+	}
+}

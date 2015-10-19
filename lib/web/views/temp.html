@@ -1,0 +1,49 @@
+{% extends "layouts/index_paper_kit.html" %}
+
+{% block head %}
+
+{# call super to common css #}
+{{ super() }}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+
+
+{% include "includes/navbar.html" %}
+
+<div id="main-container">
+
+    <div id="map-container" xstyle="border: solid 1px;">
+
+        <!-- container for modal -->
+        <div class="modal x-fade" id="modal-1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div id="mn-r-modal-contents-1" class="modal-content" >
+
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="height: 100%; margin: 0;">
+            <div id="mn-r-map-1" class="col-sm-12" style="height: 100%; padding: 0;">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Modal Bodies come here -->
+<!--   end modal -->
+
+{# call super to common js #}
+{{ super() }}
+
+{% endblock %}
+

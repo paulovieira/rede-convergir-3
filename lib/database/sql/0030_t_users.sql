@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS users(
 	email text unique not null,
 	first_name text,
 	last_name text,
+	photo text,
+	session_history jsonb,
 	pw_hash text not null,
 	created_at timestamptz not null default now(),
 	recover text,

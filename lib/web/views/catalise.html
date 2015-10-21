@@ -1,5 +1,7 @@
 {% extends "layouts/index_paper_kit.html" %}
 
+{% from "includes/navbar.html" import navbar %}
+
 {% block head %}
 
 {# call super to common css #}
@@ -17,7 +19,7 @@
 
 {% block body %}
 
-{% include "includes/navbar.html" %}
+{{ navbar(ctx) }}
 
 
 <div class="wrapper">

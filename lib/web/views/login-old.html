@@ -14,15 +14,9 @@
     <link href="/static/bootstrap/x_paper_kit_1.0/assets/css/ct-paper.css" rel="stylesheet"/>
     <link href="/static/bootstrap/x_paper_kit_1.0/assets/css/demo.css" rel="stylesheet" /> 
     <link href="/static/bootstrap/x_paper_kit_1.0/assets/css/examples.css" rel="stylesheet" /> 
-
-    <!-- Navigation Bar With Icons -->
-    <link href="static/bootstrap/x-navbar-v1.1/css/pe-icon-7-stroke.css" rel="stylesheet" />
-    <link href="static/bootstrap/x-navbar-v1.1/css/ct-navbar.css" rel="stylesheet" />
-
+       
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
-
-
 
 
 {#
@@ -41,63 +35,39 @@
 
 
 <!-- navbar come here   -->
-
-    <nav class="navbar navbar-ct-blue navbar-fixed-top navbar-transparent" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand navbar-brand-logo" href="http://www.creative-tim.com">
-                <div class="logo">
-                    <img src="https://s3.amazonaws.com/creativetim_bucket/new_logo.png">
-                </div>
-                <div class="brand"> Creative Tim </div>
-              </a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="javascript:void(0)" data-toggle="search">
-                            <i class="pe-7s-search"></i>
-                            <p>Search</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="pe-7s-mail">
-                                <span class="label"> 23 </span>  
-                            </i>
-                            <p>Messages</p>
-                        </a>
-                    </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="pe-7s-user"></i>
-                        <p>Account</p>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-
+{% include "includes/navbar-transparent.html" %}
 <!-- end navbar  -->
 
 
 
 <div class="wrapper">
     <!-- content come here     -->
+    <div class="register-background"> 
+        <div class="filter-black">
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
+                    <div class="register-card">
+                        <h3 class="title">Bem-vindo</h3>
+                        <form class="register-form">
+                            <label>Email</label>
+                            <input class="form-control" placeholder="">
+
+                            <label>Password</label>
+                            <input class="form-control" placeholder="">
+                            <button class="btn btn-danger btn-block">Entrar</button>
+                        </form>
+                        <div class="forgot">
+                            <a href="#" class="btn btn-simple btn-danger">Password esquecida?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+    </div>
 </div>
 
 
@@ -193,8 +163,7 @@
     <script src="/static/bootstrap/x_paper_kit_1.0/assets/js/bootstrap-datepicker.js"></script>
     <script src="/static/bootstrap/x_paper_kit_1.0/assets/js/ct-paper.js"></script>    
 
-    <!-- Navigation Bar With Icons -->
-    <script src="/static/bootstrap/x-navbar-v1.1/js/ct-navbar.js"></script>
+
 
 	<script type="text/javascript">
 

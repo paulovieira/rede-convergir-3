@@ -33,3 +33,21 @@
 	background-color: #6F6C66;
 	color: white;
 }
+
+.navbar {
+	padding: 0;
+	margin-bottom: 0;
+	border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.navbar .navbar-brand {
+	padding: 17px 15px;
+	font-size: 23px;
+}
+
+.navbar-transparent .navbar-nav > li > a:not(.btn), [class*="navbar-ct"] .navbar-nav > li > a:not(.btn) {
+ 
+	opacity: 1.0;
+	padding: 0px 18px;
+	line-height: 36px;
+}

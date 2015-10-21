@@ -1,11 +1,10 @@
-
 {% macro navbar(ctx) %}
 
 <nav class="navbar navbar-default">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-menu-contents">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -14,17 +13,30 @@
             <a class="navbar-brand" href="#">Rede Convergir</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse" id="nav-menu-contents">
             <ul class="nav navbar-nav">
+
                 <li><a href="/projectos" class="btn btn-simple {{ 'active' if ctx.urlParam1=='projectos' }}">Projectos</a></li>
-                <li><a href="/eventos" class="btn btn-simple">Eventos</a></li>
+
+                <li><a href="/eventos" class="btn btn-simple {{ 'active' if ctx.urlParam1=='eventos' }}">Eventos</a></li>
+
                 <li class="dropdown">
+                
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recursos <b class="caret"></b></a>
                     <ul class="dropdown-menu dropdown-menu-right">
+
                         <li><a href="/catalise" class="{{ 'active' if ctx.urlParam1=='catalise' }}">CATALISE</a></li>
+
                     </ul>
                 </li>
             </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
+                <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-facebook"></i></a>
+                <a href="/login" class="btn btn-simple"><i class="fa fa-user"></i></a>
+            </ul>
+
         </div>
         <!-- /.navbar-collapse -->
     </div>

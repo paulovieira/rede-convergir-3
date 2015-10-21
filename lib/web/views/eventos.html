@@ -10,6 +10,18 @@
 
 <link href="/static/leaflet/mapbox-2.2.2/mapbox.standalone.css" rel="stylesheet" />
 <link href="/rc-app/_css/cartografia.css" rel="stylesheet" />
+<link href="/static/jquery/fullcalendar-2.4.0/fullcalendar.css" rel="stylesheet" />
+<link href="/static/jquery/fullcalendar-2.4.0/fullcalendar.print.css" rel='stylesheet' media='print' />
+
+<style>
+
+    #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+</style>
+
 
 {% endblock %}
 
@@ -18,7 +30,20 @@
 
 {{ navbar(ctx) }}
 
-Eventos
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <div style="margin-top: 100px" id='calendar'></div>
+        </div>
+        <div class="col-sm-4">
+            
+        </div>
+    </div>
+</div>
+
+
+{#
 <div id="main-container">
 
     <div id="map-container" xstyle="border: solid 1px;">
@@ -40,7 +65,7 @@ Eventos
 
     </div>
 </div>
-
+#}
 
 
 <!-- Modal Bodies come here -->
@@ -60,6 +85,10 @@ Eventos
 
 	</script>
 
+    <script src="/static/jquery/fullcalendar-2.4.0/lib/moment.min.js"></script>
+    <script src="/static/jquery/fullcalendar-2.4.0/fullcalendar.js"></script>
+
+    <script src="/rc-calendar/index.js"></script>
 {#
     <!-- cartografia libs -->
     <!-- NOTE: if we add new files here, we must add in the gruntfile as well -->

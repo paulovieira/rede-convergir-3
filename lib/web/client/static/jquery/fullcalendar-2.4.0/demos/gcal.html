@@ -12,7 +12,7 @@
 
 	$(document).ready(function() {
 	
-		$('#calendar').fullCalendar({
+		var calendarOptions2 = {
 
 			// THIS KEY WON'T WORK IN PRODUCTION!!!
 			// To make your own Google API key, follow the directions here:
@@ -27,12 +27,18 @@
 				window.open(event.url, 'gcalevent', 'width=700,height=600');
 				return false;
 			},
+
+			googleCalendarError: function(x,y,z){
+				debugger;
+			},
 			
 			loading: function(bool) {
+				debugger;
 				$('#loading').toggle(bool);
 			}
 			
-		});
+		}
+		$('#calendar').fullCalendar(calendarOptions2);
 		
 	});
 

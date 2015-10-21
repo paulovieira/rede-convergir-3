@@ -51,3 +51,27 @@
 	padding: 0px 18px;
 	line-height: 36px;
 }
+
+
+.btn-catalise {
+	color: #84730e; 
+	border-color: #84730e;
+}
+
+.btn-catalise:active {
+	color: #84730e; 
+	border-color: #84730e;
+	background-color: transparent;
+}
+
+.btn-catalise:focus {
+	color: #84730e; 
+	border-color: #84730e;
+	background-color: transparent;
+}
+
+.btn-catalise:hover {
+	color: #564b09; 
+	border-color: #564b09;
+	background-color: #fcf9e3;
+}

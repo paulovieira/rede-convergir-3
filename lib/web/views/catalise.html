@@ -67,7 +67,9 @@
 
                 </div>
 
-                <a class="btn btn-warning" role="button" data-toggle="collapse" href="#read-more">Ler mais</a>
+                <a style="" class="btn btn-warning btn-catalise" role="button" data-toggle="collapse" data-is-open="false" href="#read-more">
+                    Ler mais <i style="font-size: 115%; margin-left: 5px;" class="fa fa-arrow-circle-down"></i>
+                </a>
 
                 <hr>
 
@@ -163,6 +165,27 @@
 <script src="/static/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js"></script>
 
 <script>
+
+RC.$readMoreBtn = $("a[href='#read-more'");
+RC.$readMoreBtn.on("click", function(){
+
+    var isOpen = RC.$readMoreBtn.data("isOpen");
+    var html = "";
+    if(isOpen){
+        html = 'Ler mais <i style="font-size: 115%; margin-left: 5px;" class="fa fa-arrow-circle-down"></i>'
+    }
+    else{
+        html = 'Recolher  <i style="font-size: 115%; margin-left: 5px;" class="fa fa-arrow-circle-up"></i>';
+    }
+
+    RC.$readMoreBtn.data("isOpen", !isOpen);
+
+    setTimeout(function(){
+        RC.$readMoreBtn.html(html);
+    }, 500);
+   
+});
+
 var map = L.map('map').setView([39.5, -8], 8);
 
 L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {

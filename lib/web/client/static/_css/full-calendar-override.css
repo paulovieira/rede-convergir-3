@@ -1,0 +1,29 @@
+/* the draggable elements in the calendar plugin shouldn't be affected by the transition*/
+a.fc-draggable {
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  -ms-transition: none;
+  transition: none; 
+}
+
+.fc-day-grid-event{
+	margin: 1px 6px 0;
+}
+
+div.fc-center > h2 {
+	font-size: 1.5em;
+}
+
+a.gcal-event {
+	border: 1px solid green;
+	background-color: green;	
+}
+
+div#calendar > div.fc-toolbar {
+	margin-bottom: 35px;
+}
+
+.popup-event {
+	font-size: 115%;	
+}

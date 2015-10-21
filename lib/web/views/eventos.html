@@ -5,19 +5,29 @@
 {% block head %}
 
 {# call super to common css #}
-{{ super() }}
+{{ super() }} 
 
 
 <link href="/static/leaflet/mapbox-2.2.2/mapbox.standalone.css" rel="stylesheet" />
 <link href="/rc-app/_css/cartografia.css" rel="stylesheet" />
 <link href="/static/jquery/fullcalendar-2.4.0/fullcalendar.css" rel="stylesheet" />
 <link href="/static/jquery/fullcalendar-2.4.0/fullcalendar.print.css" rel='stylesheet' media='print' />
-
+<link href="/static/_css/full-calendar-override.css" rel="stylesheet" /> 
 <style>
 
     #calendar {
-        max-width: 900px;
         margin: 0 auto;
+    }
+
+    #loading {
+        display: none;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    #map {
+        height: 1200px;
     }
 
 </style>
@@ -31,13 +41,14 @@
 {{ navbar(ctx) }}
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-8">
-            <div style="margin-top: 100px" id='calendar'></div>
+<div class="container-fluid">
+    <div class="row" style="margin-top: 50px">
+        <div id="calendar-container" class="col-sm-offset-1 col-sm-7" style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 60px 20px 30px 20px; margin-right: 25px;">
+            <div id='loading'>loading...</div>
+            <div id='calendar'></div>
         </div>
-        <div class="col-sm-4">
-            
+        <div class="col-sm-3" style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 5px;">
+            <div style="" id="map"></div>
         </div>
     </div>
 </div>
@@ -85,9 +96,18 @@
 
 	</script>
 
+    {# leaflet #}
+    <script src="/static/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script>
+    <script src="/static/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js"></script>
+
+    {# calendar plugin #}
     <script src="/static/jquery/fullcalendar-2.4.0/lib/moment.min.js"></script>
     <script src="/static/jquery/fullcalendar-2.4.0/fullcalendar.js"></script>
+    <script src="/static/jquery/fullcalendar-2.4.0/gcal.js"></script>
+    <script src="/static/jquery/fullcalendar-2.4.0/lang/pt.js"></script>  
 
+    <script src="/static/underscore/underscore-1.6.0.js"></script>
+    
     <script src="/rc-calendar/index.js"></script>
 {#
     <!-- cartografia libs -->
@@ -127,3 +147,4 @@
 #}
 
 {% endblock %}
+

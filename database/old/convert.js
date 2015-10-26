@@ -1,4 +1,5 @@
 var Fs = require("fs"),
+    Path = require("path"),
     Xml2js = require("xml2js"),
     Hoek = require("hoek"),
     _ = require("underscore"),
@@ -21,10 +22,11 @@ Fs.readFile(inputFile, function(err, inputData) {
 
 			if(_.difference(Object.keys(obj), knownKeys).length>0){
 				console.log("WARNING: project " + obj.projectid + " has some unknown key");
+                console.log(_.difference(Object.keys(obj), knownKeys));
 			}
 		});
 
-		// use more meaningful keys
+		// the keys should be more clear
     	outputData = Hoek.transform(outputData.convergir.project, {
 
     		// basic fields
@@ -55,8 +57,8 @@ Fs.readFile(inputFile, function(err, inputData) {
 
 			// other informations
 			"visitors": "visitors.0",
-			"groupSize": "groupsize.0",
-			"scopeArea": "scopearea.0",
+			"size": "groupsize.0",
+			"scope": "scopearea.0",
 			"target": "target.0",
 			"influence": "projectinfluence.0",
 			"physicalArea": "areaha.0",
@@ -65,42 +67,135 @@ Fs.readFile(inputFile, function(err, inputData) {
 
     	});
 
+        var types = [];
+
     	// execute some post-processing
-    	outputData.forEach(function(obj){
+    	outputData.forEach(function(obj, i){
 
-    		// domains
-    		if(_s.trim(obj.domains)!==""){
-    			obj.domains = obj.domains.split(",");	
-    		}
-    		else{
-    			obj.domains	= [];
-    		}
+            types.push(obj.type);
+            types = _.uniq(types);
 
-    		// target
-    		if(_s.trim(obj.target)!==""){
-    			obj.target = obj.target.split(",");	
-    		}
-    		else{
-    			obj.target	= [];
-    		}
+            // all values from the old database are strings; we should trim
+            Object.keys(obj).forEach(function(key){
+                obj[key] = _s.trim(obj[key]);
+            });
 
-    		console.log("TODO: use moment to convert the date field to ISO...")
+            // id should start from 1
+            obj.idOld = obj.id;
+            obj.id = i + 1;
+
+            // logo should be the slugified name
+            if(obj.logo){
+                obj.logoOld = obj.logo;
+                obj.logo = _s.slugify(obj.name) + "-" + obj.id + Path.extname(obj.logo); 
+            }
 
 
+            // domains and target are comma-separated lists; makes more sense to use arrays
+            obj.domains = obj.domains ? obj.domains.split(",") : [];
+            obj.target  = obj.target  ? obj.target.split(",")  : [];
+
+            // dates should be in ISO8601
+            obj.startDate    = getISODate(obj.startDate);
+            obj.registryDate = getISODate(obj.registryDate);
+            obj.updateDate   = getISODate(obj.updateDate);
+
+            // coordinates should be an array: [lat, lng]
+            obj.coordinates = [Number(obj.lat), Number(obj.lng)];
+            delete obj.lat;
+            delete obj.lng;
+
+            // influence should be an array with min/max
+            var influence = [];
+
+            if(obj.influence.indexOf("<10") >= 0 || obj.influence === "10"){
+                //console.log("&lt;10")
+                influence[0] = 0;
+                influence[1] = 10;
+            }
+            else if(obj.influence.indexOf(">10.000") >= 0){
+                influence[0] = 10000;
+            }
+            else if(obj.influence.indexOf("a") >= 0){
+                influence = obj.influence.split("a");
+                influence[0] = Number(influence[0]);
+                influence[1] = Number(influence[1]);
+            }
+
+            obj.influence = influence;
+
+            // videosUrl are simply an id to an youtube video
     		if(obj.videoUrl){
     			obj.videoUrl = "https://www.youtube.com/watch?v=" + obj.videoUrl;
     		}
 						
     	});
     	
+        //console.log("types: ", types);
 
-    	console.log("Number of projects: ", outputData.length);
-
-    	// make sure all objects in the array 
+        var numberOfProjects = outputData.length;
+    	console.log("Number of projects: ", numberOfProjects);
 
         Fs.writeFile(outputFile, JSON.stringify(outputData, null, 4), "utf8", function(){
 
         	console.log("All done");	
         });
+
+        // create bash script to fetch all the logos
+        var wgetLogos = "#!/bin/bash\n";
+        var logosCount = 0;
+        var missingLogoOutput = "";
+
+        outputData.forEach(function(obj){
+
+            if(obj.logo){
+                wgetLogos += "wget http://www.redeconvergir.net/projects/" + obj.idOld + "/" + obj.logoOld + " -O " + obj.logo +  "\n";    
+                logosCount++;
+            }
+            else{
+                missingLogoOutput += obj.name + "\n" + obj.email + "\n\n";
+            }
+            
+        });
+
+        // create bash script to fetch all the associated documents
+        var wgetDocs = "#!/bin/bash\n";
+        var docCount = 0;
+
+        outputData.forEach(function(obj){
+            if(obj.docUrl){
+                wgetDocs += "wget http://www.redeconvergir.net/projects/" + obj.id + "/" + obj.docUrl + "\n";    
+                docCount++;
+            }
+        });
+        console.log("%d projects have associated document", docCount);
+
+        Fs.writeFile("wget_logos.sh", wgetLogos, "utf8", function(){
+            console.log("TODO: rename logo and associate with the project")
+        });
+
+        Fs.writeFile("wget_associated_doc.sh", wgetDocs, "utf8", function(){
+        });
+
+        var missingLogosCount = numberOfProjects - logosCount;
+        if(missingLogosCount > 0){
+
+            Fs.writeFile("projects_with_missing_logo.txt", missingLogoOutput, "utf8", function(){
+
+                console.log("%d projects have the logo missing", missingLogosCount);
+            });        
+        }
+
     });
 });
+
+
+function getISODate(d){
+
+    var dateParts = d.split("/");
+    if(dateParts.length!==3){
+        throw new Error("date is invalid");
+    }
+
+    return (new Date(dateParts[2], dateParts[1], dateParts[0])).toJSON();
+};

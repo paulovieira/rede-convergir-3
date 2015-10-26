@@ -81,8 +81,8 @@ Note: When the database is initialized there are no users (apart from the modera
 
 ### definitions
 
-Contains the name and respective definitions. The "code" column indicates the group where a given definition belongs. We have the following code/groups and respective names.
-    "type"
+Contains the name and respective definitions. The "segment" column indicates the group where a given definition belongs. We have the following segments/groups and respective names.
+    segment "type"
         Permacultura
         Projectos integrais que visem a cultura permanente.
         
@@ -110,7 +110,7 @@ Contains the name and respective definitions. The "code" column indicates the gr
         Uso da Terra e Comunidade
         Projectos inspiradores e criadores de relações interdependentes: Eco-comunidades, Cooperativas e Associações comunitárias, Ecoaldeias e Co-habitações, Tecnologia de espaço aberto e Tomada de Decisão por Consenso, Título Nativo e Direito tradicional de uso, Agenda Local 21, Cidade pela retoma.
 
-    "domains"
+    segment "domain"
         Agricultura
         Agricultura - biológica ou natural; 
 
@@ -144,7 +144,7 @@ Contains the name and respective definitions. The "code" column indicates the gr
         Ferramentas Sociais
         Ferramentas sociais - uso de metodologias e ferramentas que visam o equilíbrio e harmonia social do projecto. 
 
-    "target"
+    segment "target"
         Crianças
         Adolescentes
         Adultos
@@ -153,18 +153,22 @@ Contains the name and respective definitions. The "code" column indicates the gr
         Pessoas com deficiência
         Crianças com necessidades educativas especiais
         Geral
-    "scope"
+    segment "scope"
         Urbano
         Rural
         Misto
+    segment "visitors"
+        Sim
+        Não
+        Sujeito a confirmação após contacto
 
 
     - id SERIAL PK
-    - code TEXT
+    - segment TEXT
     - name JSONB
     - desc JSONB
 
-### definitions_initiatives
+### initiatives_definitions
 
 Link table. 
 

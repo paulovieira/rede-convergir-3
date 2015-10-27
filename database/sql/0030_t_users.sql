@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users(
 	bio text,
 	url text,
 	photo text,
-	session_history jsonb, -- should be an array, see the constraint below
+	session_history jsonb default '[]', -- should be an array, see the constraint below
 	pw_hash text not null,
 	created_at timestamptz not null default now(),
 	recover_code text,

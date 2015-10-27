@@ -186,9 +186,8 @@ BEGIN
 	RETURNING *
 	INTO deleted_row;
 
-	deleted_key   := deleted_row.key;
-
-	IF deleted_key IS NOT NULL THEN
+	IF deleted_row.key IS NOT NULL THEN
+		SELECT deleted_row.key INTO deleted_key;
 		RETURN NEXT;
 	END IF;
 

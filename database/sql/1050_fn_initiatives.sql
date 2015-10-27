@@ -1,3 +1,35 @@
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    type_id TEXT references definitions(id),  -- the possible types are defined with the prefix "type"
+    type_other TEXT,  -- some specific type for this initiative; if this is not null, then type_id should be a reference to the dummy definition
+    -- domains (comes from t_initiatives_definitions - 1 initiative can have many domains); the possible domains are defined with the prefix "domain"
+    domains_other TEXT,  -- some specific domain for this initiative
+    url TEXT,
+    contact_name TEXT NOT NULL,
+    email TEXT,
+    phone TEXT,
+    contact_other TEXT,
+    logo TEXT,
+    street TEXT,
+    city TEXT,
+    postal_code TEXT,
+    coordinates JSONB,  -- should be an array, see the constraint below
+    promoter TEXT,
+    start_date TIMESTAMPTZ,
+    registry_date TIMESTAMPTZ,
+    update_date TIMESTAMPTZ not null default now(),
+	visitors_id TEXT references definitions(id),  -- the possible visitor policy are defined with the prefix "visitors"
+    group_size TEXT,   -- should be an integer (but the data in given in a free text field)
+    scope_id TEXT references definitions(id),  -- the possible scopes are defined with the prefix "scope"
+	-- target  (comes from t_initiatives_definitions - 1 initiative can have many domains); the possible targets are defined with the prefix "target"
+    target_other TEXT,
+    influence JSONB,  -- should be an array, see the constraint below
+    physical_area TEXT,
+    video_url TEXT,
+    doc_url TEXT,
+
+
 
 /*
 
@@ -6,26 +38,40 @@
 */
 
 
-DROP FUNCTION IF EXISTS users_read(json);
+DROP FUNCTION IF EXISTS initiatives_read(json);
 
-CREATE FUNCTION users_read(options json DEFAULT '[{}]')
+CREATE FUNCTION initiatives_read(options json DEFAULT '[{}]')
 
 -- return table using the definition of the config table
 RETURNS TABLE(
-	id INT,
-	email TEXT,
-	first_name TEXT,
-	last_name TEXT,
-	bio TEXT,
-	url TEXT,
-	photo TEXT,
-	session_history JSONB,
-	pw_hash TEXT,
-	created_at timestamptz,
-	recover TEXT,
-	recover_valid_until timestamptz
---	user_texts JSON,  -- join with the users_texts CTE
---	user_groups JSON   -- join with the users_groups CTE
+    id INT,
+    name TEXT,
+    description TEXT,
+    type_id TEXT,
+    type_other TEXT,
+    domains_other TEXT,
+    url TEXT,
+    contact_name TEXT,
+    email TEXT,
+    phone TEXT,
+    contact_other TEXT,
+    logo TEXT,
+    street TEXT,
+    city TEXT,
+    postal_code TEXT,
+    coordinates JSONB,
+    promoter TEXT,
+    start_date TIMESTAMPTZ,
+    registry_date TIMESTAMPTZ,
+    update_date TIMESTAMPTZ,
+	visitors_id TEXT,
+    group_size TEXT,
+    scope_id TEXT,
+    target_other TEXT,
+    influence JSONB,
+    physical_area TEXT,
+    video_url TEXT,
+    doc_url TEXT
 )
 AS
 $BODY$
@@ -37,7 +83,6 @@ DECLARE
 
 	-- fields to be used in WHERE clause
 	_id INT;
-	_email TEXT;
 BEGIN
 
 -- convert the json argument from object to array of (one) objects
@@ -47,11 +92,10 @@ END IF;
 
 FOR input_obj IN ( select json_array_elements(options) ) LOOP
 
-	command := 'SELECT u.* FROM users u';
+	command := 'SELECT i.* FROM initiatives i';
 			
 	-- extract values to be (optionally) used in the WHERE clause
 	SELECT input_obj->>'id' INTO _id;
-	SELECT input_obj->>'email' INTO _email;
 	
 	number_conditions := 0;
 	
@@ -61,21 +105,11 @@ FOR input_obj IN ( select json_array_elements(options) ) LOOP
 		ELSE                           command = command || ' AND';
 		END IF;
 
-		command = command || format(' id = %L', _id);
+		command = command || format(' i.id = %L', _id);
 		number_conditions := number_conditions + 1;
 	END IF;
 
-	-- criteria: email
-	IF _email IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' email = %L', _email);
-		number_conditions := number_conditions + 1;
-	END IF;
-
-	command := command || ' ORDER BY u.id;';
+	command := command || ' ORDER BY i.id;';
 
 	--raise notice 'command: %', command;
 
@@ -95,16 +129,15 @@ LANGUAGE plpgsql;
 
 EXAMPLES:
 
-insert into users values
-	(default, 'paulovieira@gmail.com', 'paulo', 'vieira', 'my bio', 'my url', 'my photo', default, 'pw hash', default),
 
-	(default, 'dummy@gmail.com', 'dummy', 'last name', 'my dummy bio', 'my dummy url', 'my dummy photo', default, 'pw dummy hash', default)
+insert into initiatives values
+	(default, 'name', 'desc', 'type_permaculture', 'type other', 'domain other', 'url', 'contact', 'email', 'phone', 'contact other', 'logo', 'street', 'city', 'postal code', '[1.1, 2.2]', 'promoter', '1980-01-01', '1981-01-01', default, 'type_permaculture', '5', 'type_permaculture', 'taret_other', '[1, 5]', '10ha', 'url', 'doc url'),
+
+	(default, 'name2', 'desc2', 'type_permaculture', 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', 'logo2', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, 'type_permaculture', '52', 'type_permaculture', 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2')
 
 
-select * from  users_read('{"id": 2}');
-select * from  users_read('[{"id": 2}, {"id": 3}]');
-select * from  users_read('[{"email": "paulovieira@gmail.com"}, {"id": 3}]');
-select * from  users_read();
+select * from  initiatives_read('{"id": 1}');
+select * from  initiatives_read('[{"id": 3}, {"id": 4}]');
 
 */
 

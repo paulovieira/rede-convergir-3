@@ -161,6 +161,9 @@ Contains the name and respective definitions. The "segment" column indicates the
         Sim
         Não
         Sujeito a confirmação após contacto
+    segment "status"
+        Vivo
+        Terminado
 
 
     - id SERIAL PK

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS definitions(
-	id serial primary key,
-	segment text not null,
-	name jsonb not null,
+	--id serial primary key,
+	id text primary key,
+	title jsonb not null,
 	description jsonb not null
 );
 
@@ -9,5 +9,8 @@ CREATE TABLE IF NOT EXISTS definitions(
 SELECT audit.audit_table('definitions');
 
 /*
-NOTE: the table contains a dummy definition; 
+NOTES: 
+the table contains a dummy definition; 
+the id should be human-readable text in the form "prefix_name"; for instance: "type_permaculture", "type_transition", etc
+
 */

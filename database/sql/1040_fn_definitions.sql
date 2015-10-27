@@ -1,0 +1,252 @@
+
+/*
+
+	1. READ
+
+*/
+
+
+DROP FUNCTION IF EXISTS definitions_read(json);
+
+CREATE FUNCTION definitions_read(options json DEFAULT '[{}]')
+
+-- return table using the definition of the config table
+RETURNS TABLE(
+	id TEXT,
+	title JSONB,
+	description JSONB
+)
+AS
+$BODY$
+
+DECLARE
+	input_obj json;
+	command text;
+	number_conditions INT;
+
+	-- fields to be used in WHERE clause
+	_id TEXT;
+	_id_starts_with TEXT;
+BEGIN
+
+-- convert the json argument from object to array of (one) objects
+IF  json_typeof(options) = 'object'::text THEN
+	options = ('[' || options::text ||  ']')::json;
+END IF;
+
+FOR input_obj IN ( select json_array_elements(options) ) LOOP
+
+	command := 'SELECT d.* FROM definitions d';
+			
+	-- extract values to be (optionally) used in the WHERE clause
+	SELECT input_obj->>'id' INTO _id;
+	SELECT input_obj->>'id_starts_with' INTO _id_starts_with;
+	
+	number_conditions := 0;
+	
+	-- criteria: id
+	IF _id IS NOT NULL THEN
+		IF number_conditions = 0 THEN  command = command || ' WHERE';  
+		ELSE                           command = command || ' AND';
+		END IF;
+
+		command = command || format(' id = %L', _id);
+		number_conditions := number_conditions + 1;
+	END IF;
+
+	-- criteria: id_starts_with
+	IF _id_starts_with IS NOT NULL THEN
+		IF number_conditions = 0 THEN  command = command || ' WHERE';  
+		ELSE                           command = command || ' AND';
+		END IF;
+
+		-- using the position utility function instead of " id LIKE %_id_starts_with"
+		command = command || format(' position(%L in d.id) > 0', _id_starts_with);
+		number_conditions := number_conditions + 1;
+	END IF;
+
+	command := command || ' ORDER BY d.id;';
+
+	--raise notice 'command: %', command;
+
+	IF number_conditions > 0 THEN
+		RETURN QUERY EXECUTE command;
+	END IF;
+
+
+END LOOP;
+		
+RETURN;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+/*
+
+EXAMPLES:
+
+        
+        
+        
+        
+
+insert into definitions values
+	('type_permaculture', '{"pt": "Permacultura"}', '{"pt": "Projectos integrais que visem a cultura permanente."}'),
+	('type_permaculture', '{"pt": "Transição"}', '{"pt": "Iniciativas sociais que facilitem a transição da comunidade para uma visão positiva."}'),
+	('domain_agriculture', '{"pt": "Agricultura"}', '{"pt": "Agricultura - biológica ou natural; "}')
+
+
+        
+
+
+select * from definitions;
+
+select * from  definitions_read('{"id": "type_transition"}');
+
+select * from  definitions_read('[{"id": "type_transition"}, {"id": "type_permaculture"}]');
+
+select * from  definitions_read('{"id_starts_with": "type"}');
+
+
+
+*/
+
+
+
+DROP FUNCTION IF EXISTS definitions_upsert(json);
+
+CREATE FUNCTION definitions_upsert(input_obj json)
+RETURNS SETOF definitions AS
+$BODY$
+DECLARE
+	upserted_row definitions%ROWTYPE;
+	current_row definitions%ROWTYPE;
+
+	-- fields to be used in WHERE clause
+	_id TEXT;
+
+	-- fields to be inserted or updated	
+	_title JSONB;
+	_description JSONB;
+BEGIN
+
+	
+	SELECT input_obj->>'id' INTO _id;
+
+
+	IF _id IS NOT NULL THEN
+
+		-- add an explicit row lock (if the row does not exist, it won't have effect)
+		SELECT * FROM definitions where id = _id FOR UPDATE INTO current_row;
+		
+		-- IF current_row.id IS NULL THEN
+		-- 	RETURN;
+		-- END IF;
+	ELSE
+		RETURN;
+		--SELECT nextval(pg_get_serial_sequence('definitions', 'id')) INTO _id;
+	END IF;
+
+	--raise notice 'current: %s', current_row.email;
+	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
+
+	SELECT COALESCE((input_obj->>'title')::jsonb,       current_row.title)       INTO _title;
+	SELECT COALESCE((input_obj->>'description')::jsonb, current_row.description) INTO _description;
+
+	INSERT INTO definitions(
+		id,
+		title,
+		description
+		)
+	VALUES (
+		_id,
+		_title,
+		_description
+		)
+	ON CONFLICT (id) DO UPDATE SET 
+		title = EXCLUDED.title,
+		description = EXCLUDED.description
+	RETURNING 
+		*
+	INTO STRICT 
+		upserted_row;
+
+	RETURN NEXT upserted_row;
+
+RETURN;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+/*
+
+EXAMPLES:
+
+select * from definitions
+
+
+in this case the id property should always be present, either for creating a new row or updating
+
+create a new definition:
+
+select * from definitions_upsert('{
+	"id": "type_xyz",
+	"title": {"pt": "xxx"},
+	"description": {"pt": "yyy"}
+}');
+
+
+update only the title:
+
+select * from definitions_upsert('{
+	"id": "type_xyz",
+	"title": {"pt": "zzz"}
+}');
+
+
+
+*/
+
+
+
+
+
+DROP FUNCTION IF EXISTS definitions_delete(json);
+
+CREATE FUNCTION definitions_delete(input_obj json)
+RETURNS TABLE(deleted_id TEXT) AS
+$$
+DECLARE
+	deleted_row definitions%ROWTYPE;
+
+	-- fields to be used in WHERE clause
+	_id TEXT;
+BEGIN
+
+	-- extract values to be used in the WHERE clause
+	SELECT input_obj->>'id' INTO _id;
+
+	DELETE FROM definitions
+	WHERE id = _id
+	RETURNING *
+	INTO deleted_row;
+
+	deleted_id   := deleted_row.id;
+
+	IF deleted_row.id IS NOT NULL THEN
+		SELECT deleted_row.id INTO deleted_id;
+		RETURN NEXT;
+	END IF;
+
+RETURN;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+/*
+select * from definitions
+
+select * from definitions_delete('{"id": 4}');
+
+*/

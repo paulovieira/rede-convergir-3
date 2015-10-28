@@ -115,9 +115,9 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 	--raise notice 'command: %', command;
 
-	IF number_conditions > 0 THEN
+--	IF number_conditions > 0 THEN
 		RETURN QUERY EXECUTE command;
-	END IF;
+--	END IF;
 
 
 END LOOP;
@@ -347,7 +347,7 @@ to create a new row, the id property should be missing
 select * from initiatives_upsert('{
     "name": "name",
     "description": "description",
-    "type_id": "type_permaculture",
+    "type_id": null,
     "type_other": "type other",
     "domains_other": "domains other",
     "url": "url",
@@ -363,9 +363,9 @@ select * from initiatives_upsert('{
     "promoter": "promoter",
     "start_date": "1985-04-05",
     "registry_date": "2015-10-27",
-    "visitors_id": "type_permaculture",
+    "visitors_id": null,
     "group_size": "9",
-    "scope_id": "type_permaculture",
+    "scope_id": null,
     "target_other": "target_other",
     "influence": [4,8],
     "physical_area": "physical_area",
@@ -373,6 +373,35 @@ select * from initiatives_upsert('{
     "doc_url": "doc_url"
 }');
 
+
+select * from initiatives_upsert('{
+    "name": "name 2",
+    "description": "description 2",
+    "type_id": null,
+    "type_other": "type other 2",
+    "domains_other": "domains other 2",
+    "url": "url 2",
+    "contact_name": "contact name 2",
+    "email": "email 2",
+    "phone": "phone 2",
+    "contact_other": "contact other 2",
+    "logo": "logo 2",
+    "street": "street 2",
+    "city": "city 2",
+    "postal_code": "postal code 2",
+    "coordinates": [4.4, 5.5],
+    "promoter": "promoter 2",
+    "start_date": "1985-04-05",
+    "registry_date": "2015-10-27",
+    "visitors_id": null,
+    "group_size": "9",
+    "scope_id": null,
+    "target_other": "target_other 2",
+    "influence": [4,8],
+    "physical_area": "physical_area 2",
+    "video_url": "video_url 2",
+    "doc_url": "doc_url 2"
+}');
 
 to update one or more fields of an existing row, the id property should be given;
 note that only the given properties will be updated; 

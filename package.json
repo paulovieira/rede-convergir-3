@@ -1,16 +1,26 @@
 {
-  "name": "cirac",
+  "name": "rede-convergir",
   "version": "0.0.1",
-  "description": "cirac",
+  "description": "rede-convergir",
   "main": "index.js",
   "license": "BSD",
   "dependencies": {
+    "chairo": "^0.2.0",
+    "change-case-keys": "0.0.4",
     "config": "^1.16.0",
+    "glue": "^2.4.0",
     "good": "^6.4.0",
     "good-console": "^5.1.0",
     "hapi": "^8.8.1",
+    "hapi-auth-cookie": "^3.1.0",
     "hapi-nunjucks": "0.0.5",
-    "hoek": "^2.16.3"
+    "hoek": "^2.16.3",
+    "joi": "^6.9.1",
+    "pg-monitor": "^0.3.4",
+    "pg-promise": "^2.2.4",
+    "q": "^1.4.1",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.2.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

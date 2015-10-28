@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS initiatives(
     doc_url TEXT,
 
     CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array'),
-    CONSTRAINT group_sizeinfluence_must_be_array   CHECK (jsonb_typeof(influence) = 'array')
+    CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence) = 'array')
 );
 
 -- PERFORM audit.audit_table('initiatives');

@@ -82,9 +82,9 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 	--raise notice 'command: %', command;
 
-	IF number_conditions > 0 THEN
+	--IF number_conditions > 0 THEN
 		RETURN QUERY EXECUTE command;
-	END IF;
+	--END IF;
 
 
 END LOOP;

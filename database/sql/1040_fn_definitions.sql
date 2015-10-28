@@ -8,9 +8,9 @@
 
 DROP FUNCTION IF EXISTS definitions_read(json);
 
-CREATE FUNCTION definitions_read(options json DEFAULT '[{}]')
+CREATE FUNCTION definitions_read(input json DEFAULT '[{}]')
 
--- return table using the definition of the config table
+-- return table using the smae columns of the definitions table
 RETURNS TABLE(
 	id TEXT,
 	title JSONB,
@@ -29,12 +29,13 @@ DECLARE
 	_id_starts_with TEXT;
 BEGIN
 
--- convert the json argument from object to array of (one) objects
-IF  json_typeof(options) = 'object'::text THEN
-	options = ('[' || options::text ||  ']')::json;
+-- if the json argument is an object, convert it to an array (of 1 object)
+IF  json_typeof(input) = 'object' THEN
+	SELECT json_build_array(input) INTO input;
 END IF;
 
-FOR input_obj IN ( select json_array_elements(options) ) LOOP
+
+FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 	command := 'SELECT d.* FROM definitions d';
 			
@@ -50,7 +51,7 @@ FOR input_obj IN ( select json_array_elements(options) ) LOOP
 		ELSE                           command = command || ' AND';
 		END IF;
 
-		command = command || format(' id = %L', _id);
+		command = command || format(' d.id = %L', _id);
 		number_conditions := number_conditions + 1;
 	END IF;
 
@@ -92,7 +93,7 @@ EXAMPLES:
 
 insert into definitions values
 	('type_permaculture', '{"pt": "Permacultura"}', '{"pt": "Projectos integrais que visem a cultura permanente."}'),
-	('type_permaculture', '{"pt": "Transição"}', '{"pt": "Iniciativas sociais que facilitem a transição da comunidade para uma visão positiva."}'),
+	('type_transicao', '{"pt": "Transição"}', '{"pt": "Iniciativas sociais que facilitem a transição da comunidade para uma visão positiva."}'),
 	('domain_agriculture', '{"pt": "Agricultura"}', '{"pt": "Agricultura - biológica ou natural; "}')
 
 
@@ -133,19 +134,13 @@ BEGIN
 	
 	SELECT input_obj->>'id' INTO _id;
 
-
-	IF _id IS NOT NULL THEN
-
-		-- add an explicit row lock (if the row does not exist, it won't have effect)
-		SELECT * FROM definitions where id = _id FOR UPDATE INTO current_row;
-		
-		-- IF current_row.id IS NULL THEN
-		-- 	RETURN;
-		-- END IF;
-	ELSE
+	if _id IS NULL THEN
 		RETURN;
-		--SELECT nextval(pg_get_serial_sequence('definitions', 'id')) INTO _id;
 	END IF;
+
+	-- add an explicit row lock (if the row does not exist, it won't have effect)
+	SELECT * FROM definitions where id = _id FOR UPDATE INTO current_row;
+		
 
 	--raise notice 'current: %s', current_row.email;
 	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
@@ -186,6 +181,8 @@ select * from definitions
 
 
 in this case the id property should always be present, either for creating a new row or updating
+(because the id is not of type "serial", it is a simple "text", which must be unique)
+
 
 create a new definition:
 
@@ -247,6 +244,6 @@ LANGUAGE plpgsql;
 /*
 select * from definitions
 
-select * from definitions_delete('{"id": 4}');
+select * from definitions_delete('{"id": "type_xyz"}');
 
 */

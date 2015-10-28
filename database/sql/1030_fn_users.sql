@@ -8,9 +8,9 @@
 
 DROP FUNCTION IF EXISTS users_read(json);
 
-CREATE FUNCTION users_read(options json DEFAULT '[{}]')
+CREATE FUNCTION users_read(input json DEFAULT '[{}]')
 
--- return table using the definition of the config table
+-- return table using the smae columns of the users table
 RETURNS TABLE(
 	id INT,
 	email TEXT,
@@ -40,14 +40,17 @@ DECLARE
 	_email TEXT;
 BEGIN
 
--- convert the json argument from object to array of (one) objects
-IF  json_typeof(options) = 'object'::text THEN
-	options = ('[' || options::text ||  ']')::json;
+-- if the json argument is an object, convert it to an array (of 1 object)
+IF  json_typeof(input) = 'object' THEN
+	SELECT json_build_array(input) INTO input;
 END IF;
 
-FOR input_obj IN ( select json_array_elements(options) ) LOOP
+
+
+FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 	command := 'SELECT u.* FROM users u';
+
 			
 	-- extract values to be (optionally) used in the WHERE clause
 	SELECT input_obj->>'id' INTO _id;
@@ -137,20 +140,19 @@ BEGIN
 	
 	SELECT (input_obj->>'id')::int INTO _id;
 
+	-- for tables with surrogate primary key (serial),
 	-- if an id is not given, the intention is to create/insert a new row; 
 	-- otherwise, the intention is always to update an existing row; in other words
 	-- we can't insert a new row with a pre-defined id
-	IF _id IS NOT NULL THEN
-
+	IF _id IS NULL THEN
+		SELECT nextval(pg_get_serial_sequence('users', 'id')) INTO _id;		
+	ELSE
 		-- add an explicit row lock
 		SELECT * FROM users where id = _id FOR UPDATE INTO current_row;
-		
+
 		IF current_row.id IS NULL THEN
 			RETURN;
 		END IF;
-	ELSE
-		
-		SELECT nextval(pg_get_serial_sequence('users', 'id')) INTO _id;
 	END IF;
 
 	--raise notice 'current: %s', current_row.email;

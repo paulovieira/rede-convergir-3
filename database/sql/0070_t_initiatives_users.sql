@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS initiatives_users(
-	id         serial,
+	id            serial unique not null,
 	initiative_id int references initiatives(id) on update cascade on delete cascade,
 	user_id       int references users(id)       on update cascade on delete cascade,
 

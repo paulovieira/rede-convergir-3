@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS initiatives(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
-    type_id TEXT references definitions(id),  -- the possible types are defined with the prefix "type"
+    type_id TEXT references definitions(id) ON DELETE SET NULL,  -- the possible types are defined with the prefix "type"
     type_other TEXT,  -- some specific type for this initiative; if this is not null, then type_id should be a reference to the dummy definition
     -- domains (comes from t_initiatives_definitions - 1 initiative can have many domains); the possible domains are defined with the prefix "domain"
     domains_other TEXT,  -- some specific domain for this initiative
@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS initiatives(
     start_date TIMESTAMPTZ,
     registry_date TIMESTAMPTZ,
     update_date TIMESTAMPTZ not null default now(),
-	visitors_id TEXT references definitions(id),  -- the possible visitor policy are defined with the prefix "visitors"
+	visitors_id TEXT references definitions(id)  ON DELETE SET NULL,  -- the possible visitor policy are defined with the prefix "visitors"
     group_size TEXT,   -- should be an integer (but the data in given in a free text field)
-    scope_id TEXT references definitions(id),  -- the possible scopes are defined with the prefix "scope"
+    scope_id TEXT references definitions(id)  ON DELETE SET NULL,  -- the possible scopes are defined with the prefix "scope"
 	-- target  (comes from t_initiatives_definitions - 1 initiative can have many domains); the possible targets are defined with the prefix "target"
     target_other TEXT,
     influence JSONB,  -- should be an array, see the constraint below

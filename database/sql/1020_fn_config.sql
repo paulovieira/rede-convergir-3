@@ -10,9 +10,9 @@
 
 DROP FUNCTION IF EXISTS config_read(json);
 
-CREATE FUNCTION config_read(options json DEFAULT '[{}]')
+CREATE FUNCTION config_read(input json DEFAULT '[{}]')
 
--- return table using the definition of the config table
+-- return table using the smae columns of the config table
 RETURNS TABLE(
 	key TEXT,
 	value JSONB
@@ -29,12 +29,14 @@ DECLARE
 	_key TEXT;
 BEGIN
 
--- convert the json argument from object to array of (one) objects
-IF  json_typeof(options) = 'object'::text THEN
-	options = ('[' || options::text ||  ']')::json;
+
+-- if the json argument is an object, convert it to an array (of 1 object)
+IF  json_typeof(input) = 'object' THEN
+	SELECT json_build_array(input) INTO input;
 END IF;
 
-FOR input_obj IN ( select json_array_elements(options) ) LOOP
+
+FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 	command := 'SELECT key, value FROM config ';
 			
@@ -98,6 +100,7 @@ RETURNS SETOF config AS
 $BODY$
 DECLARE
 	upserted_row config%ROWTYPE;
+	current_row config%ROWTYPE;
 
 	-- fields to be used in WHERE clause
 	_key TEXT;
@@ -107,7 +110,15 @@ DECLARE
 BEGIN
 
 	SELECT input_obj->>'key'   INTO _key;
-	SELECT input_obj->>'value' INTO _value;
+
+	if _key IS NULL THEN
+		RETURN;
+	END IF;
+
+	-- add an explicit row lock (if the row does not exist, it won't have effect)
+	SELECT * FROM config where key = _key FOR UPDATE INTO current_row;
+
+	SELECT COALESCE((input_obj->>'value')::jsonb, current_row.value) INTO _value;
 
 	INSERT INTO config(
 		key,

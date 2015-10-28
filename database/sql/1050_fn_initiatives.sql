@@ -1,3 +1,4 @@
+/*
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
@@ -28,7 +29,7 @@
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
-
+*/
 
 
 /*
@@ -40,9 +41,9 @@
 
 DROP FUNCTION IF EXISTS initiatives_read(json);
 
-CREATE FUNCTION initiatives_read(options json DEFAULT '[{}]')
+CREATE FUNCTION initiatives_read(input json DEFAULT '[{}]')
 
--- return table using the definition of the config table
+-- return table using the smae columns of the initiatives table
 RETURNS TABLE(
     id INT,
     name TEXT,
@@ -85,12 +86,13 @@ DECLARE
 	_id INT;
 BEGIN
 
--- convert the json argument from object to array of (one) objects
-IF  json_typeof(options) = 'object'::text THEN
-	options = ('[' || options::text ||  ']')::json;
+-- if the json argument is an object, convert it to an array (of 1 object)
+IF  json_typeof(input) = 'object' THEN
+    SELECT json_build_array(input) INTO input;
 END IF;
 
-FOR input_obj IN ( select json_array_elements(options) ) LOOP
+
+FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 	command := 'SELECT i.* FROM initiatives i';
 			
@@ -131,9 +133,9 @@ EXAMPLES:
 
 
 insert into initiatives values
-	(default, 'name', 'desc', 'type_permaculture', 'type other', 'domain other', 'url', 'contact', 'email', 'phone', 'contact other', 'logo', 'street', 'city', 'postal code', '[1.1, 2.2]', 'promoter', '1980-01-01', '1981-01-01', default, 'type_permaculture', '5', 'type_permaculture', 'taret_other', '[1, 5]', '10ha', 'url', 'doc url'),
+	(default, 'name', 'desc', NULL, 'type other', 'domain other', 'url', 'contact', 'email', 'phone', 'contact other', 'logo', 'street', 'city', 'postal code', '[1.1, 2.2]', 'promoter', '1980-01-01', '1981-01-01', default, NULL, '5', NULL, 'taret_other', '[1, 5]', '10ha', 'url', 'doc url'),
 
-	(default, 'name2', 'desc2', 'type_permaculture', 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', 'logo2', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, 'type_permaculture', '52', 'type_permaculture', 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2')
+	(default, 'name2', 'desc2', NULL, 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', 'logo2', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, NULL, '52', NULL, 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2')
 
 
 select * from  initiatives_read('{"id": 1}');
@@ -143,98 +145,184 @@ select * from  initiatives_read('[{"id": 3}, {"id": 4}]');
 
 
 
-DROP FUNCTION IF EXISTS users_upsert(json);
+DROP FUNCTION IF EXISTS initiatives_upsert(json);
 
-CREATE FUNCTION users_upsert(input_obj json)
-RETURNS SETOF users AS
+CREATE FUNCTION initiatives_upsert(input_obj json)
+RETURNS SETOF initiatives AS
 $BODY$
 DECLARE
-	upserted_row users%ROWTYPE;
-	current_row users%ROWTYPE;
+	upserted_row initiatives%ROWTYPE;
+	current_row initiatives%ROWTYPE;
 
 	-- fields to be used in WHERE clause
 	_id INT;
 
 	-- fields to be inserted or updated	
-	_email TEXT;
-	_first_name TEXT;
-	_last_name TEXT;
-	_pw_hash TEXT;
-	_bio TEXT;
-	_url TEXT;
-	_photo TEXT;
-	_recover_code TEXT;
-	_recover_code_expiration TIMESTAMPTZ;
+    _name TEXT;
+    _description TEXT;
+    _type_id TEXT;
+    _type_other TEXT;
+    _domains_other TEXT;
+    _url TEXT;
+    _contact_name TEXT;
+    _email TEXT;
+    _phone TEXT;
+    _contact_other TEXT;
+    _logo TEXT;
+    _street TEXT;
+    _city TEXT;
+    _postal_code TEXT;
+    _coordinates JSONB;
+    _promoter TEXT;
+    _start_date TIMESTAMPTZ;
+    _registry_date TIMESTAMPTZ;
+    _update_date TIMESTAMPTZ;
+    _visitors_id TEXT;
+    _group_size TEXT;
+    _scope_id TEXT;
+    _target_other TEXT;
+    _influence JSONB;
+    _physical_area TEXT;
+    _video_url TEXT;
+    _doc_url TEXT;
 BEGIN
 
 	
 	SELECT (input_obj->>'id')::int INTO _id;
 
-	-- if an id is not given, the intention is to create/insert a new row; 
-	-- otherwise, the intention is always to update an existing row; in other words
-	-- we can't insert a new row with a pre-defined id
-	IF _id IS NOT NULL THEN
+    IF _id IS NULL THEN
+        SELECT nextval(pg_get_serial_sequence('initiatives', 'id')) INTO _id;     
+    ELSE
+        -- add an explicit row lock
+        SELECT * FROM initiatives where id = _id FOR UPDATE INTO current_row;
 
-		-- add an explicit row lock
-		SELECT * FROM users where id = _id FOR UPDATE INTO current_row;
-		
-		IF current_row.id IS NULL THEN
-			RETURN;
-		END IF;
-	ELSE
-		
-		SELECT nextval(pg_get_serial_sequence('users', 'id')) INTO _id;
-	END IF;
+        IF current_row.id IS NULL THEN
+            RETURN;
+        END IF;
+    END IF;
+
 
 	--raise notice 'current: %s', current_row.email;
 	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
 
-	SELECT COALESCE(input_obj->>'email',      current_row.email)      INTO _email;
-	SELECT COALESCE(input_obj->>'first_name', current_row.first_name) INTO _first_name;
-	SELECT COALESCE(input_obj->>'last_name',  current_row.last_name)  INTO _last_name;
-	SELECT COALESCE(input_obj->>'bio',        current_row.bio)        INTO _bio;
-	SELECT COALESCE(input_obj->>'url',        current_row.url)        INTO _url;
-	SELECT COALESCE(input_obj->>'photo',      current_row.photo)      INTO _photo;
-	SELECT COALESCE(input_obj->>'pw_hash',    current_row.pw_hash)    INTO _pw_hash;
-	SELECT COALESCE(input_obj->>'recover_code',            current_row.recover_code)    INTO _recover_code;
-	SELECT COALESCE( (input_obj->>'recover_code_expiration')::timestamptz, current_row.recover_code_expiration)    INTO _recover_code_expiration;
+	SELECT COALESCE(input_obj->>'name',      current_row.name)      INTO _name;
+	SELECT COALESCE(input_obj->>'description', current_row.description) INTO _description;
+	SELECT COALESCE(input_obj->>'type_id',  current_row.type_id)  INTO _type_id;
+	SELECT COALESCE(input_obj->>'type_other',  current_row.type_other)        INTO _type_other;
+	SELECT COALESCE(input_obj->>'domains_other',        current_row.domains_other)        INTO _domains_other;
+	SELECT COALESCE(input_obj->>'url',      current_row.url)      INTO _url;
+	SELECT COALESCE(input_obj->>'contact_name',    current_row.contact_name)    INTO _contact_name;
+	SELECT COALESCE(input_obj->>'email',        current_row.email)    INTO _email;
+    SELECT COALESCE(input_obj->>'phone',            current_row.phone)    INTO _phone;
+    SELECT COALESCE(input_obj->>'contact_other',            current_row.contact_other)    INTO _contact_other;
+    SELECT COALESCE(input_obj->>'logo',            current_row.logo)    INTO _logo;
+    SELECT COALESCE(input_obj->>'street',            current_row.street)    INTO _street;
+    SELECT COALESCE(input_obj->>'city',            current_row.city)    INTO _city;
+    SELECT COALESCE(input_obj->>'postal_code',            current_row.postal_code)    INTO _postal_code;
+    SELECT COALESCE((input_obj->>'coordinates')::jsonb,            current_row.coordinates)    INTO _coordinates;
+    SELECT COALESCE(input_obj->>'promoter',            current_row.promoter)    INTO _promoter;
+    SELECT COALESCE((input_obj->>'start_date')::timestamptz, current_row.start_date)    INTO _start_date;
+    SELECT COALESCE((input_obj->>'registry_date')::timestamptz, current_row.registry_date, now())    INTO _registry_date;
+    SELECT COALESCE((input_obj->>'update_date')::timestamptz,   now())    INTO _update_date;
+    SELECT COALESCE(input_obj->>'visitors_id',            current_row.visitors_id)    INTO _visitors_id;
+    SELECT COALESCE(input_obj->>'group_size',            current_row.group_size)    INTO _group_size;
+    SELECT COALESCE(input_obj->>'scope_id',            current_row.scope_id)    INTO _scope_id;
+    SELECT COALESCE(input_obj->>'target_other',            current_row.target_other)    INTO _target_other;
+    SELECT COALESCE((input_obj->>'influence')::jsonb,            current_row.influence)    INTO _influence;
+    SELECT COALESCE(input_obj->>'physical_area',            current_row.physical_area)    INTO _physical_area;
+    SELECT COALESCE(input_obj->>'video_url',            current_row.video_url)    INTO _video_url;
+    SELECT COALESCE(input_obj->>'doc_url',            current_row.doc_url)    INTO _doc_url;
 
 	-- todo: add entry to the session history
 
-	INSERT INTO users(
-		id,
-		email,
-		first_name,
-		last_name,
-		bio,
-		url,
-		photo,
-		pw_hash,
-		recover_code,
-		recover_code_expiration
+	INSERT INTO initiatives(
+        id,
+        name,
+        description,
+        type_id,
+        type_other,
+        domains_other,
+        url,
+        contact_name,
+        email,
+        phone,
+        contact_other,
+        logo,
+        street,
+        city,
+        postal_code,
+        coordinates,
+        promoter,
+        start_date,
+        registry_date,
+        update_date,
+        visitors_id,
+        group_size,
+        scope_id,
+        target_other,
+        influence,
+        physical_area,
+        video_url,
+        doc_url
 		)
 	VALUES (
-		_id,
-		_email,
-		_first_name,
-		_last_name,
-		_bio,
-		_url,
-		_photo,
-		_pw_hash,
-		_recover_code,
-		_recover_code_expiration
+        _id,
+        _name,
+        _description,
+        _type_id,
+        _type_other,
+        _domains_other,
+        _url,
+        _contact_name,
+        _email,
+        _phone,
+        _contact_other,
+        _logo,
+        _street,
+        _city,
+        _postal_code,
+        _coordinates,
+        _promoter,
+        _start_date,
+        _registry_date,
+        _update_date,
+        _visitors_id,
+        _group_size,
+        _scope_id,
+        _target_other,
+        _influence,
+        _physical_area,
+        _video_url,
+        _doc_url
 		)
 	ON CONFLICT (id) DO UPDATE SET 
-		email = EXCLUDED.email,
-		first_name = EXCLUDED.first_name,
-		last_name = EXCLUDED.last_name,
-		bio = EXCLUDED.bio,
-		url = EXCLUDED.url,
-		photo = EXCLUDED.photo,
-		pw_hash = EXCLUDED.pw_hash,
-		recover_code = EXCLUDED.recover_code,
-		recover_code_expiration = EXCLUDED.recover_code_expiration
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        type_id = EXCLUDED.type_id,
+        type_other = EXCLUDED.type_other,
+        domains_other = EXCLUDED.domains_other,
+        url = EXCLUDED.url,
+        contact_name = EXCLUDED.contact_name,
+        email = EXCLUDED.email,
+        phone = EXCLUDED.phone,
+        contact_other = EXCLUDED.contact_other,
+        logo = EXCLUDED.logo,
+        street = EXCLUDED.street,
+        city = EXCLUDED.city,
+        postal_code = EXCLUDED.postal_code,
+        coordinates = EXCLUDED.coordinates,
+        promoter = EXCLUDED.promoter,
+        start_date = EXCLUDED.start_date,
+        registry_date = EXCLUDED.registry_date,
+        update_date = EXCLUDED.update_date,
+        visitors_id = EXCLUDED.visitors_id,
+        group_size = EXCLUDED.group_size,
+        scope_id = EXCLUDED.scope_id,
+        target_other = EXCLUDED.target_other,
+        influence = EXCLUDED.influence,
+        physical_area = EXCLUDED.physical_area,
+        video_url = EXCLUDED.video_url,
+        doc_url = EXCLUDED.doc_url
 	RETURNING 
 		*
 	INTO STRICT 
@@ -251,26 +339,51 @@ LANGUAGE plpgsql;
 
 EXAMPLES:
 
-select * from users
+select * from initiatives
 
 
 to create a new row, the id property should be missing
 
-select * from users_upsert('{
-	"email": "abc@abc.com",
-	"first_name": "paulo",
-	"last_name": "vieira",
-	"pw_hash": "xyz"
+select * from initiatives_upsert('{
+    "name": "name",
+    "description": "description",
+    "type_id": "type_permaculture",
+    "type_other": "type other",
+    "domains_other": "domains other",
+    "url": "url",
+    "contact_name": "contact name",
+    "email": "email",
+    "phone": "phone",
+    "contact_other": "contact other",
+    "logo": "logo",
+    "street": "street",
+    "city": "city",
+    "postal_code": "postal code",
+    "coordinates": [4.4, 5.5],
+    "promoter": "promoter",
+    "start_date": "1985-04-05",
+    "registry_date": "2015-10-27",
+    "visitors_id": "type_permaculture",
+    "group_size": "9",
+    "scope_id": "type_permaculture",
+    "target_other": "target_other",
+    "influence": [4,8],
+    "physical_area": "physical_area",
+    "video_url": "video_url",
+    "doc_url": "doc_url"
 }');
 
 
 to update one or more fields of an existing row, the id property should be given;
 note that only the given properties will be updated; 
 
-select * from users_upsert('{
-    "id": 22,
-	"first_name": "pauloxx",
+select * from initiatives_upsert('{
+    "id": 7,
+    "name": "name changed",
+    "type_id": "type_transicao",
 }');
+
+
 
 
 */
@@ -279,13 +392,13 @@ select * from users_upsert('{
 
 
 
-DROP FUNCTION IF EXISTS users_delete(json);
+DROP FUNCTION IF EXISTS initiatives_delete(json);
 
-CREATE FUNCTION users_delete(input_obj json)
+CREATE FUNCTION initiatives_delete(input_obj json)
 RETURNS TABLE(deleted_id int) AS
 $$
 DECLARE
-	deleted_row users%ROWTYPE;
+	deleted_row initiatives%ROWTYPE;
 
 	-- fields to be used in WHERE clause
 	_id INT;
@@ -294,7 +407,7 @@ BEGIN
 	-- extract values to be used in the WHERE clause
 	SELECT (input_obj->>'id')::int INTO _id;
 
-	DELETE FROM users
+	DELETE FROM initiatives
 	WHERE id = _id
 	RETURNING *
 	INTO deleted_row;
@@ -313,8 +426,8 @@ LANGUAGE plpgsql;
 
 
 /*
-select * from users
+select * from initiatives
 
-select * from users_delete('{"id": 4}');
+select * from initiatives_delete('{"id": 2}');
 
 */

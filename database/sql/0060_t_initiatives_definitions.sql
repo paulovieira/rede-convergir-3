@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS initiatives_definitions(
-	id serial,
+	id            serial unique not null,
 	initiative_id int references initiatives(id)  on update cascade on delete cascade,
 	definition_id text references definitions(id) on update cascade on delete cascade,
 

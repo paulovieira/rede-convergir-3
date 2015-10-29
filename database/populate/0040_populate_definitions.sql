@@ -255,7 +255,7 @@ select * from definitions_upsert('
 select * from definitions_upsert('
     {
         "id": "scope_mixed",
-        "title": {"pt": "Misto"},
+        "title": {"pt": "Urbano e Rural"},
         "description": {"pt": ""}
     }
 ');

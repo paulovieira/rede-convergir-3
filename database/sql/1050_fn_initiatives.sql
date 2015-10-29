@@ -1,6 +1,7 @@
 /*
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
+    slug TEXT NOT NULL,
     description TEXT NOT NULL,
     type_id TEXT references definitions(id),  -- the possible types are defined with the prefix "type"
     type_other TEXT,  -- some specific type for this initiative; if this is not null, then type_id should be a reference to the dummy definition
@@ -29,6 +30,7 @@
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
+    status_id TEXT
 */
 
 
@@ -47,6 +49,7 @@ CREATE FUNCTION initiatives_read(input json DEFAULT '[{}]')
 RETURNS TABLE(
     id INT,
     name TEXT,
+    slug TEXT,
     description TEXT,
     type_id TEXT,
     type_other TEXT,
@@ -72,7 +75,8 @@ RETURNS TABLE(
     influence JSONB,
     physical_area TEXT,
     video_url TEXT,
-    doc_url TEXT
+    doc_url TEXT,
+    status_id TEXT
 )
 AS
 $BODY$
@@ -133,9 +137,9 @@ EXAMPLES:
 
 
 insert into initiatives values
-	(default, 'name', 'desc', NULL, 'type other', 'domain other', 'url', 'contact', 'email', 'phone', 'contact other', 'logo', 'street', 'city', 'postal code', '[1.1, 2.2]', 'promoter', '1980-01-01', '1981-01-01', default, NULL, '5', NULL, 'taret_other', '[1, 5]', '10ha', 'url', 'doc url'),
+	(default, 'name', 'slug', 'desc', NULL, 'type other', 'domain other', 'url', 'contact', 'email', 'phone', 'contact other', 'logo', 'street', 'city', 'postal code', '[1.1, 2.2]', 'promoter', '1980-01-01', '1981-01-01', default, NULL, '5', NULL, 'taret_other', '[1, 5]', '10ha', 'url', 'doc url', NULL),
 
-	(default, 'name2', 'desc2', NULL, 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', 'logo2', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, NULL, '52', NULL, 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2')
+	(default, 'name2', 'slug2', 'desc2', NULL, 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', 'logo2', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, NULL, '52', NULL, 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2', NULL)
 
 
 select * from  initiatives_read('{"id": 1}');
@@ -159,6 +163,7 @@ DECLARE
 
 	-- fields to be inserted or updated	
     _name TEXT;
+    _slug TEXT;
     _description TEXT;
     _type_id TEXT;
     _type_other TEXT;
@@ -185,6 +190,10 @@ DECLARE
     _physical_area TEXT;
     _video_url TEXT;
     _doc_url TEXT;
+    _status_id TEXT;
+    -- temp variables used to update the initiatives_definitions table
+    _array_definitions_ids JSON;
+    _definition_id TEXT;
 BEGIN
 
 	
@@ -206,6 +215,7 @@ BEGIN
 	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
 
 	SELECT COALESCE(input_obj->>'name',      current_row.name)      INTO _name;
+    SELECT COALESCE(input_obj->>'slug',  current_row.slug)      INTO _slug;
 	SELECT COALESCE(input_obj->>'description', current_row.description) INTO _description;
 	SELECT COALESCE(input_obj->>'type_id',  current_row.type_id)  INTO _type_id;
 	SELECT COALESCE(input_obj->>'type_other',  current_row.type_other)        INTO _type_other;
@@ -232,12 +242,14 @@ BEGIN
     SELECT COALESCE(input_obj->>'physical_area',            current_row.physical_area)    INTO _physical_area;
     SELECT COALESCE(input_obj->>'video_url',            current_row.video_url)    INTO _video_url;
     SELECT COALESCE(input_obj->>'doc_url',            current_row.doc_url)    INTO _doc_url;
+    SELECT COALESCE(input_obj->>'status_id',            current_row.status_id, 'status_alive')    INTO _status_id;
 
 	-- todo: add entry to the session history
 
 	INSERT INTO initiatives(
         id,
         name,
+        slug,
         description,
         type_id,
         type_other,
@@ -263,11 +275,13 @@ BEGIN
         influence,
         physical_area,
         video_url,
-        doc_url
+        doc_url,
+        status_id
 		)
 	VALUES (
         _id,
         _name,
+        _slug,
         _description,
         _type_id,
         _type_other,
@@ -293,10 +307,12 @@ BEGIN
         _influence,
         _physical_area,
         _video_url,
-        _doc_url
+        _doc_url,
+        _status_id
 		)
 	ON CONFLICT (id) DO UPDATE SET 
         name = EXCLUDED.name,
+        slug = EXCLUDED.slug,
         description = EXCLUDED.description,
         type_id = EXCLUDED.type_id,
         type_other = EXCLUDED.type_other,
@@ -322,13 +338,40 @@ BEGIN
         influence = EXCLUDED.influence,
         physical_area = EXCLUDED.physical_area,
         video_url = EXCLUDED.video_url,
-        doc_url = EXCLUDED.doc_url
+        doc_url = EXCLUDED.doc_url,
+        status_id = EXCLUDED.status_id
 	RETURNING 
 		*
 	INTO STRICT 
 		upserted_row;
 
 	RETURN NEXT upserted_row;
+
+    -- update the initiative_definitions table (if the array of definitions, which is given in the form of array of foreign keys, have been given)
+
+    -- domains
+    SELECT (input_obj->>'domains')::json INTO _array_definitions_ids;
+    IF json_typeof(_array_definitions_ids) = 'array' THEN
+
+        DELETE FROM initiatives_definitions WHERE initiative_id = upserted_row.id AND definition_id LIKE 'domain%';
+
+        FOR _definition_id IN ( select json_array_elements_text(_array_definitions_ids) ) LOOP
+            INSERT INTO initiatives_definitions VALUES(default, upserted_row.id, _definition_id);
+        END LOOP;
+
+    END IF;
+
+    -- target
+    SELECT (input_obj->>'target')::json INTO _array_definitions_ids;
+    IF json_typeof(_array_definitions_ids) = 'array' THEN
+
+        DELETE FROM initiatives_definitions WHERE initiative_id = upserted_row.id AND definition_id LIKE 'target%';
+
+        FOR _definition_id IN ( select json_array_elements_text(_array_definitions_ids) ) LOOP
+            INSERT INTO initiatives_definitions VALUES(default, upserted_row.id, _definition_id);
+        END LOOP;
+
+    END IF;
 
 RETURN;
 END;
@@ -346,6 +389,7 @@ to create a new row, the id property should be missing
 
 select * from initiatives_upsert('{
     "name": "name",
+    "slug": "slug",
     "description": "description",
     "type_id": null,
     "type_other": "type other",
@@ -370,12 +414,14 @@ select * from initiatives_upsert('{
     "influence": [4,8],
     "physical_area": "physical_area",
     "video_url": "video_url",
-    "doc_url": "doc_url"
+    "doc_url": "doc_url",
+    "status_id": null
 }');
 
 
 select * from initiatives_upsert('{
     "name": "name 2",
+    "slug": "slug 2",
     "description": "description 2",
     "type_id": null,
     "type_other": "type other 2",
@@ -400,7 +446,8 @@ select * from initiatives_upsert('{
     "influence": [4,8],
     "physical_area": "physical_area 2",
     "video_url": "video_url 2",
-    "doc_url": "doc_url 2"
+    "doc_url": "doc_url 2",
+    "status_id": null
 }');
 
 to update one or more fields of an existing row, the id property should be given;
@@ -409,6 +456,7 @@ note that only the given properties will be updated;
 select * from initiatives_upsert('{
     "id": 7,
     "name": "name changed",
+    "slug": "slug changed",
     "type_id": "type_transicao",
 }');
 

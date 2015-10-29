@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "BSD",
   "dependencies": {
+    "boom": "^2.10.0",
     "chairo": "^0.2.0",
     "change-case-keys": "0.0.4",
     "config": "^1.16.0",

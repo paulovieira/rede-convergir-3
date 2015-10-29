@@ -28,6 +28,7 @@ internals.transformMap = {
 
     "id": "id",
     "name": "name",
+    "slug": "slug",
     "description": "description",
     "typeId": "type_id",
     "typeOther": "type_other",
@@ -54,8 +55,60 @@ internals.transformMap = {
     "physicalArea": "physical_area",
     "videoUrl": "video_url",
     "docUrl": "doc_url",
+    "statusId": "status_id"
 };
 
+internals.correctDomain = function(payload){
+
+    var domains = payload.domains;
+    for(var i=0; i<domains.length; i++){
+        
+        if(domains[i] === "Agricultura"){
+            domains[i] = "domain_agriculture";
+        }
+        else if(domains[i] === "Pecuária"){
+            domains[i] = "domain_husbandry";
+        }
+        else if(domains[i] === "Bio-Construção"){
+            domains[i] = "domain_bioconstruction";
+        }
+        else if(domains[i] === "Eco-Tecnologia"){
+            domains[i] = "domain_ecotechnology";
+        }
+        else if(domains[i] === "Arte"){
+            domains[i] = "domain_art";
+        }
+        else if(domains[i] === "Educação"){
+            domains[i] = "domain_education";
+        }
+        else if(domains[i] === "Saúde"){
+            domains[i] = "domain_health";
+        }
+        else if(domains[i] === "Espiritualidade"){
+            domains[i] = "domain_spirituality";
+        }
+        else if(domains[i] === "Economia alternativa"){
+            domains[i] = "domain_economy";
+        }
+        else if(domains[i] === "Partilha de terra ou equipamentos"){
+            domains[i] = "domain_sharing";
+        }
+        else if(domains[i] === "Ferramentas Sociais"){
+            domains[i] = "domain_tools";
+        }
+        else{
+            
+            console.log("initiaitive: ", payload.name);
+            console.log("other domains: ", domains[i]);
+        }
+    }
+};
+
+internals.correctTarget = function(payload){
+
+    payload.target = [];
+
+};
 
 internals.initiativesReadAll = function(args, done){
 
@@ -101,8 +154,15 @@ internals.initiativesCreate = function(args, done){
 
     Utils.logCallsite(Hoek.callStack()[0]);
 
+    if(!args.payload.slug){
+        args.payload.slug = _s.slugify(args.payload.name);
+    }
+
+    internals.correctDomain(args.payload);
+    internals.correctTarget(args.payload);
+
     ChangeCase(args.payload, "underscored");
-    console.log("payload: ", args.payload);
+    //console.log("payload: ", args.payload);
     
     // 1) create the resources with the payload data
     Db.func('initiatives_upsert', JSON.stringify(args.payload))
@@ -193,25 +253,3 @@ internals.initiativesUpdate = function(args, done){
         });
 };
 
-
-/*
-
-
-curl  http://127.0.0.1:6001/api/v1/initiatives  \
-    --request POST  \
-    --header "Content-Type: application/json"  \
-    --data '{ "name": "name 3", "description": "description 3", "typeId": "type_permaculture", "typeOther": "type other 3", "domainsOther": "domains other 3", "url": "url 3", "contactName": "contact name 3", "email": "email 3", "phone": "phone 3", "contactOther": "contact other 3", "logo": "logo 3", "street": "street 3", "city": "city 3", "postalCode": "postal code 3", "coordinates": [4.4, 5.5], "promoter": "promoter 3", "startDate": "1985-04-05", "registryDate": "2015-10-27", "visitorsId": "visitors_yes", "groupSize": "9", "scopeId": "scope_urban", "targetOther": "targetOther 3", "influence": [4,8], "physicalArea": "physicalArea 3", "videoUrl": "videoUrl 3", "docUrl": "docUrl 3" }' 
-
-
-curl  http://127.0.0.1:6001/api/v1/initiatives  \
-    --request PUT  \
-    --header "Content-Type: application/json"  \
-    --data '{ "id": 14, "name": "name 3", "description": "description 3", "typeId": "type_permaculture", "typeOther": "type other 3", "domainsOther": "domains other 3", "url": "url 3", "contactName": "contact name 3", "email": "email 3", "phone": "phone 3", "contactOther": "contact other 3", "logo": "logo 3", "street": "street 3", "city": "city 3", "postalCode": "postal code 3", "coordinates": [4.4, 5.5], "promoter": "promoter 3", "startDate": "1985-04-05", "registryDate": "2015-10-27", "visitorsId": "visitors_yes", "groupSize": "9", "scopeId": "scope_urban", "targetOther": "targetOther 3", "influence": [4,8], "physicalArea": "physicalArea 3", "videoUrl": "videoUrl 3", "docUrl": "docUrl 3" }' 
-
-
-curl  http://127.0.0.1:6001/api/v1/initiatives/14  \
-    --request PUT  \
-    --header "Content-Type: application/json"  \
-    --data '{ "id": 14, "name": "name xyz" }' 
-
-*/

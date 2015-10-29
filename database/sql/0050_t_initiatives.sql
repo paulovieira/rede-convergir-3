@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS initiatives(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
     description TEXT NOT NULL,
     type_id TEXT references definitions(id) ON DELETE SET NULL,  -- the possible types are defined with the prefix "type"
     type_other TEXT,  -- some specific type for this initiative; if this is not null, then type_id should be a reference to the dummy definition
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS initiatives(
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
+    status_id TEXT references definitions(id) ON DELETE SET NULL default 'status_alive',  -- the possible status are defined with the prefix "status"
 
     CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array'),
     CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence) = 'array')

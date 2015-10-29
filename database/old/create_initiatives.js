@@ -2,7 +2,7 @@ var Fs = require("fs");
 var Wreck = require('wreck');
 
 
-Fs.readFile("./db_151022.json", function(err, data){
+Fs.readFile("./db_151022_new.json", function(err, data){
     if(err){
         throw err;
     }
@@ -11,7 +11,9 @@ Fs.readFile("./db_151022.json", function(err, data){
     console.log("number of initiatives: ", data.length);
 
     var offset = 0;
-    var batchSize = data.length;
+    var batchSize = 200;
+    //var batchSize = data.length;
+
     
     var initiative;
     for(var i = offset; i < offset + batchSize; i++){

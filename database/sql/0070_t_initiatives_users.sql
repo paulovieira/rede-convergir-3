@@ -6,5 +6,4 @@ CREATE TABLE IF NOT EXISTS initiatives_users(
 	primary key(initiative_id, user_id)
 );
 
--- PERFORM audit.audit_table('initiatives_users');
 SELECT audit.audit_table('initiatives_users');

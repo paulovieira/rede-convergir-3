@@ -8,14 +8,24 @@ CREATE TABLE IF NOT EXISTS events(
 	end_date timestamptz not null,
 	address text,
 	postal_code text,
-	city text,
+	city text not null,
 	files jsonb, -- must be an array
 	url text,
 	coordinates jsonb, -- must be an array
+
+	-- more fields
+	price text,
+	contact text,
+	target reference ...
+	facilitation TEXT
+	type_id reference ...
+	
+
+
+
 
 	CONSTRAINT files_must_be_array         CHECK (jsonb_typeof(files) = 'array'),
 	CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array')
 );
 
--- PERFORM audit.audit_table('events');
 SELECT audit.audit_table('events');

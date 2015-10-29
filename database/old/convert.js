@@ -136,8 +136,12 @@ Fs.readFile(inputFile, function(err, inputData) {
         var numberOfProjects = outputData.length;
     	console.log("Number of projects: ", numberOfProjects);
 
-        Fs.writeFile(outputFile, JSON.stringify(outputData, null, 4), "utf8", function(){
+        Fs.writeFile(outputFile, JSON.stringify(outputData, null, 4), "utf8", function(err){
 
+            if(err){
+                throw err;
+            }
+            
         	console.log("All done");	
         });
 

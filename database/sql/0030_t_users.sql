@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users(
 	photo text,
 	session_history jsonb default '[]', -- should be an array, see the constraint below
 	pw_hash text not null,
+	-- permissions;
 	created_at timestamptz not null default now(),
 	recover_code text,
 	recover_code_expiration timestamptz,
@@ -15,7 +16,6 @@ CREATE TABLE IF NOT EXISTS users(
     CONSTRAINT session_history_must_be_array   CHECK (jsonb_typeof(session_history) = 'array')
 );
 
---PERFORM audit.audit_table('users');
 SELECT audit.audit_table('users');
 
 -- NOTE: the table contains a dummy user; it is used for events that don't below to any registered user/initiative;

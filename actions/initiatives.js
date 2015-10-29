@@ -32,6 +32,7 @@ internals.transformMap = {
     "description": "description",
     "typeId": "type_id",
     "typeOther": "type_other",
+    "domains": "domains",
     "domainsOther": "domains_other",
     "url": "url",
     "contactName": "contact_name",
@@ -50,6 +51,7 @@ internals.transformMap = {
     "visitorsId": "visitors_id",
     "groupSize": "group_size",
     "scopeId": "scope_id",
+    "target": "target",
     "targetOther": "target_other",
     "influence": "influence",
     "physicalArea": "physical_area",
@@ -58,57 +60,6 @@ internals.transformMap = {
     "statusId": "status_id"
 };
 
-internals.correctDomain = function(payload){
-
-    var domains = payload.domains;
-    for(var i=0; i<domains.length; i++){
-        
-        if(domains[i] === "Agricultura"){
-            domains[i] = "domain_agriculture";
-        }
-        else if(domains[i] === "Pecuária"){
-            domains[i] = "domain_husbandry";
-        }
-        else if(domains[i] === "Bio-Construção"){
-            domains[i] = "domain_bioconstruction";
-        }
-        else if(domains[i] === "Eco-Tecnologia"){
-            domains[i] = "domain_ecotechnology";
-        }
-        else if(domains[i] === "Arte"){
-            domains[i] = "domain_art";
-        }
-        else if(domains[i] === "Educação"){
-            domains[i] = "domain_education";
-        }
-        else if(domains[i] === "Saúde"){
-            domains[i] = "domain_health";
-        }
-        else if(domains[i] === "Espiritualidade"){
-            domains[i] = "domain_spirituality";
-        }
-        else if(domains[i] === "Economia alternativa"){
-            domains[i] = "domain_economy";
-        }
-        else if(domains[i] === "Partilha de terra ou equipamentos"){
-            domains[i] = "domain_sharing";
-        }
-        else if(domains[i] === "Ferramentas Sociais"){
-            domains[i] = "domain_tools";
-        }
-        else{
-            
-            console.log("initiaitive: ", payload.name);
-            console.log("other domains: ", domains[i]);
-        }
-    }
-};
-
-internals.correctTarget = function(payload){
-
-    payload.target = [];
-
-};
 
 internals.initiativesReadAll = function(args, done){
 
@@ -128,11 +79,21 @@ internals.initiativesReadAll = function(args, done){
 
 };
 
+
 internals.initiativesRead = function(args, done){
 
     Utils.logCallsite(Hoek.callStack()[0]);
 
-    Db.func('initiatives_read', JSON.stringify(args.params.ids))
+    if(!args.params[args.searchField]){
+        return done(Boom.badImplementation("args.searchField is " + args.searchField + ", but there is no corresponding data in args.params"));
+    }
+    
+    var queryOptions = {};
+    queryOptions[args.searchField] = args.params[args.searchField];
+
+    //console.log("queryOptions: ", queryOptions);
+
+    Db.func('initiatives_read', JSON.stringify(queryOptions))
         .then(function(data) {
 
             if (data.length === 0) {
@@ -157,9 +118,6 @@ internals.initiativesCreate = function(args, done){
     if(!args.payload.slug){
         args.payload.slug = _s.slugify(args.payload.name);
     }
-
-    internals.correctDomain(args.payload);
-    internals.correctTarget(args.payload);
 
     ChangeCase(args.payload, "underscored");
     //console.log("payload: ", args.payload);
@@ -198,7 +156,6 @@ internals.initiativesCreate = function(args, done){
         });
 
 };
-
 
 
 internals.initiativesUpdate = function(args, done){

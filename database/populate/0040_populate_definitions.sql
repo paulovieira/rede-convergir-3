@@ -293,7 +293,15 @@ select * from definitions_upsert('
 select * from definitions_upsert('
     {
         "id": "status_alive",
-        "title": {"pt": "Vivo"},
+        "title": {"pt": "Ativo"},
+        "description": {"pt": ""}
+    }
+');
+
+select * from definitions_upsert('
+    {
+        "id": "status_germinate",
+        "title": {"pt": "A germinar"},
         "description": {"pt": ""}
     }
 ');
@@ -301,8 +309,34 @@ select * from definitions_upsert('
 select * from definitions_upsert('
     {
         "id": "status_inactive",
-        "title": {"pt": "Inactivo"},
+        "title": {"pt": "Inativo"},
         "description": {"pt": ""}
     }
 ');
 
+
+-- SEGMENT: event types
+
+select * from definitions_upsert('
+    {
+        "id": "event_type_course",
+        "title": {"pt": "Formação"},
+        "description": {"pt": ""}
+    }
+');
+
+select * from definitions_upsert('
+    {
+        "id": "event_type_seminar",
+        "title": {"pt": "Seminário"},
+        "description": {"pt": ""}
+    }
+');
+
+select * from definitions_upsert('
+    {
+        "id": "event_type_meetings",
+        "title": {"pt": "Encontro"},
+        "description": {"pt": ""}
+    }
+');

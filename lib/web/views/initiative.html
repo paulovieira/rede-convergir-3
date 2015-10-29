@@ -1,0 +1,62 @@
+{% extends "layouts/index_paper_kit.html" %}
+
+{% from "includes/navbar.html" import navbar %}
+
+{% block head %}
+
+{# call super to common css #}
+{{ super() }}
+
+<link href="/static/leaflet/mapbox-2.2.2/mapbox.standalone.css" rel="stylesheet" />
+
+<style>
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+{{ navbar(ctx) }}
+
+
+<div class="wrapper">
+    <div class="container">
+        <div style="margin-top: 25px;" class="row">
+
+            {# LEFT COLUMN #}
+            <div style="xborder: solid 1px;"  class="col-sm-5">
+
+
+            </div>
+
+            {# RIGHT COLUMN #}
+            <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px;" class="col-sm-7">
+
+
+
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 40px;">
+            <div class="col-sm-12">
+                PARA FAZER:
+                <ul>
+                    <li>adicionar legenda para fazer a ligação de "caso de estudo" / "participante" e as respectivas cores</li>
+                    <li>clustering dos marcadores</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{{ super() }}
+
+<script>
+console.log("initiative");
+
+</script>
+
+{% endblock %}
+

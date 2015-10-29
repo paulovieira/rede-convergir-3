@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS definitions(
 	description jsonb not null
 );
 
---PERFORM audit.audit_table('definitions');
 SELECT audit.audit_table('definitions');
 
 /*

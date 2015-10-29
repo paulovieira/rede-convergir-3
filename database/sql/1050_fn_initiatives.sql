@@ -76,7 +76,9 @@ RETURNS TABLE(
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
-    status_id TEXT
+    status_id TEXT,
+    domains JSON,  -- join with the domains CTE
+    target JSON  -- join with the domains CTE
 )
 AS
 $BODY$
@@ -86,8 +88,12 @@ DECLARE
 	command text;
 	number_conditions INT;
 
+    domains_cte TEXT;
+    target_cte TEXT;
+
 	-- fields to be used in WHERE clause
 	_id INT;
+    _slug TEXT;
 BEGIN
 
 -- if the json argument is an object, convert it to an array (of 1 object)
@@ -95,13 +101,57 @@ IF  json_typeof(input) = 'object' THEN
     SELECT json_build_array(input) INTO input;
 END IF;
 
+-- for each initiative, get an array of the domains
+domains_cte := '
+    SELECT 
+        i.id AS initiative_id, 
+        (CASE 
+            WHEN COUNT(idef) = 0 THEN ''[]''::json  
+            ELSE json_agg(idef.definition_id) 
+        END ) AS domains
+    FROM initiatives i
+    LEFT JOIN initiatives_definitions idef
+    ON i.id = idef.initiative_id
+    WHERE idef.definition_id LIKE ''domain%''
+    GROUP BY i.id
+';
+
+-- for each initiative, get an array of the target groups
+target_cte := '
+    SELECT 
+        i.id AS initiative_id, 
+        (CASE 
+            WHEN COUNT(idef) = 0 THEN ''[]''::json  
+            ELSE json_agg(idef.definition_id) 
+        END ) AS target
+    FROM initiatives i
+    LEFT JOIN initiatives_definitions idef
+    ON i.id = idef.initiative_id
+    WHERE idef.definition_id LIKE ''target%''
+    GROUP BY i.id
+';
 
 FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
-	command := 'SELECT i.* FROM initiatives i';
+    command := 'WITH '
+        || 'domains_cte AS ( ' || domains_cte ||  ' ), '
+        || 'target_cte  AS ( ' || target_cte  ||  ' ) '
+        || 'SELECT 
+                i.* ,
+                domains_cte.domains,
+                target_cte.target
+            FROM initiatives i
+            INNER JOIN domains_cte
+            ON i.id = domains_cte.initiative_id
+            INNER JOIN target_cte
+            ON i.id = target_cte.initiative_id            
+        ';
+
+--	command := 'SELECT i.* FROM initiatives i';
 			
 	-- extract values to be (optionally) used in the WHERE clause
-	SELECT input_obj->>'id' INTO _id;
+	SELECT input_obj->>'id'   INTO _id;
+    SELECT input_obj->>'slug' INTO _slug;
 	
 	number_conditions := 0;
 	
@@ -114,6 +164,16 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
 		command = command || format(' i.id = %L', _id);
 		number_conditions := number_conditions + 1;
 	END IF;
+
+    -- criteria: slug
+    IF _slug IS NOT NULL THEN
+        IF number_conditions = 0 THEN  command = command || ' WHERE';  
+        ELSE                           command = command || ' AND';
+        END IF;
+
+        command = command || format(' i.slug = %L', _slug);
+        number_conditions := number_conditions + 1;
+    END IF;
 
 	command := command || ' ORDER BY i.id;';
 
@@ -143,8 +203,8 @@ insert into initiatives values
 
 
 select * from  initiatives_read('{"id": 1}');
-select * from  initiatives_read('[{"id": 3}, {"id": 4}]');
 
+select * from  initiatives_read('[{"slug": "biovilla"}, {"id": 2778}]');
 */
 
 

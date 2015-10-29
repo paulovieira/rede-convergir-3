@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS initiatives(
     street TEXT,
     city TEXT,
     postal_code TEXT,
+    country_code TEXT,   -- ISO 3166 code
     coordinates JSONB,  -- should be an array, see the constraint below
     promoter TEXT,
     start_date TIMESTAMPTZ,
@@ -36,7 +37,6 @@ CREATE TABLE IF NOT EXISTS initiatives(
     CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence) = 'array')
 );
 
--- PERFORM audit.audit_table('initiatives');
 SELECT audit.audit_table('initiatives');
 
 -- NOTE: the table contains a dummy initiative; it is used for events that don't below to any registered user/initiative;

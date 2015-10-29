@@ -4,5 +4,4 @@ CREATE TABLE IF NOT EXISTS config(
 	value JSONB NOT NULL
 );
 
---PERFORM audit.audit_table('config');
 SELECT audit.audit_table('config');

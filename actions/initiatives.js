@@ -43,6 +43,7 @@ internals.transformMap = {
     "street": "street",
     "city": "city",
     "postalCode": "postal_code",
+    "countryCode": "country_code",
     "coordinates": "coordinates",
     "promoter": "promoter",
     "startDate": "start_date",

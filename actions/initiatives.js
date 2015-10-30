@@ -63,6 +63,8 @@ internals.transformMap = {
 
 internals.initiativesRead = function(args, done){
 
+    // TODO: add cache with catbox-memory here
+
     Utils.logCallsite(Hoek.callStack()[0]);
 
     Db.func("initiatives_read", JSON.stringify(args.searchConditions))

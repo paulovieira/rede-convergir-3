@@ -17,7 +17,7 @@ module.exports = function(options){
 
     var seneca = this;
 
-    seneca.add("role:initiatives, cmd:readAll", internals.initiativesReadAll);
+    //seneca.add("role:initiatives, cmd:readAll", internals.initiativesRead);
     seneca.add("role:initiatives, cmd:read",    internals.initiativesRead);
     seneca.add("role:initiatives, cmd:create",  internals.initiativesCreate);
     seneca.add("role:initiatives, cmd:update",  internals.initiativesUpdate);
@@ -61,51 +61,18 @@ internals.transformMap = {
 };
 
 
-internals.initiativesReadAll = function(args, done){
-
-    Utils.logCallsite(Hoek.callStack()[0]);
-	
-    Db.func("initiatives_read")
-        .then(function(data){
-
-            data = args.raw === true ? data : Hoek.transform(data, internals.transformMap);
-            return done(null, data);
-        })
-        .catch(function(err) {
-
-            err = err.isBoom ? err : Boom.badImplementation(err.msg, err);
-            return done(err);
-        });
-
-};
-
-
 internals.initiativesRead = function(args, done){
 
     Utils.logCallsite(Hoek.callStack()[0]);
 
-    if(!args.params[args.searchField]){
-        return done(Boom.badImplementation("args.searchField is " + args.searchField + ", but there is no corresponding data in args.params"));
-    }
-    
-    var queryOptions = {};
-    queryOptions[args.searchField] = args.params[args.searchField];
-
-    //console.log("queryOptions: ", queryOptions);
-
-    Db.func('initiatives_read', JSON.stringify(queryOptions))
+    Db.func("initiatives_read", JSON.stringify(args.searchConditions))
         .then(function(data) {
-
-            if (data.length === 0) {
-                throw Boom.notFound("The resource does not exist.");
-            }
 
             data = args.raw === true ? data : Hoek.transform(data, internals.transformMap);
             return done(null, data);
         })
         .catch(function(err) {
 
-            err = err.isBoom ? err : Boom.badImplementation(err.msg, err);
             return done(err);
         });
 };
@@ -123,6 +90,7 @@ internals.initiativesCreate = function(args, done){
     //console.log("payload: ", args.payload);
     
     // 1) create the resources with the payload data
+
     Db.func('initiatives_upsert', JSON.stringify(args.payload))
 
         // 2) read the created resources (to obtain the joined data)
@@ -141,7 +109,7 @@ internals.initiativesCreate = function(args, done){
 
         // 3) apply the object transform and reply
         .then(function(data){
-
+console.log("\n data: \n", data);
             if (data.length === 0) {
                 throw Boom.notFound("The resource does not exist anymore.");
             }

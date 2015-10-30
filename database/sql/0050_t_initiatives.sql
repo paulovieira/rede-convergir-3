@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS initiatives(
     street TEXT,
     city TEXT,
     postal_code TEXT,
-    country_code TEXT,   -- ISO 3166 code
+    country_code TEXT REFERENCES countries(code) ON DELETE SET NULL DEFAULT 'PT',   -- ISO 3166 code
     coordinates JSONB,  -- should be an array, see the constraint below
     promoter TEXT,
     start_date TIMESTAMPTZ,

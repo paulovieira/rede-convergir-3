@@ -16,6 +16,7 @@
     street TEXT,
     city TEXT,
     postal_code TEXT,
+    country_code TEXT,
     coordinates JSONB,  -- should be an array, see the constraint below
     promoter TEXT,
     start_date TIMESTAMPTZ,
@@ -63,6 +64,7 @@ RETURNS TABLE(
     street TEXT,
     city TEXT,
     postal_code TEXT,
+    country_code TEXT,
     coordinates JSONB,
     promoter TEXT,
     start_date TIMESTAMPTZ,
@@ -94,6 +96,7 @@ DECLARE
 	-- fields to be used in WHERE clause
 	_id INT;
     _slug TEXT;
+    _type TEXT;
 BEGIN
 
 -- if the json argument is an object, convert it to an array (of 1 object)
@@ -112,9 +115,11 @@ domains_cte := '
     FROM initiatives i
     LEFT JOIN initiatives_definitions idef
     ON i.id = idef.initiative_id
-    WHERE idef.definition_id LIKE ''domain%''
+    AND idef.definition_id LIKE ''domain%''
     GROUP BY i.id
 ';
+
+-- NOTE: in the query above, the filter for LIKE should in the "ON" part, not in the "WHERE" part (because the where removes lines at the end, so we would loose stuff)
 
 -- for each initiative, get an array of the target groups
 target_cte := '
@@ -127,7 +132,7 @@ target_cte := '
     FROM initiatives i
     LEFT JOIN initiatives_definitions idef
     ON i.id = idef.initiative_id
-    WHERE idef.definition_id LIKE ''target%''
+    AND idef.definition_id LIKE ''target%''
     GROUP BY i.id
 ';
 
@@ -152,6 +157,7 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
 	-- extract values to be (optionally) used in the WHERE clause
 	SELECT input_obj->>'id'   INTO _id;
     SELECT input_obj->>'slug' INTO _slug;
+    SELECT input_obj->>'type' INTO _type;
 	
 	number_conditions := 0;
 	
@@ -175,9 +181,19 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
         number_conditions := number_conditions + 1;
     END IF;
 
+    -- criteria: type
+    IF _type IS NOT NULL THEN
+        IF number_conditions = 0 THEN  command = command || ' WHERE';  
+        ELSE                           command = command || ' AND';
+        END IF;
+
+        command = command || format(' i.type_id = %L', _type);
+        number_conditions := number_conditions + 1;
+    END IF;
+
 	command := command || ' ORDER BY i.id;';
 
-	--raise notice 'command: %', command;
+	raise notice 'command: %', command;
 
 --	IF number_conditions > 0 THEN
 		RETURN QUERY EXECUTE command;
@@ -237,6 +253,7 @@ DECLARE
     _street TEXT;
     _city TEXT;
     _postal_code TEXT;
+    _country_code TEXT;
     _coordinates JSONB;
     _promoter TEXT;
     _start_date TIMESTAMPTZ;
@@ -289,6 +306,7 @@ BEGIN
     SELECT COALESCE(input_obj->>'street',            current_row.street)    INTO _street;
     SELECT COALESCE(input_obj->>'city',            current_row.city)    INTO _city;
     SELECT COALESCE(input_obj->>'postal_code',            current_row.postal_code)    INTO _postal_code;
+    SELECT COALESCE(input_obj->>'country_code',            current_row.country_code, 'PT')    INTO _country_code;
     SELECT COALESCE((input_obj->>'coordinates')::jsonb,            current_row.coordinates)    INTO _coordinates;
     SELECT COALESCE(input_obj->>'promoter',            current_row.promoter)    INTO _promoter;
     SELECT COALESCE((input_obj->>'start_date')::timestamptz, current_row.start_date)    INTO _start_date;
@@ -323,6 +341,7 @@ BEGIN
         street,
         city,
         postal_code,
+        country_code,
         coordinates,
         promoter,
         start_date,
@@ -355,6 +374,7 @@ BEGIN
         _street,
         _city,
         _postal_code,
+        _country_code,
         _coordinates,
         _promoter,
         _start_date,
@@ -386,6 +406,7 @@ BEGIN
         street = EXCLUDED.street,
         city = EXCLUDED.city,
         postal_code = EXCLUDED.postal_code,
+        country_code = EXCLUDED.country_code,
         coordinates = EXCLUDED.coordinates,
         promoter = EXCLUDED.promoter,
         start_date = EXCLUDED.start_date,

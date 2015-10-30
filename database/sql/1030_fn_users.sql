@@ -16,6 +16,7 @@ RETURNS TABLE(
 	email TEXT,
 	first_name TEXT,
 	last_name TEXT,
+	country_code TEXT,
 	bio TEXT,
 	url TEXT,
 	photo TEXT,
@@ -129,6 +130,7 @@ DECLARE
 	_email TEXT;
 	_first_name TEXT;
 	_last_name TEXT;
+	_country_code TEXT;
 	_pw_hash TEXT;
 	_bio TEXT;
 	_url TEXT;
@@ -161,6 +163,7 @@ BEGIN
 	SELECT COALESCE(input_obj->>'email',      current_row.email)      INTO _email;
 	SELECT COALESCE(input_obj->>'first_name', current_row.first_name) INTO _first_name;
 	SELECT COALESCE(input_obj->>'last_name',  current_row.last_name)  INTO _last_name;
+	SELECT COALESCE(input_obj->>'country_code',current_row.country_code, 'PT')  INTO _country_code;
 	SELECT COALESCE(input_obj->>'bio',        current_row.bio)        INTO _bio;
 	SELECT COALESCE(input_obj->>'url',        current_row.url)        INTO _url;
 	SELECT COALESCE(input_obj->>'photo',      current_row.photo)      INTO _photo;
@@ -175,6 +178,7 @@ BEGIN
 		email,
 		first_name,
 		last_name,
+		country_code,
 		bio,
 		url,
 		photo,
@@ -187,6 +191,7 @@ BEGIN
 		_email,
 		_first_name,
 		_last_name,
+		_country_code,
 		_bio,
 		_url,
 		_photo,
@@ -198,6 +203,7 @@ BEGIN
 		email = EXCLUDED.email,
 		first_name = EXCLUDED.first_name,
 		last_name = EXCLUDED.last_name,
+		country_code = EXCLUDED.country_code,
 		bio = EXCLUDED.bio,
 		url = EXCLUDED.url,
 		photo = EXCLUDED.photo,

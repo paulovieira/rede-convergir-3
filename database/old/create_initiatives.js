@@ -11,8 +11,8 @@ Fs.readFile("./db_151022_new.json", function(err, data){
     console.log("number of initiatives: ", data.length);
 
     var offset = 0;
-    var batchSize = 200;
-    //var batchSize = data.length;
+    //var batchSize = 1;
+    var batchSize = data.length;
 
     
     var initiative;

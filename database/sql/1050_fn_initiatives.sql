@@ -88,20 +88,15 @@ $BODY$
 DECLARE
 	input_obj json;
 	command text;
-	number_conditions INT;
 
     domains_cte TEXT;
     target_cte TEXT;
 
-	-- fields to be used in WHERE clause
-	_id INT;
-    _slug TEXT;
-    _type TEXT;
 BEGIN
 
 -- if the json argument is an object, convert it to an array (of 1 object)
 IF  json_typeof(input) = 'object' THEN
-    SELECT json_build_array(input) INTO input;
+    input := json_build_array(input);
 END IF;
 
 -- for each initiative, get an array of the domains
@@ -149,55 +144,29 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
             INNER JOIN domains_cte
             ON i.id = domains_cte.initiative_id
             INNER JOIN target_cte
-            ON i.id = target_cte.initiative_id            
-        ';
+            ON i.id = target_cte.initiative_id
+            WHERE true ';
 
---	command := 'SELECT i.* FROM initiatives i';
-			
-	-- extract values to be (optionally) used in the WHERE clause
-	SELECT input_obj->>'id'   INTO _id;
-    SELECT input_obj->>'slug' INTO _slug;
-    SELECT input_obj->>'type' INTO _type;
-	
-	number_conditions := 0;
-	
 	-- criteria: id
-	IF _id IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' i.id = %L', _id);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'id' IS NOT NULL THEN
+		command := command || format(' AND i.id = %L', input_obj->>'id');
 	END IF;
 
     -- criteria: slug
-    IF _slug IS NOT NULL THEN
-        IF number_conditions = 0 THEN  command = command || ' WHERE';  
-        ELSE                           command = command || ' AND';
-        END IF;
-
-        command = command || format(' i.slug = %L', _slug);
-        number_conditions := number_conditions + 1;
+    IF input_obj->>'slug' IS NOT NULL THEN
+        command := command || format(' AND i.slug = %L', input_obj->>'slug');
     END IF;
 
-    -- criteria: type
-    IF _type IS NOT NULL THEN
-        IF number_conditions = 0 THEN  command = command || ' WHERE';  
-        ELSE                           command = command || ' AND';
-        END IF;
-
-        command = command || format(' i.type_id = %L', _type);
-        number_conditions := number_conditions + 1;
+    -- criteria: type_id
+    IF input_obj->>'type_id' IS NOT NULL THEN
+        command := command || format(' AND i.type_id = %L', input_obj->>'type_id');
     END IF;
 
 	command := command || ' ORDER BY i.id;';
 
-	raise notice 'command: %', command;
+--	raise notice 'command: %', command;
 
---	IF number_conditions > 0 THEN
-		RETURN QUERY EXECUTE command;
---	END IF;
+	RETURN QUERY EXECUTE command;
 
 
 END LOOP;
@@ -279,48 +248,59 @@ BEGIN
     IF _id IS NULL THEN
         SELECT nextval(pg_get_serial_sequence('initiatives', 'id')) INTO _id;     
     ELSE
-        -- add an explicit row lock
+        -- check if the row exists; if not an exception will be thrown with error code
+        -- P0002 (query returned no rows); this happens automatically because we are
+        -- using STRICT INTO ("the query must return exactly one row or a run-time error will
+        -- be reported" - http://www.postgresql.org/docs/9.5/static/plpgsql-statements.html)
+
+        -- note: FOR UPDATE prevents the row from being locked, modified or deleted by other 
+        -- transactions until the current transaction ends. See:
+        -- http://www.postgresql.org/docs/9.4/static/explicit-locking.html
+        --SELECT * FROM initiatives where id = _id FOR UPDATE INTO STRICT current_row;
         SELECT * FROM initiatives where id = _id FOR UPDATE INTO current_row;
 
-        IF current_row.id IS NULL THEN
-            RETURN;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION USING 
+                    ERRCODE = 'no_data_found',
+                    MESSAGE = 'row with id ' || _id ||' does not exist';
         END IF;
+
     END IF;
 
 
 	--raise notice 'current: %s', current_row.email;
 	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
 
-	SELECT COALESCE(input_obj->>'name',      current_row.name)      INTO _name;
-    SELECT COALESCE(input_obj->>'slug',  current_row.slug)      INTO _slug;
-	SELECT COALESCE(input_obj->>'description', current_row.description) INTO _description;
-	SELECT COALESCE(input_obj->>'type_id',  current_row.type_id)  INTO _type_id;
-	SELECT COALESCE(input_obj->>'type_other',  current_row.type_other)        INTO _type_other;
-	SELECT COALESCE(input_obj->>'domains_other',        current_row.domains_other)        INTO _domains_other;
-	SELECT COALESCE(input_obj->>'url',      current_row.url)      INTO _url;
-	SELECT COALESCE(input_obj->>'contact_name',    current_row.contact_name)    INTO _contact_name;
-	SELECT COALESCE(input_obj->>'email',        current_row.email)    INTO _email;
-    SELECT COALESCE(input_obj->>'phone',            current_row.phone)    INTO _phone;
-    SELECT COALESCE(input_obj->>'contact_other',            current_row.contact_other)    INTO _contact_other;
-    SELECT COALESCE(input_obj->>'logo',            current_row.logo)    INTO _logo;
-    SELECT COALESCE(input_obj->>'street',            current_row.street)    INTO _street;
-    SELECT COALESCE(input_obj->>'city',            current_row.city)    INTO _city;
-    SELECT COALESCE(input_obj->>'postal_code',            current_row.postal_code)    INTO _postal_code;
-    SELECT COALESCE(input_obj->>'country_code',            current_row.country_code, 'PT')    INTO _country_code;
-    SELECT COALESCE((input_obj->>'coordinates')::jsonb,            current_row.coordinates)    INTO _coordinates;
-    SELECT COALESCE(input_obj->>'promoter',            current_row.promoter)    INTO _promoter;
-    SELECT COALESCE((input_obj->>'start_date')::timestamptz, current_row.start_date)    INTO _start_date;
-    SELECT COALESCE((input_obj->>'registry_date')::timestamptz, current_row.registry_date, now())    INTO _registry_date;
-    SELECT COALESCE((input_obj->>'update_date')::timestamptz,   now())    INTO _update_date;
-    SELECT COALESCE(input_obj->>'visitors_id',            current_row.visitors_id)    INTO _visitors_id;
-    SELECT COALESCE(input_obj->>'group_size',            current_row.group_size)    INTO _group_size;
-    SELECT COALESCE(input_obj->>'scope_id',            current_row.scope_id)    INTO _scope_id;
-    SELECT COALESCE(input_obj->>'target_other',            current_row.target_other)    INTO _target_other;
-    SELECT COALESCE((input_obj->>'influence')::jsonb,            current_row.influence)    INTO _influence;
-    SELECT COALESCE(input_obj->>'physical_area',            current_row.physical_area)    INTO _physical_area;
-    SELECT COALESCE(input_obj->>'video_url',            current_row.video_url)    INTO _video_url;
-    SELECT COALESCE(input_obj->>'doc_url',            current_row.doc_url)    INTO _doc_url;
-    SELECT COALESCE(input_obj->>'status_id',            current_row.status_id, 'status_alive')    INTO _status_id;
+	_name          := COALESCE(input_obj->>'name',      current_row.name);
+    _slug          := COALESCE(input_obj->>'slug',  current_row.slug);
+	_description   := COALESCE(input_obj->>'description', current_row.description);
+	_type_id       := COALESCE(input_obj->>'type_id',  current_row.type_id);
+	_type_other    := COALESCE(input_obj->>'type_other',  current_row.type_other);
+	_domains_other := COALESCE(input_obj->>'domains_other',        current_row.domains_other);
+	_url           := COALESCE(input_obj->>'url',      current_row.url);
+	_contact_name  := COALESCE(input_obj->>'contact_name',    current_row.contact_name);
+	_email         := COALESCE(input_obj->>'email',        current_row.email);
+    _phone         := COALESCE(input_obj->>'phone',            current_row.phone);
+    _contact_other := COALESCE(input_obj->>'contact_other',            current_row.contact_other);
+    _logo          := COALESCE(input_obj->>'logo',            current_row.logo);
+    _street        := COALESCE(input_obj->>'street',            current_row.street);
+    _city          := COALESCE(input_obj->>'city',            current_row.city);
+    _postal_code   := COALESCE(input_obj->>'postal_code',            current_row.postal_code);
+    _country_code  := COALESCE(input_obj->>'country_code',            current_row.country_code, 'PT');
+    _coordinates   := COALESCE((input_obj->>'coordinates')::jsonb,            current_row.coordinates);
+    _promoter      := COALESCE(input_obj->>'promoter',            current_row.promoter);
+    _start_date    := COALESCE((input_obj->>'start_date')::timestamptz, current_row.start_date);
+    _registry_date := COALESCE((input_obj->>'registry_date')::timestamptz, current_row.registry_date, now());
+    _update_date   := COALESCE((input_obj->>'update_date')::timestamptz,   now());
+    _visitors_id   := COALESCE(input_obj->>'visitors_id',            current_row.visitors_id);
+    _group_size    := COALESCE(input_obj->>'group_size',            current_row.group_size);
+    _scope_id      := COALESCE(input_obj->>'scope_id',            current_row.scope_id);
+    _target_other  := COALESCE(input_obj->>'target_other',            current_row.target_other);
+    _influence     := COALESCE((input_obj->>'influence')::jsonb,            current_row.influence);
+    _physical_area := COALESCE(input_obj->>'physical_area',            current_row.physical_area);
+    _video_url     := COALESCE(input_obj->>'video_url',            current_row.video_url);
+    _doc_url       := COALESCE(input_obj->>'doc_url',            current_row.doc_url);
+    _status_id     := COALESCE(input_obj->>'status_id',            current_row.status_id, 'status_alive');
 
 	-- todo: add entry to the session history
 
@@ -535,10 +515,10 @@ to update one or more fields of an existing row, the id property should be given
 note that only the given properties will be updated; 
 
 select * from initiatives_upsert('{
-    "id": 7,
+    "id": 328,
     "name": "name changed",
     "slug": "slug changed",
-    "type_id": "type_transicao",
+    "type_id": "type_transition"
 }');
 
 
@@ -553,29 +533,24 @@ select * from initiatives_upsert('{
 DROP FUNCTION IF EXISTS initiatives_delete(json);
 
 CREATE FUNCTION initiatives_delete(input_obj json)
-RETURNS TABLE(deleted_id int) AS
+RETURNS SETOF initiatives AS
 $$
 DECLARE
 	deleted_row initiatives%ROWTYPE;
 
-	-- fields to be used in WHERE clause
-	_id INT;
 BEGIN
 
-	-- extract values to be used in the WHERE clause
-	SELECT (input_obj->>'id')::int INTO _id;
+    -- if the row does not exist an exception will be thrown with error code P0002
+    -- (query returned no rows); this happens automatically because we are
+    -- using STRICT INTO ("the query must return exactly one row or a run-time error will
+    -- be reported" - http://www.postgresql.org/docs/9.5/static/plpgsql-statements.html)
 
 	DELETE FROM initiatives
-	WHERE id = _id
+	WHERE id = (input_obj->>'id')::int
 	RETURNING *
-	INTO deleted_row;
+	INTO STRICT deleted_row;
 
-	deleted_id   := deleted_row.id;
-
-	IF deleted_row.id IS NOT NULL THEN
-		SELECT deleted_row.id INTO deleted_id;
-		RETURN NEXT;
-	END IF;
+    RETURN NEXT deleted_row;
 
 RETURN;
 END;

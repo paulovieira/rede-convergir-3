@@ -36,57 +36,35 @@ DECLARE
 	command text;
 	number_conditions INT;
 
-	-- fields to be used in WHERE clause
-	_id INT;
-	_email TEXT;
 BEGIN
 
 -- if the json argument is an object, convert it to an array (of 1 object)
 IF  json_typeof(input) = 'object' THEN
-	SELECT json_build_array(input) INTO input;
+    input := json_build_array(input);
 END IF;
-
 
 
 FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
-	command := 'SELECT u.* FROM users u';
-
-			
-	-- extract values to be (optionally) used in the WHERE clause
-	SELECT input_obj->>'id' INTO _id;
-	SELECT input_obj->>'email' INTO _email;
-	
-	number_conditions := 0;
+	command := 'SELECT u.* 
+				FROM users u
+				WHERE true ';
 	
 	-- criteria: id
-	IF _id IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' id = %L', _id);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'id' IS NOT NULL THEN
+		command = command || format(' AND id = %L ', input_obj->>'id');
 	END IF;
 
 	-- criteria: email
-	IF _email IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' email = %L', _email);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'email' IS NOT NULL THEN
+		command = command || format(' AND email = %L ', input_obj->>'email');
 	END IF;
 
 	command := command || ' ORDER BY u.id;';
 
 	--raise notice 'command: %', command;
 
-	--IF number_conditions > 0 THEN
-		RETURN QUERY EXECUTE command;
-	--END IF;
-
+	RETURN QUERY EXECUTE command;
 
 END LOOP;
 		
@@ -100,9 +78,9 @@ LANGUAGE plpgsql;
 EXAMPLES:
 
 insert into users values
-	(default, 'paulovieira@gmail.com', 'paulo', 'vieira', 'my bio', 'my url', 'my photo', default, 'pw hash', default),
+	(default, 'paulovieira@gmail.com', 'paulo', 'vieira', default, 'my bio', 'my url', 'my photo', default, 'pw hash', default),
 
-	(default, 'dummy@gmail.com', 'dummy', 'last name', 'my dummy bio', 'my dummy url', 'my dummy photo', default, 'pw dummy hash', default)
+	(default, 'dummy@gmail.com', 'dummy', 'last name', default, 'my dummy bio', 'my dummy url', 'my dummy photo', default, 'pw dummy hash', default)
 
 
 select * from  users_read('{"id": 2}');

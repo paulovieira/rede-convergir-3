@@ -22,70 +22,41 @@ $BODY$
 DECLARE
 	input_obj json;
 	command text;
-	number_conditions INT;
 
-	-- fields to be used in WHERE clause
-	_id INT;
-	_initiative_id INT;
-	_user_id INT;
 BEGIN
 
 -- if the json argument is an object, convert it to an array (of 1 object)
 IF  json_typeof(input) = 'object' THEN
-	SELECT json_build_array(input) INTO input;
+	input := json_build_array(input);
 END IF;
 
 
 FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
-	command := 'SELECT i.* FROM initiatives_users i';
-			
-	-- extract values to be (optionally) used in the WHERE clause
-	SELECT input_obj->>'id' INTO _id;
-	SELECT input_obj->>'initiative_id' INTO _initiative_id;
-	SELECT input_obj->>'user_id' INTO _user_id;
-	
-	number_conditions := 0;
-	
-	-- criteria: id
-	IF _id IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
+	command := 'SELECT i.* 
+				FROM initiatives_users i
+				WHERE true ';
 
-		command = command || format(' i.id = %L', _id);
-		number_conditions := number_conditions + 1;
+	-- criteria: id
+	IF input_obj->>'id' IS NOT NULL THEN
+		command = command || format(' AND i.id = %L ', input_obj->>'id');
 	END IF;
 
 	-- criteria: initiative_id
-	IF _initiative_id IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' initiative_id = %L ', _initiative_id);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'initiative_id' IS NOT NULL THEN
+		command = command || format(' AND initiative_id = %L ', input_obj->>'initiative_id');
 	END IF;
 
 	-- criteria: user_id 
-	IF _user_id IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' user_id = %L ', _user_id);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'user_id' IS NOT NULL THEN
+		command = command || format(' AND user_id = %L ', input_obj->>'user_id');
 	END IF;
-
 
 	command := command || ' ORDER BY i.id;';
 
 	--raise notice 'command: %', command;
 
-	--IF number_conditions > 0 THEN
-		RETURN QUERY EXECUTE command;
-	--END IF;
-
+	RETURN QUERY EXECUTE command;
 
 END LOOP;
 		
@@ -103,8 +74,8 @@ select * from users
 select * from initiatives_users
 
 insert into initiatives_users values
-	(default, 1, 'type_permaculture'),
-	(default, 1, 'type_transicao')
+	(default, 388, 1),
+	(default, 400, 1)
 
 
 select * from  initiatives_users_read('{"initiative_id": 6}');

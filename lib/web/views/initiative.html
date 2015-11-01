@@ -23,19 +23,81 @@
     <div class="container">
         <div style="margin-top: 25px;" class="row">
 
-            {# LEFT COLUMN #}
-            <div style="xborder: solid 1px;"  class="col-sm-5">
+            <div style=""  class="col-sm-offset-1 col-sm-10">
+                <h3 class="text-center">{{ ctx.data.name }}</h3>
+            </div>
+            
 
+            {# LEFT COLUMN #}
+            <div style="xborder: 1px solid #bdbdbd; border-radius: 5px; padding: 10px;"  class="col-sm-offset-1 col-sm-7">
+
+                <p>
+
+                <div title="Website (abrir numa nova janela / tab)"><span style="" class="attribute-title icon-margin"><i class="fa fa-external-link"></i></span> <a target="_blank" href="{{ ctx.data.url }}">{{ ctx.data.url }}</a></div>
+
+                <div title="Pessoa de contacto"><span style="" class="attribute-title icon-margin"><i class="fa fa-user"></i></span> {{ ctx.data.contactName }}</div>
+
+                <div title="Email de contacto"><span style=""><i class="fa fa-at" class="attribute-title icon-margin"></i></span> <a href="mailto:{{ ctx.data.email }}">{{ ctx.data.email }}</a></div>
+
+                {% if ctx.data.promoter %}
+                <div title="Promotor / Desenvolvido por"><span style="" class="attribute-title icon-margin"><i class="fa fa-user-plus"></i></span> {{ ctx.data.promoter }}</div>
+                {% endif %}
+
+                </p>
+
+                <p>
+                <div title="Endereço"> <span style="" class="attribute-title icon-margin" ><i class="fa fa-map-marker"  ></i></span> {{ ctx.data.fullAddress }}</div>
+
+                <div title="Telefone"><span style="" class="attribute-title icon-margin"><i class="fa fa-phone"></i></span> {{ ctx.data.phone | default("(não disponível)") }}</div>
+
+                {% if ctx.data.contactOther %}
+                <div title="Outro contacto"><span style="" class="attribute-title icon-margin"><i class="fa fa-phone"></i></span> {{ ctx.data.contactOther }}</div>
+                {% endif %}
+                </p>
 
             </div>
 
             {# RIGHT COLUMN #}
-            <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px;" class="col-sm-7">
+            <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px;" class="col-sm-3">
 
 
 
             </div>
         </div>
+
+        <hr>
+
+        {% if ctx.data.videoUrl %}
+        <div style="margin-top: 25px;" class="row">
+            <div style=""  class="col-sm-offset-1 col-sm-10">
+
+                <p>Vídeo de apresentação:</p>
+                <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px 10px 5px 10px;">
+                    {{ ctx.data.videoUrl }}
+                </div>
+
+            </div>
+        </div>  
+        {% endif %}
+
+        <div style="margin-top: 25px;" class="row">
+            <div style=""  class="col-sm-offset-1 col-sm-10">
+
+                <p>
+                <span class="attribute-title">Fundado em:</span> {{ ctx.data.startDateHuman }}
+                <br>
+                <span class="attribute-title">Tipo de projecto ou iniciativa:</span> {{ ctx.data.type }}
+
+                <div title="Email de contacto"><span style=""><i class="fa fa-at" class="attribute-title icon-margin"></i></span> <a href="mailto:{{ ctx.data.email }}">{{ ctx.data.email }}</a></div>
+
+                {% if ctx.data.promoter %}
+                <div title="Promotor / Desenvolvido por"><span style="" class="attribute-title icon-margin"><i class="fa fa-user-plus"></i></span> {{ ctx.data.promoter }}</div>
+                {% endif %}
+
+                </p>
+
+            </div>
+        </div>  
 
         <div class="row" style="margin-top: 40px;">
             <div class="col-sm-12">
@@ -54,8 +116,8 @@
 {{ super() }}
 
 <script>
-console.log("initiative");
-
+RC.videoHeight = parseInt((9/16)*$("iframe").width());
+$("iframe").attr("height", RC.videoHeight);
 </script>
 
 {% endblock %}

@@ -25,43 +25,29 @@ DECLARE
 	command text;
 	number_conditions INT;
 
-	-- fields to be used in WHERE clause
-	_key TEXT;
 BEGIN
 
 
 -- if the json argument is an object, convert it to an array (of 1 object)
 IF  json_typeof(input) = 'object' THEN
-	SELECT json_build_array(input) INTO input;
+    input := json_build_array(input);
 END IF;
 
 
 FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
-	command := 'SELECT key, value FROM config ';
-			
-	-- extract values to be (optionally) used in the WHERE clause
-	SELECT input_obj->>'key' INTO _key;
-	
-	number_conditions := 0;
-	
+	command := 'SELECT * 
+				FROM config 
+				WHERE true ';
+
 	-- criteria: key
-	IF _key IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' key = %L', _key);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'key' IS NOT NULL THEN
+		command = command || format(' AND key = %L', input_obj->>'key');
 	END IF;
-
 	
 	command := command || ' ORDER BY key;';
 
-	--IF number_conditions > 0 THEN
-		RETURN QUERY EXECUTE command;
-	--END IF;
-
+	RETURN QUERY EXECUTE command;
 
 END LOOP;
 		

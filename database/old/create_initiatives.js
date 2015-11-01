@@ -33,7 +33,7 @@ Fs.readFile("./db_151022_new.json", function(err, data){
                 throw err;
             }
 
-            if(res.statusCode!==200){
+            if(res.statusCode!==201){
                 console.log(payload.toString());
             }
             //console.log("res: \n", res);

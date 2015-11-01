@@ -24,56 +24,37 @@ DECLARE
 	command text;
 	number_conditions INT;
 
-	-- fields to be used in WHERE clause
-	_id TEXT;
-	_id_starts_with TEXT;
 BEGIN
 
 -- if the json argument is an object, convert it to an array (of 1 object)
 IF  json_typeof(input) = 'object' THEN
-	SELECT json_build_array(input) INTO input;
+    input := json_build_array(input);
 END IF;
 
 
 FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
-	command := 'SELECT d.* FROM definitions d';
-			
-	-- extract values to be (optionally) used in the WHERE clause
-	SELECT input_obj->>'id' INTO _id;
-	SELECT input_obj->>'id_starts_with' INTO _id_starts_with;
-	
-	number_conditions := 0;
+	command := 'SELECT d.* 
+				FROM definitions d
+				WHERE true ';
 	
 	-- criteria: id
-	IF _id IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		command = command || format(' d.id = %L', _id);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'id' IS NOT NULL THEN
+		command = command || format(' AND d.id = %L ', input_obj->>'id');
 	END IF;
 
 	-- criteria: id_starts_with
-	IF _id_starts_with IS NOT NULL THEN
-		IF number_conditions = 0 THEN  command = command || ' WHERE';  
-		ELSE                           command = command || ' AND';
-		END IF;
-
-		-- using the position utility function instead of " id LIKE %_id_starts_with"
-		command = command || format(' position(%L in d.id) > 0', _id_starts_with);
-		number_conditions := number_conditions + 1;
+	IF input_obj->>'id_starts_with' IS NOT NULL THEN
+		-- we are using the position utility function instead of " id LIKE %...'"
+		-- (much easier to read)
+		command = command || format(' AND position(%L in d.id) = 1 ', input_obj->>'id_starts_with');
 	END IF;
 
 	command := command || ' ORDER BY d.id;';
 
 	--raise notice 'command: %', command;
 
-	--IF number_conditions > 0 THEN
-		RETURN QUERY EXECUTE command;
-	--END IF;
-
+	RETURN QUERY EXECUTE command;
 
 END LOOP;
 		

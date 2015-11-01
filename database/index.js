@@ -3,10 +3,11 @@ var Path = require("path");
 var pgpLib = require('pg-promise');
 var PgMonitor = require("pg-monitor");
 var Config = require("config");
-var Q = require("q");
+//var Q = require("q");
+var Promise = require('bluebird');
 
 var pgpOptions = {
-    promiseLib: Q
+    promiseLib: Promise
 };
 
 PgMonitor.attach(pgpOptions, null, true);

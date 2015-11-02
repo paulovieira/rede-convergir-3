@@ -1,3 +1,5 @@
+-- TODO: extract the json objects to a separate file and call psql separately fir each object
+
 -- -- SEGMENT: types
 
 select * from definitions_upsert('

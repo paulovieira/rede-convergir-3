@@ -16,14 +16,11 @@ CREATE TABLE IF NOT EXISTS events(
 	-- more fields
 	price text,
 	contact text,
-	target reference ...
-	facilitation TEXT
-	type_id reference ...
+	-- target  (comes from t_initiatives_definitions - 1 initiative can have many domains); the possible targets are defined with the prefix "target"
+	target_other TEXT,
+	facilitation TEXT,
+	type_id TEXT references definitions(id) ON DELETE SET NULL,  -- the possible types are defined with the prefix "event_type"
 	
-
-
-
-
 	CONSTRAINT files_must_be_array         CHECK (jsonb_typeof(files) = 'array'),
 	CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array')
 );

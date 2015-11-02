@@ -1,5 +1,7 @@
 BEGIN;
 
+DELETE FROM countries;
+
 COPY countries (name, code, id) FROM stdin DELIMITER '|';
 Afghanistan|AF|4
 Albania|AL|8

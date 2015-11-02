@@ -16,6 +16,7 @@ module.exports = function(options){
 
     var seneca = this;
 
+    seneca.add("role:initiatives, cmd:read, test:hello-world" ,    internals.initiativesReadTest);
     seneca.add("role:initiatives, cmd:read",    internals.initiativesRead);
     seneca.add("role:initiatives, cmd:create",  internals.initiativesCreate);
     seneca.add("role:initiatives, cmd:upsert",  internals.initiativesUpsert);
@@ -57,6 +58,29 @@ internals.fromDbToPublicAPI = {
     "videoUrl": "video_url",
     "docUrl": "doc_url",
     "statusId": "status_id"
+};
+
+
+internals.initiativesReadTest = function(args, done){
+
+    // TODO: add cache with catbox-memory here
+
+    Utils.logCallsite(Hoek.callStack()[0]);
+
+    var data = [{hello: "world from action"}];
+    return done(null, data);
+
+    // Db.func("initiatives_read", JSON.stringify(args.searchConditions))
+    //     .then(function(data) {
+
+    //         data = args.raw === true ? data : Hoek.transform(data, internals.fromDbToPublicAPI);
+    //         return done(null, data);
+    //     })
+    //     .catch(function(err) {
+
+    //         err = err.isBoom ? err : Boom.badImplementation(Utils.getErrMsg(err));
+    //         return done(err);
+    //     });
 };
 
 

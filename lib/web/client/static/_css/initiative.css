@@ -1,0 +1,20 @@
+ul.list-initiative-types > li {
+	margin-bottom: 10px;
+}
+/*
+div.field-title {
+	margin-bottom: 10px;
+}
+*/
+
+div.list-block {
+	margin-bottom: 15px;
+}
+
+div.list-block > div {
+	margin-bottom: 2px;
+}
+
+.has-domain {
+	color: green;
+}

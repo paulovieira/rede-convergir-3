@@ -25,7 +25,7 @@ module.exports = function(grunt) {
     internals.statics.base = {};
     internals.statics.base.input = [
         'lib/web/client/static/jquery/jquery-1.11.2.js', 
-        'lib/web/client/static/bootstrap/3.3.5-original/js/bootstrap.js' 
+        'lib/web/client/static/bootstrap/3.3.5/js/bootstrap.js' 
     ];
 
     internals.statics.base.output = Path.join(

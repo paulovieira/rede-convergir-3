@@ -38,7 +38,7 @@ select * from definitions_upsert('
     {
         "id": "type_tools",
         "title": {"pt": "Ferramentas e Tecnologias"},
-        "description": {"pt": "Projectos e ferramentas de tecnologias criativas e sustentáveis: Reuso e Reciclagem criativa, Ferramentas Manuais, Bicicletas e bicicletas eléctricas, Fogão de lenha eficiente e de baixa poluição, Combustíveis de restos orgânicos, Gaseificação de madeira, Co-geração, Micro-hydro & Aero geradores, Cerca eléctrica de geração de energia renovável, Armazenagem de energia, Engenharia de Transição"}
+        "description": {"pt": "Projectos e ferramentas de tecnologias criativas e sustentáveis: Reuso e Reciclagem criativa, Ferramentas Manuais, Bicicletas e bicicletas eléctricas, Fogão de lenha eficiente e de baixa poluição, Combustíveis de restos orgânicos, Gaseificação de madeira, Co-geração, Micro-hydro &amp; Aero geradores, Cerca eléctrica de geração de energia renovável, Armazenagem de energia, Engenharia de Transição"}
     }
 ');
 
@@ -62,7 +62,7 @@ select * from definitions_upsert('
     {
         "id": "type_economy",
         "title": {"pt": "Economia e Finanças"},
-        "description": {"pt": "Ferramentas financeiras que promovam a sustentabilidade económica: Redes de Trocas e Economia solidária, Economia solidária, Moeda local e regional, Rodovias específicas para carros cheios, boleias & Compartilhar o carro, Investimento Ético & Comércio Justo, WWOOFing & Redes similares, Mercados de Produtores & Agricultura apoiada na Comunidade (AAC), Cotas de Energia Cambiável, Análise dos Ciclos da Vida & Contabilidade Emergética"}
+        "description": {"pt": "Ferramentas financeiras que promovam a sustentabilidade económica: Redes de Trocas e Economia solidária, Economia solidária, Moeda local e regional, Rodovias específicas para carros cheios, boleias &amp; Compartilhar o carro, Investimento Ético &amp; Comércio Justo, WWOOFing &amp; Redes similares, Mercados de Produtores &amp; Agricultura apoiada na Comunidade (AAC), Cotas de Energia Cambiável, Análise dos Ciclos da Vida &amp; Contabilidade Emergética"}
     }
 ');
 

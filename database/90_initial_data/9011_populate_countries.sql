@@ -1,5 +1,6 @@
 BEGIN;
 
+-- here we are not using upsert, so delete all data first
 DELETE FROM countries;
 
 COPY countries (name, code, id) FROM stdin DELIMITER '|';

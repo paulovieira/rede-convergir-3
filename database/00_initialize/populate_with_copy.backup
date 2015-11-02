@@ -38,6 +38,7 @@ visitors_confirmation|{"pt": "Sujeito a confirmação após contacto"}|{"pt": ""
 status_alive|{"pt": "Ativo"}|{"pt": ""}
 status_germinate|{"pt": "A germinar"}|{"pt": ""}
 status_inactive|{"pt": "Inativo"}|{"pt": ""}
+status_pending|{"pt": "Pendente"}|{"pt": ""}
 event_type_course|{"pt": "Formação"}|{"pt": ""}
 event_type_seminar|{"pt": "Seminário"}|{"pt": ""}
 event_type_meetings|{"pt": "Encontro"}|{"pt": ""}

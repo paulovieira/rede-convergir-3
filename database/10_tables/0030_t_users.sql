@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users(
 	email text unique not null,
 	first_name text,
 	last_name text,
+	country_code text references countries(code) ON DELETE SET NULL DEFAULT 'PT',
 	bio text,
 	url text,
 	photo text,

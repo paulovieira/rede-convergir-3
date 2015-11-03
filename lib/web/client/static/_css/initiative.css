@@ -1,5 +1,5 @@
 ul.list-initiative-definitions > li {
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
 
 .field-title {
@@ -12,10 +12,10 @@ div.list-block {
 }
 
 div.list-block > div {
-	margin-bottom: 2px;
+	margin-bottom: 3px;
 }
 
-.has-domain {
+.has-definition {
 	color: #006600;
 }
 

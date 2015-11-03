@@ -3,55 +3,52 @@
 <div class="row" style="margin: 0;">
 
     <div style="" class="col-sm-6">
-        <div title="Agricultura (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_agriculture') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_agriculture') }}"></i> Agricultura
+        <div class="{{ ctx.data.target | getDefinitionClass('target_children') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_children') }}"></i> 
+            {{ ctx.definitions['target_children']['title']['pt'] }}
         </div>
 
-        <div title="Pecuária (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_husbandry') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_husbandry') }}"></i> Pecuária
+        <div class="{{ ctx.data.target | getDefinitionClass('target_teenagers') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_teenagers') }}"></i> 
+            {{ ctx.definitions['target_teenagers']['title']['pt'] }}
         </div>
 
-        <div title="Bio-Construção (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_bioconstruction') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_bioconstruction') }}"></i> Bio-Construção
+        <div class="{{ ctx.data.target | getDefinitionClass('target_adults') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_adults') }}"></i> 
+            {{ ctx.definitions['target_adults']['title']['pt'] }}
         </div>
 
-        <div title="Eco-Tecnologia (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_ecotechnology') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_ecotechnology') }}"></i> Eco-Tecnologia
-        </div>
-        
-        <div title="Arte (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_art') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_art') }}"></i> Arte
+        <div class="{{ ctx.data.target | getDefinitionClass('target_seniors') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_seniors') }}"></i> 
+            {{ ctx.definitions['target_seniors']['title']['pt'] }}
         </div>
 
-        <div title="Educação (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_education') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_education') }}"></i> Educação
-        </div>
     </div>
     <div style="" class="col-sm-6">
 
-        <div title="Saúde (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_health') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_health') }}"></i> Saúde
+        <div class="{{ ctx.data.target | getDefinitionClass('target_families') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_families') }}"></i> 
+            {{ ctx.definitions['target_families']['title']['pt'] }}
         </div>
 
-        <div title="Espiritualidade (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_spirituality') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_spirituality') }}"></i> Espiritualidade
+        <div class="{{ ctx.data.target | getDefinitionClass('target_handicapped') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_handicapped') }}"></i> 
+            {{ ctx.definitions['target_handicapped']['title']['pt'] }}
         </div>
 
-        <div title="Economia alternativa (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_economy') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_economy') }}"></i> Economia alternativa
+        <div class="{{ ctx.data.target | getDefinitionClass('target_special_need_children') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_special_need_children') }}"></i> 
+            {{ ctx.definitions['target_special_need_children']['title']['pt'] }}
         </div>
 
-        <div title="Partilha de terra ou equipamentos (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_sharing') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_sharing') }}"></i> Partilha de terra ou equipamentos
+        <div class="{{ ctx.data.target | getDefinitionClass('target_general') }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo('target_general') }}"></i> 
+            {{ ctx.definitions['target_general']['title']['pt'] }}
         </div>
 
-        <div title="Ferramentas Sociais (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_tools') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_tools') }}"></i> Ferramentas Sociais
-        </div>
-
-        {% if ctx.data.domainsOther %}
-        <div style="margin-top: 3px;" title="Outro domínios de interesse">
-            Outros: {{ ctx.data.domainsOther }}
+        {% if ctx.data.targetOther %}
+        <div style="margin-top: 3px;" title="Outro público-alvo" class="has-definition">
+            Outros: {{ ctx.data.targetOther }}
         </div>
         {% endif %}
     </div>

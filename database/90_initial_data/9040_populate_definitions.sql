@@ -175,7 +175,7 @@ select * from definitions_upsert('
     {
         "id": "target_children",
         "title": {"pt": "Crianças"},
-        "description": {"pt": ""}
+        "description": {"pt": "Crianças - descricao"}
     }
 ');
 
@@ -183,7 +183,7 @@ select * from definitions_upsert('
     {
         "id": "target_teenagers",
         "title": {"pt": "Adolescentes"},
-        "description": {"pt": ""}
+        "description": {"pt": "Adolescentes - descricao"}
     }
 ');
 
@@ -191,7 +191,7 @@ select * from definitions_upsert('
     {
         "id": "target_adults",
         "title": {"pt": "Adultos"},
-        "description": {"pt": ""}
+        "description": {"pt": "Adultos - descricao"}
     }
 ');
 
@@ -199,7 +199,7 @@ select * from definitions_upsert('
     {
         "id": "target_seniors",
         "title": {"pt": "Idosos"},
-        "description": {"pt": ""}
+        "description": {"pt": "Idosos - descricao"}
     }
 ');
 
@@ -207,7 +207,7 @@ select * from definitions_upsert('
     {
         "id": "target_families",
         "title": {"pt": "Famílias"},
-        "description": {"pt": ""}
+        "description": {"pt": "Famílias - descricao"}
     }
 ');
 
@@ -215,7 +215,7 @@ select * from definitions_upsert('
     {
         "id": "target_handicapped",
         "title": {"pt": "Pessoas com deficiência"},
-        "description": {"pt": ""}
+        "description": {"pt": "Pessoas com deficiência - descricao"}
     }
 ');
 
@@ -223,7 +223,7 @@ select * from definitions_upsert('
     {
         "id": "target_special_need_children",
         "title": {"pt": "Crianças com necessidades educativas especiais"},
-        "description": {"pt": ""}
+        "description": {"pt": "Crianças com necessidades educativas especiais - descricao"}
     }
 ');
 
@@ -231,7 +231,7 @@ select * from definitions_upsert('
     {
         "id": "target_general",
         "title": {"pt": "Geral"},
-        "description": {"pt": ""}
+        "description": {"pt": "Geral - descricao"}
     }
 ');
 
@@ -242,7 +242,7 @@ select * from definitions_upsert('
     {
         "id": "scope_urban",
         "title": {"pt": "Urbano"},
-        "description": {"pt": ""}
+        "description": {"pt": "Urbano - descricao"}
     }
 ');
 
@@ -250,7 +250,7 @@ select * from definitions_upsert('
     {
         "id": "scope_rural",
         "title": {"pt": "Rural"},
-        "description": {"pt": ""}
+        "description": {"pt": "Rural - descricao"}
     }
 ');
 
@@ -258,7 +258,7 @@ select * from definitions_upsert('
     {
         "id": "scope_mixed",
         "title": {"pt": "Urbano e Rural"},
-        "description": {"pt": ""}
+        "description": {"pt": "Urbano e Rural - descricao"}
     }
 ');
 
@@ -269,7 +269,7 @@ select * from definitions_upsert('
     {
         "id": "visitors_yes",
         "title": {"pt": "Sim"},
-        "description": {"pt": ""}
+        "description": {"pt": "Sim - descricao"}
     }
 ');
 
@@ -277,7 +277,7 @@ select * from definitions_upsert('
     {
         "id": "visitors_no",
         "title": {"pt": "Não"},
-        "description": {"pt": ""}
+        "description": {"pt": "Não - descricao"}
     }
 ');
 
@@ -285,7 +285,7 @@ select * from definitions_upsert('
     {
         "id": "visitors_confirmation",
         "title": {"pt": "Sujeito a confirmação após contacto"},
-        "description": {"pt": ""}
+        "description": {"pt": "Sujeito a confirmação após contacto - descricao"}
     }
 ');
 
@@ -296,7 +296,7 @@ select * from definitions_upsert('
     {
         "id": "status_alive",
         "title": {"pt": "Ativo"},
-        "description": {"pt": ""}
+        "description": {"pt": "Ativo - descricao"}
     }
 ');
 
@@ -304,7 +304,7 @@ select * from definitions_upsert('
     {
         "id": "status_germinate",
         "title": {"pt": "A germinar"},
-        "description": {"pt": ""}
+        "description": {"pt": "A germinar - descricao"}
     }
 ');
 
@@ -312,7 +312,7 @@ select * from definitions_upsert('
     {
         "id": "status_inactive",
         "title": {"pt": "Inativo"},
-        "description": {"pt": ""}
+        "description": {"pt": "Inativo - descricao"}
     }
 ');
 
@@ -320,7 +320,7 @@ select * from definitions_upsert('
     {
         "id": "status_pending",
         "title": {"pt": "Pendente"},
-        "description": {"pt": ""}
+        "description": {"pt": "Pendente - descricao"}
     }
 ');
 
@@ -331,7 +331,7 @@ select * from definitions_upsert('
     {
         "id": "event_type_course",
         "title": {"pt": "Formação"},
-        "description": {"pt": ""}
+        "description": {"pt": "Formação - descricao"}
     }
 ');
 
@@ -339,7 +339,7 @@ select * from definitions_upsert('
     {
         "id": "event_type_seminar",
         "title": {"pt": "Seminário"},
-        "description": {"pt": ""}
+        "description": {"pt": "Seminário - descricao"}
     }
 ');
 
@@ -347,6 +347,6 @@ select * from definitions_upsert('
     {
         "id": "event_type_meetings",
         "title": {"pt": "Encontro"},
-        "description": {"pt": ""}
+        "description": {"pt": "Encontro - descricao"}
     }
 ');

@@ -16,81 +16,26 @@ module.exports = function(options){
 
     var seneca = this;
 
-    seneca.add("role:initiatives, cmd:read, test:hello-world" ,    internals.initiativesReadTest);
-    seneca.add("role:initiatives, cmd:read",    internals.initiativesRead);
-    seneca.add("role:initiatives, cmd:create",  internals.initiativesCreate);
-    seneca.add("role:initiatives, cmd:upsert",  internals.initiativesUpsert);
-    seneca.add("role:initiatives, cmd:delete",  internals.initiativesDelete);
+    seneca.add("role:definitions, cmd:read",    internals.definitionsRead);
+    // seneca.add("role:initiatives, cmd:create",  internals.initiativesCreate);
+    // seneca.add("role:initiatives, cmd:upsert",  internals.initiativesUpsert);
+    // seneca.add("role:initiatives, cmd:delete",  internals.initiativesDelete);
 };
 
 internals.fromDbToPublicAPI = {
-
     "id": "id",
-    "name": "name",
-    "slug": "slug",
-    "description": "description",
-    "typeId": "type_id",
-    "typeOther": "type_other",
-    "domains": "domains",
-    "domainsOther": "domains_other",
-    "url": "url",
-    "contactName": "contact_name",
-    "email": "email",
-    "phone": "phone",
-    "contactOther": "contact_other",
-    "logo": "logo",
-    "street": "street",
-    "city": "city",
-    "postalCode": "postal_code",
-    "countryCode": "country_code",
-    "coordinates": "coordinates",
-    "promoter": "promoter",
-    "startDate": "start_date",
-    "registryDate": "registry_date",
-    "updateDate": "update_date",
-    "visitorsId": "visitors_id",
-    "groupSize": "group_size",
-    "scopeId": "scope_id",
-    "target": "target",
-    "targetOther": "target_other",
-    "influence": "influence",
-    "physicalArea": "physical_area",
-    "videoUrl": "video_url",
-    "docUrl": "doc_url",
-    "statusId": "status_id"
+    "title": "title",
+    "description": "description"
 };
 
 
-internals.initiativesReadTest = function(args, done){
+internals.definitionsRead = function(args, done){
 
     // TODO: add cache with catbox-memory here
 
     Utils.logCallsite(Hoek.callStack()[0]);
 
-    var data = [{hello: "world from action"}];
-    return done(null, data);
-
-    // Db.func("initiatives_read", JSON.stringify(args.searchConditions))
-    //     .then(function(data) {
-
-    //         data = args.raw === true ? data : Hoek.transform(data, internals.fromDbToPublicAPI);
-    //         return done(null, data);
-    //     })
-    //     .catch(function(err) {
-
-    //         err = err.isBoom ? err : Boom.badImplementation(Utils.getErrMsg(err));
-    //         return done(err);
-    //     });
-};
-
-
-internals.initiativesRead = function(args, done){
-
-    // TODO: add cache with catbox-memory here
-
-    Utils.logCallsite(Hoek.callStack()[0]);
-
-    Db.func("initiatives_read", JSON.stringify(args.searchConditions))
+    Db.func("definitions_read", JSON.stringify(args.searchConditions))
         .then(function(data) {
 
             data = args.raw === true ? data : Hoek.transform(data, internals.fromDbToPublicAPI);
@@ -104,61 +49,6 @@ internals.initiativesRead = function(args, done){
 };
 
 /*
-internals.initiativesCreate = function(args, done){
-
-    Utils.logCallsite(Hoek.callStack()[0]);
-
-    // TODO: make sure the slug is unique
-    if(!args.data.slug){
-        args.data.slug = _s.slugify(args.data.name);
-    }
-
-    ChangeCase(args.data, "underscored");
-    //console.log("data: ", args.data);
-    
-    // 1) create the resources with the payload data (which is in args.data)
-    Db.func('initiatives_upsert', JSON.stringify(args.data))
-
-        // 2) read the created resources (to obtain the joined data)
-        .then(function(createdData) {
-
-            if (createdData.length === 0) {
-                throw Boom.badImplementation("The resource could not be created.");
-            }
-
-            return Db.func("initiatives_read", JSON.stringify({ id: createdData[0].id }));
-        })
-
-        // 3) apply the object transform and reply
-        .then(function(createdData){
-
-            if (createdData.length === 0) {
-                throw Boom.badImplementation("The resource was created but does not exist anymore.");
-            }
-
-            createdData = args.raw === true ? createdData : Hoek.transform(createdData, internals.fromDbToPublicAPI);
-            return done(null, createdData);
-        })
-
-        .catch(function(err) {
-
-            //  PL/pgSQL Error "unique_violation" (probably because of a repeated slug)
-            if(err.code === "23505"){
-                if(err.detail.indexOf("slug") >= 0){
-                    err = Boom.conflict("The provided value for slug is already in use by other initiative. Please choose a different slug.");
-                }
-                else{
-                    err = Boom.conflict();
-                }
-            }
-
-            err = err.isBoom ? err : Boom.badImplementation(Utils.getErrMsg(err));
-            return done(err);
-        });
-
-};
-*/
-
 internals.initiativesUpsert = function(args, done){
 
     Utils.logCallsite(Hoek.callStack()[0]);
@@ -268,3 +158,4 @@ debugger;
             return done(err);
         });
 };
+*/

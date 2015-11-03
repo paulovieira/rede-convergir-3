@@ -1,4 +1,4 @@
-{% macro modal_domains_more_info() %}
+{% macro modal_domains_more_info(ctx) %}
 
 <!-- Modal - definitions of domains of interest -->
 <div class="modal fade" id="domains-more-info" tabindex="-1" role="dialog" >
@@ -6,52 +6,52 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Domínios de interesse</h4>
+                <h4 class="modal-title">Domínios de interesse</h4>
             </div>
             <div class="modal-body">
                 <ul class="list-initiative-definitions">
                     <li>
-                        <b>Agricultura:</b> Agricultura - biológica ou natural
+                        <b>{{ ctx.definitions.domain_agriculture.title.pt }}:</b> {{ ctx.definitions.domain_agriculture.description.pt }}
                     </li>
 
                     <li>
-                        <b>Pecuária:</b> Pecuária - criação biológica de animais
+                        <b>{{ ctx.definitions.domain_husbandry.title.pt }}:</b> {{ ctx.definitions.domain_husbandry.description.pt }}
                     </li>
 
                     <li>
-                         <b>Bio-Construção:</b> Bio-Construção - usar recursos naturais locais para a construção de edificações
+                         <b>{{ ctx.definitions.domain_bioconstruction.title.pt }}:</b> {{ ctx.definitions.domain_bioconstruction.description.pt }}
                     </li>
 
                     <li>
-                        <b>Eco-Tecnologia:</b> Eco-Tecnologia - que possam ser usadas para o desenvolvimento sustentável
+                        <b>{{ ctx.definitions.domain_ecotechnology.title.pt }}:</b> {{ ctx.definitions.domain_ecotechnology.description.pt }}
                     </li>
 
                     <li>
-                        <b>Arte:</b> Arte - ligada à sustentabilidade
+                        <b>{{ ctx.definitions.domain_art.title.pt }}:</b> {{ ctx.definitions.domain_art.description.pt }}
                     </li>
 
                     <li>
-                        <b>Educação:</b> Educação - desde acções de formação isoladas até projectos pedagógicos continuados e plurianuais, que inclua a componente da natureza e que promovam o desenvolvimento holístico do ser humano
+                        <b>{{ ctx.definitions.domain_education.title.pt }}:</b> {{ ctx.definitions.domain_education.description.pt }}
                     </li>
 
                     <li>
-                        <b>Saúde:</b> Saúde - prevenção e tratamentos naturais
+                        <b>{{ ctx.definitions.domain_health.title.pt }}:</b> {{ ctx.definitions.domain_health.description.pt }}
                     </li>
 
                     <li>
-                        <b>Espiritualidade:</b> Espiritualidade - práticas espirituais com peso na vida da comunidade e na sua identidade
+                        <b>{{ ctx.definitions.domain_spirituality.title.pt }}:</b> {{ ctx.definitions.domain_spirituality.description.pt }}
                     </li>
 
                     <li>
-                        <b>Economia alternativa:</b> Economia alternativa - promoção e desenvolvimento de sistemas económicos alternativos à economia formal, como sistemas de troca directa, bancos de tempo ou moedas locais
+                        <b>{{ ctx.definitions.domain_economy.title.pt }}:</b> {{ ctx.definitions.domain_economy.description.pt }}
                     </li>
 
                     <li>
-                        <b>Partilha de terra ou equipamentos:</b> Partilha de terra ou equipamentos - bancos de terras ou partilha de equipamentos
+                        <b>{{ ctx.definitions.domain_sharing.title.pt }}:</b> {{ ctx.definitions.domain_sharing.description.pt }}
                     </li>
 
                     <li>
-                        <b>Ferramentas Sociais: </b> Ferramentas sociais - uso de metodologias e ferramentas que visam o equilíbrio e harmonia social do projecto
+                        <b>{{ ctx.definitions.domain_tools.title.pt }}: </b> {{ ctx.definitions.domain_tools.description.pt }}
                     </li>
 
                 </ul>

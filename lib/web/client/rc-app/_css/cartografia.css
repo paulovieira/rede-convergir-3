@@ -56,7 +56,7 @@ body {
 }
 
 .map-menu-open {
-    min-width: 700px;
+    /*min-width: 700px;*/
     height: 100%;
  }
 

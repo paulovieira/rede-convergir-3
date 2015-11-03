@@ -32,7 +32,7 @@
         <div style="margin-top: 10px;" class="row">
         
             <div style=""  class="col-sm-offset-1 col-sm-10">
-                <h3 style="letter-spacing: 1px; font-size: 2.2em;" class="text-center">{{ ctx.data.name }}</h3>
+                <h2 style="letter-spacing: 1px; xfont-size: 2.2em;" class="text-center">{{ ctx.data.name }}</h2>
 
                 {% if ctx.data.logo %}
                 <a target="_blank" href="{{ ctx.data.url }}">
@@ -55,7 +55,7 @@
                         {{ ctx.definitions[ctx.data.typeId]['title']['pt'] | default(ctx.data.typeOther, true) }}
                         </span>
                         <a href="#" data-toggle="modal" data-target="#types-more-info" title="Clique para ver mais detalhes sobre os diferentes tipos de iniciativa">
-                            <i style="font-size: 95%;" class="fa fa-info-circle"></i>
+                            <i style="font-size: 80%;" class="fa fa-info-circle"></i>
                         </a>
                     </div>
 
@@ -63,7 +63,7 @@
                         <span class="field-title">Website:</span>
                         <a target="_blank" href="{{ ctx.data.url }}">{{ ctx.data.url }}</a>
                         <a target="_blank" href="{{ ctx.data.url }}">
-                            <i style="font-size: 80%;" class="fa fa-external-link"></i>
+                            <i style="font-size: 75%;" class="fa fa-external-link"></i>
                         </a>
                     </div>
 
@@ -73,7 +73,7 @@
                         {{ ctx.definitions[ctx.data.statusId]['title']['pt'] }}
                         </span>
                         <a href="#" data-toggle="modal" data-target="#status-more-info" title="Clique para ver mais detalhes sobre os diferentes estados">
-                            <i style="font-size: 95%;" class="fa fa-info-circle"></i>
+                            <i style="font-size: 80%;" class="fa fa-info-circle"></i>
                         </a>
                     </div>
 
@@ -156,7 +156,7 @@
                         <span class="field-title">Domínios de interesse</span>
 
                         <a href="#" data-toggle="modal" data-target="#domains-more-info" title="Clique para ver mais detalhes sobre os diferentes domínios de interesse">
-                            <i style="font-size: 95%;" class="fa fa-info-circle"></i>
+                            <i style="font-size: 80%;" class="fa fa-info-circle"></i>
                         </a>
 
                     </div>

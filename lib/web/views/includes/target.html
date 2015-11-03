@@ -1,0 +1,61 @@
+{% macro target(ctx) %}
+
+<div class="row" style="margin: 0;">
+
+    <div style="" class="col-sm-6">
+        <div title="Agricultura (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_agriculture') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_agriculture') }}"></i> Agricultura
+        </div>
+
+        <div title="Pecuária (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_husbandry') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_husbandry') }}"></i> Pecuária
+        </div>
+
+        <div title="Bio-Construção (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_bioconstruction') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_bioconstruction') }}"></i> Bio-Construção
+        </div>
+
+        <div title="Eco-Tecnologia (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_ecotechnology') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_ecotechnology') }}"></i> Eco-Tecnologia
+        </div>
+        
+        <div title="Arte (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_art') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_art') }}"></i> Arte
+        </div>
+
+        <div title="Educação (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_education') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_education') }}"></i> Educação
+        </div>
+    </div>
+    <div style="" class="col-sm-6">
+
+        <div title="Saúde (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_health') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_health') }}"></i> Saúde
+        </div>
+
+        <div title="Espiritualidade (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_spirituality') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_spirituality') }}"></i> Espiritualidade
+        </div>
+
+        <div title="Economia alternativa (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_economy') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_economy') }}"></i> Economia alternativa
+        </div>
+
+        <div title="Partilha de terra ou equipamentos (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_sharing') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_sharing') }}"></i> Partilha de terra ou equipamentos
+        </div>
+
+        <div title="Ferramentas Sociais (DESCRICAO)" class="{{ ctx.data.domains | getDomainClass('domain_tools') }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_tools') }}"></i> Ferramentas Sociais
+        </div>
+
+        {% if ctx.data.domainsOther %}
+        <div style="margin-top: 3px;" title="Outro domínios de interesse">
+            Outros: {{ ctx.data.domainsOther }}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endmacro %}

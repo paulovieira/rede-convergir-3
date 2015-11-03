@@ -1,11 +1,11 @@
-ul.list-initiative-types > li {
+ul.list-initiative-definitions > li {
 	margin-bottom: 10px;
 }
-/*
-div.field-title {
-	margin-bottom: 10px;
+
+.field-title {
+    color: #7e7e7e;
 }
-*/
+
 
 div.list-block {
 	margin-bottom: 15px;
@@ -17,4 +17,9 @@ div.list-block > div {
 
 .has-domain {
 	color: #006600;
+}
+
+/* override css from the leaflet.awesome-marker plugin */
+.awesome-marker i {
+  font-size: 18px;
 }

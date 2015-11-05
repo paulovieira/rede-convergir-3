@@ -61,3 +61,11 @@ select * from shapes_create('{"srid":4326,"description":{"en":""},"schema_name":
 
 
 Quando se selecciona um layer do cirac, já nao é possível voltar a nao ver esse layer
+
+
+interactions:
+    -(list -> map) in the list of initiatives, when the user clicks the "mapa" button, the map should center in that point
+    -(map -> list) when the user clicks one icon in the map, the list should scroll to place that initiative in the top
+    -(map -> list) when the user drags or zooms the map, the collection of visible  icons will change; the list should always reflect what the user is currently seeing (and the scroll position should be maitained when possible)
+    -(filters -> map/list) when the user updates de filters, the list and map should update
+    -(search box -> map/list) 

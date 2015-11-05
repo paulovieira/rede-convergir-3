@@ -1,0 +1,100 @@
+/*
+Make sure the menu looks nice for all screen widths. 
+Don't mess here or you will suffer from a terrible disease!
+
+The DOM tree for leaflet controls is like this (class names)
+
+div.leaflet-control-container
+    div.leaflet-top,leaflet-left
+        div.leaflet-control
+;
+The menu control is given this last div. The "leaflet-control-open" class is added when the menu is open, and have yet another container below. So when the menu is open is looks this this
+
+div.leaflet-control-container
+    div.leaflet-top,leaflet-left
+        div.leaflet-control,leaflet-control-open
+          div.leaflet-control,leaflet-control-open
+            div.menu-container,menu-container-open
+
+*/
+
+.leaflet-left .leaflet-control {
+    margin-left: 5px;
+}
+
+.leaflet-top .leaflet-control {
+    margin-top: 5px;
+}
+
+.leaflet-left {
+    /* we have "left: 0px;" in the leaflet class; we add 20 because of the margin-left: 10px in the child; */
+
+    right: 10px !important;
+}
+
+/* classes to be added when the menu is open (must be removed when it is closed) */
+.leaflet-control-open {
+  height: 100%;
+
+  /* we have "margin-top: 10px" from the leaflet class;
+     use those values for the right and bottom sides too;
+  */
+  padding-bottom: 10px !important;
+}
+
+.menu-container-open {
+  height: 100%;
+  padding-bottom: 28px;
+}
+
+/* resize the menu width (use the same breakpoints as in bootstrap) */
+@media (max-width: 767px) {
+    .leaflet-control-open {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .leaflet-control-open {
+        width: 50%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .leaflet-control-open {
+        width: 45%;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1299px) {
+    .leaflet-control-open {
+        width: 40%;
+    }
+}
+
+@media (min-width: 1300px) and (max-width: 1399px) {
+    .leaflet-control-open {
+        width: 38%;
+    }
+}
+
+@media (min-width: 1400px) and (max-width: 1499px) {
+    .leaflet-control-open {
+        width: 36%;
+    }
+}
+
+@media (min-width: 1500px) {
+    .leaflet-control-open {
+        width: 34%;
+    }
+}
+
+
+.leaflet-control-container {
+    height: 100%;
+}
+
+.leaflet-top.leaflet-left {
+    height: 100%;
+}

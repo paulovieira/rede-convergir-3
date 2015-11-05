@@ -26,7 +26,7 @@ var scripts = [];
 scripts = scripts.concat(Glob.sync("database/10_*/*.sql"));
 scripts = scripts.concat(Glob.sync("database/20_*/*.sql"));
 
-scripts = [];
+
 var psqlTemplate = _.template("<%= psqlPath %> --dbname <%= dbname %> --file=<%= filename %>");
 var command;
 

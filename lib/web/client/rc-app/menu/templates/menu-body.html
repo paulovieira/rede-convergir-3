@@ -18,7 +18,7 @@
             {{ obj.description | truncate(210) | replace('<br />', ' ') | replace('\n', ' ')}} 
         {% endif %}
 
-            <a href="/iniciativas/{{ obj.slug }}" target="_blank">
+            <a href="#" data-slug={{ obj.slug }} class="js-fly-to">
                 <span class="label label-info" style="padding: 0.2em 0.6em; border-radius: 5px; margin: 0px 0px 0px 5px; xdisplay: inline; ">Mapa</span>
             </a>
 

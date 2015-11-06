@@ -31,6 +31,15 @@ body {
     width: 100%;
 }
 */
+
+/* make sure the header in the menu is not selectable*/
+.menu-header {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+      -webkit-user-drag: none;
+}
+
 .menu-container {
 
     padding: 6px 8px;
@@ -91,6 +100,11 @@ body {
 
 .attribute-title {
     color: #3783a7;
+}
+*/
+
+/*img.leaflet-marker-icon {
+    transition: transform 0.2s;
 }
 */
 

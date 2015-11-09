@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS initiatives(
     email TEXT,
     phone TEXT,
     contact_other TEXT,
-    logo TEXT,
+    logo JSONB default '{"filename": "", "min": 100, "max": 130, "exclusive": false}',
     street TEXT,
     city TEXT,
     postal_code TEXT,
@@ -33,8 +33,9 @@ CREATE TABLE IF NOT EXISTS initiatives(
     doc_url TEXT,
     status_id TEXT references definitions(id) ON DELETE SET NULL default 'status_alive',  -- the possible status are defined with the prefix "status"
 
-    CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array'),
-    CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence) = 'array')
+    CONSTRAINT logo_must_be_object       CHECK (jsonb_typeof(logo)        = 'object'),
+    CONSTRAINT coordinates_must_be_array CHECK (jsonb_typeof(coordinates) = 'array'),
+    CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence)   = 'array')
 );
 
 SELECT audit.audit_table('initiatives');

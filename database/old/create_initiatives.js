@@ -23,8 +23,15 @@ Fs.readFile("./db_151022_new.json", function(err, data){
             return;
         }
 
+        initiative.logo = {
+            filename: initiative.logo,
+            min: 100,
+            max: 130,
+            exclusive: false
+        };
+
         var options = {
-            payload: JSON.stringify(data[i])
+            payload: JSON.stringify(initiative)
         };
 
         Wreck.post('http://127.0.0.1:6001/api/v1/initiatives', options, function (err, res, payload) {

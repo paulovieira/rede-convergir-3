@@ -12,7 +12,7 @@
     email TEXT,
     phone TEXT,
     contact_other TEXT,
-    logo TEXT,
+    logo JSONB
     street TEXT,
     city TEXT,
     postal_code TEXT,
@@ -60,7 +60,7 @@ RETURNS TABLE(
     email TEXT,
     phone TEXT,
     contact_other TEXT,
-    logo TEXT,
+    logo JSONB,
     street TEXT,
     city TEXT,
     postal_code TEXT,
@@ -184,7 +184,7 @@ EXAMPLES:
 insert into initiatives values
 	(default, 'name', 'slug', 'desc', NULL, 'type other', 'domain other', 'url', 'contact', 'email', 'phone', 'contact other', 'logo', 'street', 'city', 'postal code', '[1.1, 2.2]', 'promoter', '1980-01-01', '1981-01-01', default, NULL, '5', NULL, 'taret_other', '[1, 5]', '10ha', 'url', 'doc url', NULL),
 
-	(default, 'name2', 'slug2', 'desc2', NULL, 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', 'logo2', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, NULL, '52', NULL, 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2', NULL)
+	(default, 'name2', 'slug2', 'desc2', NULL, 'type other2', 'domain other2', 'url2', 'contact2', 'email2', 'phone2', 'contact other2', '{"filename": "xyz.jpg"}', 'street2', 'city2', 'postal code2', '[1.1, 2.2]', 'promoter2', '1980-01-012', '1981-01-012', default, NULL, '52', NULL, 'taret_other2', '[1, 5]', '10ha2', 'url2', 'doc url2', NULL)
 
 
 select * from  initiatives_read('{"id": 1}');
@@ -218,7 +218,7 @@ DECLARE
     _email TEXT;
     _phone TEXT;
     _contact_other TEXT;
-    _logo TEXT;
+    _logo JSONB;
     _street TEXT;
     _city TEXT;
     _postal_code TEXT;
@@ -282,7 +282,7 @@ BEGIN
 	_email         := COALESCE(input_obj->>'email',        current_row.email);
     _phone         := COALESCE(input_obj->>'phone',            current_row.phone);
     _contact_other := COALESCE(input_obj->>'contact_other',            current_row.contact_other);
-    _logo          := COALESCE(input_obj->>'logo',            current_row.logo);
+    _logo          := COALESCE((input_obj->>'logo')::jsonb,      current_row.logo);
     _street        := COALESCE(input_obj->>'street',            current_row.street);
     _city          := COALESCE(input_obj->>'city',            current_row.city);
     _postal_code   := COALESCE(input_obj->>'postal_code',            current_row.postal_code);
@@ -460,7 +460,7 @@ select * from initiatives_upsert('{
     "email": "email",
     "phone": "phone",
     "contact_other": "contact other",
-    "logo": "logo",
+    "logo": {"filename": "xyzw.jpg"},
     "street": "street",
     "city": "city",
     "postal_code": "postal code",
@@ -492,7 +492,7 @@ select * from initiatives_upsert('{
     "email": "email 2",
     "phone": "phone 2",
     "contact_other": "contact other 2",
-    "logo": "logo 2",
+    "logo": {"filename": "xyzw.jpg"},
     "street": "street 2",
     "city": "city 2",
     "postal_code": "postal code 2",

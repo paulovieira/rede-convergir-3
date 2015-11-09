@@ -29,14 +29,17 @@
 <div class="wrapper">
     <div class="container">
 
-        <div style="margin-top: 10px;" class="row">
+        <div style="margin-top: 40px;" class="row">
         
             <div style=""  class="col-sm-offset-1 col-sm-10">
-                <h2 style="letter-spacing: 1px; xfont-size: 2.2em;" class="text-center">{{ ctx.data.name }}</h2>
 
-                {% if ctx.data.logo %}
+                {% if not ctx.data.logo.exclusive %}
+                <h2 style="margin-top: 0px; letter-spacing: 1px; xfont-size: 2.2em;" class="text-center">{{ ctx.data.name }}</h2>
+                {% endif %}
+
+                {% if ctx.data.logo.filename %}
                 <a target="_blank" href="{{ ctx.data.url }}">
-                    <img style="min-width:100px; max-width:130px;" src="/static/_images/logos/{{ ctx.data.logo }}" class="center-block img-responsive" alt="{{ ctx.data.name }} - logotipo">
+                    <img style="min-width:{{ ctx.data.logo.min | default(100) }}px; max-width:{{ ctx.data.logo.max | default(100) }}px;" src="/static/_images/logos/{{ ctx.data.logo.filename }}" class="center-block img-responsive" alt="{{ ctx.data.name }} - logotipo">
                 </a>
                 {% endif %}
             </div>

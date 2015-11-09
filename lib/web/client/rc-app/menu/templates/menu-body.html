@@ -1,11 +1,12 @@
 
+
 {% for obj in items %}
 
-<div class="row" style="margin: 0px 5px 0px 5px;">
+<div class="row initiative-container" data-slug={{ obj.slug }} style="margin: 0px 5px 0px 5px;">
 
     <div class="{{ 'col-sm-9' if obj.logo else 'col-sm-12' }}" style="padding: 0;">
     
-        <h5 style="margin-bottom: 0; color: #3783a7;" title="Ver a ficha completa desta iniciativa">
+        <h5 style="margin-bottom: 0; color: #3783a7;" title="Ver a ficha completa desta iniciativa (abre numa nova tab)">
             <a href="/iniciativas/{{ obj.slug }}" target="_blank">{{ obj.name }}</a>
         </h5> 
 
@@ -13,9 +14,9 @@
         
         <div style="font-size: 13px; line-height: 1.4; color: gray; margin-bottom: 5px;">
         {% if obj.logo %}
-            {{ obj.description | truncate(160) | replace('<br />', ' ') | replace('\n', ' ')}} 
+            {{ obj.description | replace('<br />', ' ') | replace('\n', ' ') | truncate(160) }} 
         {% else %}
-            {{ obj.description | truncate(210) | replace('<br />', ' ') | replace('\n', ' ')}} 
+            {{ obj.description | replace('<br />', ' ') | replace('\n', ' ') | truncate(210) }} 
         {% endif %}
 
             <a href="#" data-slug={{ obj.slug }} class="js-fly-to">
@@ -41,7 +42,7 @@
     {% if obj.logo %}
     <div class="col-sm-3" style="padding: 0;">
     
-    <a target="_blank" href="/iniciativas/{{ obj.slug }}" title="Ver a ficha completa desta iniciativa">
+    <a target="_blank" href="/iniciativas/{{ obj.slug }}" title="Ver a ficha completa desta iniciativa (abre numa nova tab)">
         <img style="min-width:80px; max-width:110px; padding: 3px;" src="/static/_images/logos/{{ obj.logo }}" class="center-block img-responsive img-rounded" alt="{{ obj.name }} - logotipo">
     </a>
 

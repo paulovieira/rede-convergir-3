@@ -110,12 +110,21 @@ body {
 
 
 .initiative-container {
-    margin: 0px 5px 0px 5px;
+    margin: 0px 10px 0px 5px;
     padding: 10px 0px 10px 10px;
+
+    /* we actually want a transparent border here */
+    border: 1px solid rgba(255,255,255, 0);
 }
 
 .initiative-container:hover {
     background-color: rgba(234,234,255, 0.5);
+}
+
+.initiative-selected {
+    background-color: rgba(234,234,255, 0.5);
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
 }
 
 

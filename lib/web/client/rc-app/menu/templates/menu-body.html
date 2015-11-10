@@ -19,7 +19,7 @@
         {% endif %}
 
             <a href="#" data-slug={{ obj.slug }} class="js-fly-to">
-                <span class="label label-info" style="padding: 0.2em 0.6em; border-radius: 5px; margin: 0px 0px 0px 5px; xdisplay: inline; ">Mapa</span>
+                <span class="label label-info" style="padding: 0.2em 0.6em; border-radius: 5px; margin: 0px 0px 0px 5px; xdisplay: inline; " title="Centrar no mapa">Mapa</span>
             </a>
 
         </div>
@@ -39,10 +39,10 @@
     </div>
 
     {% if obj.logo.filename %}
-    <div class="col-sm-3" style="padding: 0;">
+    <div class="col-sm-3" style="padding: 0px 15px 0px 0px;">
     
     <a target="_blank" href="/iniciativas/{{ obj.slug }}" title="Ver a ficha completa desta iniciativa (abre numa nova tab)">
-        <img style="min-width:80px; max-width:110px; padding: 3px;" src="/static/_images/logos/{{ obj.logo.filename }}" class="center-block img-responsive img-rounded" alt="{{ obj.name }} - logotipo">
+        <img style="min-width:80px; max-width:110px; padding: 3px;" src="/static/_images/logos/{{ obj.logo.filename }}" class="pull-right img-responsive img-rounded" alt="{{ obj.name }} - logotipo">
     </a>
 
     </div>
@@ -53,4 +53,3 @@
 <hr  style="margin: 10px 15px 15px 0px;">
 
 {% endfor %}
-

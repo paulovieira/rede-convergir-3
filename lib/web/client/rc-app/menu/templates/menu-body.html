@@ -33,14 +33,17 @@
     <div class="row">
 
         <p style="padding-left: 10px;">Filtro: tipo de iniciativa</p>
-        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+        <div class="col-sm-6" style="padding: 0px 0px 0px 10px; font-size: 14px;">
 
         {% set counter = 0 %}
-        {% for key, value in type %}
-        
-            {% if counter % 2 == 0 %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+        {# NOTE - here we are iteration over an object (the values are also objects) #}
+        {% for key, value in definitions.type %}
+        
+            {# handmade tweak - we want the right column to have 5 items #}
+            {% if counter % 2 == 0   %}
+
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; " title="{{ value.description.pt }}">
               <label>
                 <input type="checkbox" data-type-id="{{ value.id }}" class="js-filter-type">
                 {{ value.title.pt }}
@@ -58,11 +61,11 @@
         <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
 
         {% set counter = 1 %}
-        {% for key, value in type %}
-        
-            {% if counter % 2 == 0 %}
+        {% for key, value in definitions.type %}
+         
+            {% if counter % 2 == 0  %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ value.description.pt }}">
               <label>
                 <input type="checkbox" data-type-id="{{ value.id }}" class="js-filter-type">
                 {{ value.title.pt }}
@@ -85,11 +88,11 @@
         <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
 
         {% set counter = 0 %}
-        {% for key, value in domain %}
+        {% for key, value in definitions.domain %}
         
             {% if counter % 2 == 0 %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ value.description.pt }}">
               <label>
                 <input type="checkbox" data-domain-id="{{ value.id }}" class="js-filter-domain">
                 {{ value.title.pt }}
@@ -107,11 +110,11 @@
         <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
 
         {% set counter = 1 %}
-        {% for key, value in domain %}
+        {% for key, value in definitions.domain %}
         
             {% if counter % 2 == 0 %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ value.description.pt }}">
               <label>
                 <input type="checkbox" data-domain-id="{{ value.id }}" class="js-filter-domain">
                 {{ value.title.pt }}
@@ -127,9 +130,31 @@
         </div>
     </div>
 
+
+    <div class="row" style="margin-top: 15px;">
+
+        <p style="padding-left: 10px;">Mapa-base</p>
+        <div class="col-sm-8" style="padding: 0px 20px 0px 10px;">
+
+        {# NOTE - here we are iteration over an array of objects #}
+        {% for obj in baseLayers %}
+        
+            <div class="radio" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ obj.description.pt }}">
+              <label>
+                <input type="radio" name="base-maps" data-base-layer-id="{{ obj.id }}" value="{{ obj.id }}" class="js-base-map" {{ "checked" if obj.active }}>
+                {{ obj.title.pt }}
+              </label>
+            </div>
+
+        {% endfor %}
+        
+        </div>
+
+    </div>
+
     <div class="text-center" style="margin-top: 10px;">
         <button class="btn btn-primary" style="border-radius: 10px; margin-right: 15px;" id="options-apply-filters">
-            Aplicar filtros
+            Actualizar o mapa
         </button>
 
         <button class="btn btn-default" style="border-radius: 10px;" id="options-cancel-filters">

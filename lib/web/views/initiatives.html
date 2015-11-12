@@ -65,6 +65,18 @@
     RCData.initiatives = {{ ctx.initiatives | stringify }};
     RCData.definitionsAll = {{ ctx.definitions | stringify }};
 
+    // manually add the "other" type (this is like a dummy type but must be to be shown in the filters)
+    RCData.definitionsAll["type_other"] = {
+        id: "type_other",
+        description: {
+            pt: "Outro",
+            _order: "type999"
+        },
+        title: {
+            pt: "Outro"
+        }
+    };
+
 	</script>
 
 
@@ -97,7 +109,6 @@
 
     <!-- cartografia app -->
     <!-- NOTE: if we add new files here, we must add in the gruntfile as well -->
-    <script src="/rc-app/exclusive-layers.js"></script>
 
     <script src="/rc-app/index.js"></script>
     <script src="/rc-app/leaflet-backbone-view.js"></script>
@@ -107,23 +118,5 @@
     <script src="/rc-app/map/map.js"></script>
     <script src="/rc-app/init.js"></script>
 
-{#
-    <script src="/rc-app/entities.js"></script>
-    <script src="/rc-app/behaviors.js"></script>
-    <script src="/rc-app/init.js"></script>
-
-
-    <script src="/rc-app/menu-definition.js"></script>
-    <script src="/rc-app/cirac-layers.js"></script>
-    <script src="/rc-app/exclusive-layers.js"></script>
-
-    <script src="/rc-app/index.js"></script>
-    <script src="/rc-app/leaflet-backbone-view.js"></script>
-    <script src="/rc-app/entities.js"></script>
-    <script src="/rc-app/behaviors.js"></script>
-    <script src="/rc-app/menu/menu.js"></script>
-    <script src="/rc-app/map/map.js"></script>
-    <script src="/rc-app/init.js"></script>
-#}
 
 {% endblock %}

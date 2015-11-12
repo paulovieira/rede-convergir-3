@@ -50,7 +50,7 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
 		command = command || format(' AND position(%L in d.id) = 1 ', input_obj->>'id_starts_with');
 	END IF;
 
-	command := command || ' ORDER BY d.id;';
+	command := command || ' ORDER BY d.description->>''_order'' asc;';
 
 	--raise notice 'command: %', command;
 

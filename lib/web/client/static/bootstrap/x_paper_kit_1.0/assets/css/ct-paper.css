@@ -1138,7 +1138,7 @@ textarea.form-control {
   position: relative;
   -webkit-transition: color 0.25s linear;
   transition: color 0.25s linear;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   line-height: 1.5;
   color: #66615b; }

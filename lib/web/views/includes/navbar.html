@@ -1,4 +1,6 @@
+
 {% macro navbar(ctx) %}
+
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -19,25 +21,44 @@
         <div class="collapse navbar-collapse" id="nav-menu-contents">
             <ul class="nav navbar-nav">
 
-                <li><a href="/iniciativas" class="btn btn-simple {{ 'active' if ctx.urlParam1=='iniciativas' }}">Iniciativas</a></li>
+                <li><a href="/iniciativas" class="btn btn-simple {{ 'active' if ctx.urlParam1=='iniciativas' }}" title="Iniciativas">Iniciativas</a></li>
 
-                <li><a href="/eventos" class="btn btn-simple {{ 'active' if ctx.urlParam1=='eventos' }}">Eventos</a></li>
+                <li><a href="/eventos" class="btn btn-simple {{ 'active' if ctx.urlParam1=='eventos' }}" title="Eventos">Eventos</a></li>
+
+                <li><a href="/sobre" class="btn btn-simple {{ 'active' if ctx.urlParam1=='sobre' }}" title="O que é a Rede Convergir?">Sobre</a></li>
 
                 <li class="dropdown">
                 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recursos <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Liga-te <b class="caret-big"></b></a>
                     <ul class="dropdown-menu dropdown-menu-right">
 
+                        <li><a href="/newsletter" class="{{ 'active' if ctx.urlParam1=='newsletter' }}" title="Newsletter mensal">Newsletter</a></li>
+                        <li><a href="/exportar" class="{{ 'active' if ctx.urlParam1=='exportar' }}" title="Exportar o mapa das iniciativas ou o calendário para o seu website">Exportar</a></li>
+                        <li><a href="/recursos" class="{{ 'active' if ctx.urlParam1=='recursos' }}" title="Recursos e projectos associados">Recursos</a></li>
+                        <li><a href="/ligacoes-uteis" class="{{ 'active' if ctx.urlParam1=='ligacoes-uteis' }}" title="Links úteis">Ligações</a></li>
+{#
                         <li><a href="/catalise" class="{{ 'active' if ctx.urlParam1=='catalise' }}">CATALISE</a></li>
+#}
 
                     </ul>
                 </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <a href="https://twitter.com/redeconvergir" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
-                <a href="https://www.facebook.com/Rede-Convergir-789470407837483" target="_blank" class="btn btn-simple"><i class="fa fa-facebook"></i></a>
-                <a href="/login" class="btn btn-simple"><i class="fa fa-user"></i></a>
+
+
+                            {# include js that will dinamically generate the appropriate mailto link. It will output the following string to the document:
+
+                            <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-at icon-top-right"></i></a>
+
+                            #}                
+
+                {% include "includes/email-enkoder.html" %}
+
+                <a href="https://www.facebook.com/Rede-Convergir-789470407837483" target="_blank" title="Facebook da Rede Convergir (abre numa nova tab)"><i class="fa fa-facebook icon-top"></i></a>
+
+                <a href="/login" title="Entrar na área reservada"><i class="fa fa-user icon-top"></i></a>
+
             </ul>
 
         </div>

@@ -182,3 +182,11 @@ hr.initiative-separator:last-of-type {
     margin-left: -13px;
     content: "";
 }
+
+.icon-top {
+    padding-top: 25px;
+    margin-left: 30px;
+    color:  #66615B; 
+    font-weight: 500; 
+    font-size: 20px;    
+}

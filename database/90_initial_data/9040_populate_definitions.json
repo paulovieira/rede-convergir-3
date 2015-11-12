@@ -256,7 +256,11 @@
         "description": {"pt": "A iniciativa aguarda a aprovação dos moderadores."}
     },
 
-
+    {
+        "id": "status_rejected",
+        "title": {"pt": "rejeitado"},
+        "description": {"pt": "A iniciativa não foi aprovada."}
+    }
 
     // SEGMENT: event types
 

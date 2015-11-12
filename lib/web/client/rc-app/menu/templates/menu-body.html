@@ -1,55 +1,145 @@
 
-{% for obj in items %}
+<div class="row search-container" style="padding-right: 20px;">
 
-<div class="row initiative-container" data-slug={{ obj.slug }} >
+    <div class="col-sm-9" style="padding: 0px 20px 0px 0px;">
+        <div class="form-group">
+          <div class="input-group" style="background-color: white;">
 
-    <div class="{{ 'col-sm-9' if obj.logo.filename else 'col-sm-12' }}" style="padding: 0;">
-    
-        <h5 style="margin: 0; color: #3783a7;" title="Ver a ficha completa desta iniciativa (abre numa nova tab)">
-            <a href="/iniciativas/{{ obj.slug }}" target="_blank">{{ obj.name }}</a>
-        </h5> 
+              <input type="text" style="background-color: white; border: 2px solid #7A9E9F; border-radius: 10px; border-top-right-radius: 0; border-bottom-right-radius: 0;" class="form-control" id="search-initiative">
+              <span class="input-group-addon" style="background-color: white; border: 2px solid #7A9E9F; border-left: 0; border-radius: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; cursor: pointer;">
+                  <i style="color: #7A9E9F; font-size: 125%;" class="fa fa-search"></i>
+              </span>
 
-        
-        
-        <div style="font-size: 13px; line-height: 1.4; color: gray; margin-bottom: 5px;">
-        {% if obj.logo %}
-            {{ obj.description | replace('<br />', ' ') | replace('\n', ' ') | truncate(160) }} 
-        {% else %}
-            {{ obj.description | replace('<br />', ' ') | replace('\n', ' ') | truncate(210) }} 
-        {% endif %}
-
-            <a href="#" data-slug={{ obj.slug }} class="js-fly-to">
-                <span class="label label-info" style="padding: 0.2em 0.6em; border-radius: 5px; margin: 0px 0px 0px 5px; xdisplay: inline; " title="Centrar no mapa">Mapa</span>
-            </a>
-
+          </div>
         </div>
-
-        <p style="margin-bottom: 0px; font-size: 12px; color: #007f00;">
-            <small>
-                <span style="">Tipo:</span> 
-                <span title="{{ obj.typeDescription }}" style="opacity: 0.9;">{{ obj.typeTitle }}</span> 
-            </small>
-            <a href="#" class="js-modal-types-description" data-toggle="modal" data-target="#types-more-info" title="Ver mais detalhes sobre os diferentes tipos de iniciativa">
-                <i style="xmargin-left: 2px; color: #009900;" class="fa fa-info-circle"></i>    
-            </a>
-
-        </p>
-
-
     </div>
 
-    {% if obj.logo.filename %}
     <div class="col-sm-3" style="padding: 0px 15px 0px 0px;">
-    
-    <a target="_blank" href="/iniciativas/{{ obj.slug }}" title="Ver a ficha completa desta iniciativa (abre numa nova tab)">
-        <img style="min-width:80px; max-width:110px; padding: 3px;" src="/static/_images/logos/{{ obj.logo.filename }}" class="pull-right img-responsive img-rounded" alt="{{ obj.name }} - logotipo">
-    </a>
+        <button class="btn btn-primary" style="padding: 0px 14px 0px 18px; border-radius: 10px;" id="options-filters">
+            Opções 
+            <i style="font-size: 125%;" class="fa fa-cog"></i>
+        </button>
 
     </div>
-    {% endif %}
-
 </div>
 
-<hr  style="margin: 10px 15px 15px 0px;">
 
-{% endfor %}
+<div id="options-filters-form" class="search-container invisible" style="padding: 10px 10px 20px 10px; margin-top: -30px;">
+
+
+<div class="arrow"></div>
+<div style="padding: 10px 0px 20px 20px; border: 2px solid #7A9E9F; border-radius: 5px;">
+
+    <div class="row">
+
+        <p style="padding-left: 10px;">Filtro: tipo de iniciativa</p>
+        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+
+        {% set counter = 0 %}
+        {% for key, value in type %}
+        
+            {% if counter % 2 == 0 %}
+
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+              <label>
+                <input type="checkbox" data-type-id="{{ value.id }}" class="js-filter-type">
+                {{ value.title.pt }}
+              </label>
+            </div>
+
+            {% endif %}
+
+            {% set counter = counter + 1 %}
+            
+        {% endfor %}
+        
+        </div>
+
+        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+
+        {% set counter = 1 %}
+        {% for key, value in type %}
+        
+            {% if counter % 2 == 0 %}
+
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+              <label>
+                <input type="checkbox" data-type-id="{{ value.id }}" class="js-filter-type">
+                {{ value.title.pt }}
+              </label>
+            </div>
+
+            {% endif %}
+            
+            {% set counter = counter + 1 %}
+            
+        {% endfor %}
+        
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-top: 15px;">
+
+        <p style="padding-left: 10px;">Filtro: domínio de interesse</p>
+        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+
+        {% set counter = 0 %}
+        {% for key, value in domain %}
+        
+            {% if counter % 2 == 0 %}
+
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+              <label>
+                <input type="checkbox" data-domain-id="{{ value.id }}" class="js-filter-domain">
+                {{ value.title.pt }}
+              </label>
+            </div>
+
+            {% endif %}
+
+            {% set counter = counter + 1 %}
+            
+        {% endfor %}
+        
+        </div>
+
+        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+
+        {% set counter = 1 %}
+        {% for key, value in domain %}
+        
+            {% if counter % 2 == 0 %}
+
+            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; line-height: 1.3;">
+              <label>
+                <input type="checkbox" data-domain-id="{{ value.id }}" class="js-filter-domain">
+                {{ value.title.pt }}
+              </label>
+            </div>
+
+            {% endif %}
+            
+            {% set counter = counter + 1 %}
+            
+        {% endfor %}
+        
+        </div>
+    </div>
+
+    <div class="text-center" style="margin-top: 10px;">
+        <button class="btn btn-primary" style="border-radius: 10px; margin-right: 15px;" id="options-apply-filters">
+            Aplicar filtros
+        </button>
+
+        <button class="btn btn-default" style="border-radius: 10px;" id="options-cancel-filters">
+            Fechar
+        </button>
+    </div>
+
+</div>
+</div>
+
+<div id="mn-r-list"></div>
+
+

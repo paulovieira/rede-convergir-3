@@ -125,6 +125,7 @@ body {
 */
 }
 
+
 .initiative-selected {
     background-color: rgba(234,234,255, 0.6);
 /*
@@ -135,5 +136,49 @@ body {
     border-radius: 3px;
 }
 
+hr.initiative-separator:last-of-type {
+    display:none;
+}
+
+/* equal to initiative-container */
+.search-container {
+    margin: 0px 10px 0px 5px;
+    padding: 10px 0px 10px 10px;
+}
+
+.invisible {
+    display: none;
+}
 
 
+/* based on the arrow effect from bootstrap's popover */
+.arrow {
+    position: relative;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+
+    border-width: 13px;
+    border-top-width: 0;
+    border-bottom-color: #7A9E9F;
+
+    left: 85%;
+}
+.arrow::after {
+    position: relative;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+
+    border-width: 13px;
+    border-top-width: 0;
+    border-bottom-color: #fff;
+
+    top: 3px;
+    margin-left: -13px;
+    content: "";
+}

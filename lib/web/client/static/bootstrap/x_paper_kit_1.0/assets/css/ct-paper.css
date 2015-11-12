@@ -1130,6 +1130,7 @@ textarea.form-control {
   color: #FFFFFF; }
 
 /*      Checkbox and radio         */
+
 .checkbox,
 .radio {
   margin-bottom: 12px;
@@ -1141,12 +1142,12 @@ textarea.form-control {
   font-weight: normal;
   line-height: 1.5;
   color: #66615b; }
-
+/*
 .checkbox input,
 .radio input {
   outline: none !important;
   display: none; }
-
+*/
 .checkbox .icons,
 .radio .icons {
   color: #66615b;
@@ -1181,6 +1182,9 @@ textarea.form-control {
   opacity: 0;
   filter: alpha(opacity=0); }
 
+/* disable the hover state for checkbox/radio*/
+
+/*
 .checkbox:hover,
 .radio:hover {
   -webkit-transition: color 0.2s linear;
@@ -1195,7 +1199,7 @@ textarea.form-control {
 .radio:hover .second-icon {
   opacity: 1;
   filter: alpha(opacity=100); }
-
+*/
 .checkbox.checked .first-icon,
 .radio.checked .first-icon {
   opacity: 0;
@@ -1207,6 +1211,7 @@ textarea.form-control {
   filter: alpha(opacity=100);
   -webkit-transition: color 0.2s linear;
   transition: color 0.2s linear; }
+
 
 .checkbox.disabled,
 .radio.disabled {

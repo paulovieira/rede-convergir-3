@@ -49,15 +49,17 @@
 
                             {# include js that will dinamically generate the appropriate mailto link. It will output the following string to the document:
 
-                            <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-at icon-top-right"></i></a>
+                            <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-at icon-navbar"></i></a>
 
+                            {% include "includes/email-enkoder.html" %}
                             #}                
 
-                {% include "includes/email-enkoder.html" %}
+                                
+                <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-at icon-navbar"></i></a>
 
-                <a href="https://www.facebook.com/Rede-Convergir-789470407837483" target="_blank" title="Facebook da Rede Convergir (abre numa nova tab)"><i class="fa fa-facebook icon-top"></i></a>
+                <a href="https://www.facebook.com/Rede-Convergir-789470407837483" target="_blank" title="Facebook da Rede Convergir (abre numa nova tab)"><i class="fa fa-facebook icon-navbar"></i></a>
 
-                <a href="/login" title="Entrar na área reservada"><i class="fa fa-user icon-top"></i></a>
+                <a href="/login" title="Entrar na área reservada"><i class="fa fa-user icon-navbar"></i></a>
 
             </ul>
 

@@ -1,10 +1,13 @@
-{% set visibleCount = 0 %}
+<div class="row" style="margin: 0px 10px 0px 5px; padding: 0px 0px 0px 10px;">
+    <div class="col-sm-12" style="padding: 0px 0px 0px 0px; margin-left: -1px;">
+    <span style="font-size: 12px; font-family: 'Montserrat'">{{ numFilteredMsg }} {{ "(toda a rede)" if numFiltered == initiatives.length }}</span>
+    </div>
+</div>
 
-{% for obj in items %}
 
-{% if obj.visible %}
+{% if numFiltered > 0 %}
 
-{% set visibleCount = visibleCount + 1 %}
+{% for obj in initiatives %}
 
 <div class="row initiative-container {{ 'initiative-selected' if obj.selected }}" data-slug={{ obj.slug }} >
 
@@ -15,7 +18,7 @@
         </h5> 
         
         
-        <div style="font-size: 13px; line-height: 1.4; color: gray; margin-bottom: 5px;">
+        <div style="font-size: 13px; line-height: 1.4; color: gray; margin-bottom: 5px; padding-right: 3px;">
         {% if obj.logo %}
             {{ obj.description | replace('<br />', ' ') | replace('\n', ' ') | truncate(160) }} 
         {% else %}
@@ -58,14 +61,13 @@
 
 </div>
 
-<hr class="initiative-separator"  style="margin: 10px 15px 15px 0px;">
+<hr class="initiative-separator"  style="margin: 10px 12px 15px 7px;">
 
-{% endif %}
 {% endfor %}
 
-{# empty view #}
-{% if visibleCount == 0%}
+{% else %}
 
+{# empty view #}
 <div class="row initiative-container">
     <div class="col-sm-12" style="padding: 0;">
         

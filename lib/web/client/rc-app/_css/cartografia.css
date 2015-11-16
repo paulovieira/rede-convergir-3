@@ -53,17 +53,22 @@ body {
 
 }
 
-.menu-icon {
-    font-size: 150%;
+.scale-10 {
     transition: all .20s ease;
 }
 
-.menu-icon:hover {
-    
-    transform: scale(1.10, 1.10);
-    /**/
+.scale-10:hover {
+    transform: scale(1.10);
 }
 
+
+.scale-40 {
+    transition: all .20s ease;
+}
+
+.scale-40:hover {
+    transform: scale(1.50);
+}
 
 
 
@@ -142,7 +147,7 @@ hr.initiative-separator:last-of-type {
 
 /* equal to initiative-container */
 .search-container {
-    margin: 0px 10px 0px 5px;
+    margin: 0px 10px -10px 5px;
     padding: 10px 0px 10px 10px;
 }
 
@@ -183,10 +188,3 @@ hr.initiative-separator:last-of-type {
     content: "";
 }
 
-.icon-top {
-    padding-top: 25px;
-    margin-left: 30px;
-    color:  #66615B; 
-    font-weight: 500; 
-    font-size: 20px;    
-}

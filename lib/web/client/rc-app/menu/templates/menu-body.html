@@ -1,7 +1,7 @@
 
 <div class="row search-container" style="padding-right: 20px;">
 
-    <div class="col-sm-9" style="padding: 0px 20px 0px 0px;">
+    <div class="col-sm-9" style="padding: 0px 20px 0px 0px; margin-left: -1px;">
         <div class="form-group">
           <div class="input-group" style="background-color: white;">
 
@@ -21,6 +21,7 @@
         </button>
 
     </div>
+
 </div>
 
 
@@ -28,12 +29,14 @@
 
 
 <div class="arrow"></div>
-<div style="padding: 10px 0px 20px 20px; border: 2px solid #7A9E9F; border-radius: 5px;">
+<div style="padding: 10px 0px 20px 15px; border: 2px solid #7A9E9F; border-radius: 5px;">
+
 
     <div class="row">
 
-        <p style="padding-left: 10px;">Filtro: tipo de iniciativa</p>
-        <div class="col-sm-6" style="padding: 0px 0px 0px 10px; font-size: 14px;">
+        <p style="padding-left: 15px;">Filtro: tipo de iniciativa</p>
+
+        <div class="col-sm-6">
 
         {% set counter = 0 %}
 
@@ -43,11 +46,11 @@
             {# handmade tweak - we want the right column to have 5 items #}
             {% if counter % 2 == 0   %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px; " title="{{ value.description.pt }}">
-              <label>
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ value.description.pt }}">
                 <input type="checkbox" data-type-id="{{ value.id }}" class="js-filter-type">
                 {{ value.title.pt }}
-              </label>
+            </label>
             </div>
 
             {% endif %}
@@ -58,18 +61,18 @@
         
         </div>
 
-        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+        <div class="col-sm-6">
 
         {% set counter = 1 %}
         {% for key, value in definitions.type %}
          
             {% if counter % 2 == 0  %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ value.description.pt }}">
-              <label>
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ value.description.pt }}">
                 <input type="checkbox" data-type-id="{{ value.id }}" class="js-filter-type">
                 {{ value.title.pt }}
-              </label>
+            </label>
             </div>
 
             {% endif %}
@@ -81,22 +84,23 @@
         </div>
     </div>
 
-
+    <hr style="margin: 10px 15px 0px 0px;">
+    
     <div class="row" style="margin-top: 15px;">
 
-        <p style="padding-left: 10px;">Filtro: domínio de interesse</p>
-        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+        <p style="padding-left: 15px;">Filtro: domínio de interesse</p>
+        <div class="col-sm-6">
 
         {% set counter = 0 %}
         {% for key, value in definitions.domain %}
         
             {% if counter % 2 == 0 %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ value.description.pt }}">
-              <label>
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ value.description.pt }}">
                 <input type="checkbox" data-domain-id="{{ value.id }}" class="js-filter-domain">
                 {{ value.title.pt }}
-              </label>
+            </label>
             </div>
 
             {% endif %}
@@ -107,18 +111,18 @@
         
         </div>
 
-        <div class="col-sm-6" style="padding: 0px 20px 0px 10px;">
+        <div class="col-sm-6">
 
         {% set counter = 1 %}
         {% for key, value in definitions.domain %}
         
             {% if counter % 2 == 0 %}
 
-            <div class="checkbox" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ value.description.pt }}">
-              <label>
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ value.description.pt }}">
                 <input type="checkbox" data-domain-id="{{ value.id }}" class="js-filter-domain">
                 {{ value.title.pt }}
-              </label>
+            </label>
             </div>
 
             {% endif %}
@@ -130,17 +134,19 @@
         </div>
     </div>
 
+    <hr style="margin: 10px 15px 0px 0px;">
 
     <div class="row" style="margin-top: 15px;">
 
-        <p style="padding-left: 10px;">Mapa-base</p>
-        <div class="col-sm-8" style="padding: 0px 20px 0px 10px;">
+        <p style="padding-left: 15px;">Mapa-base</p>
+        <div class="col-sm-12">
 
         {# NOTE - here we are iteration over an array of objects #}
         {% for obj in baseLayers %}
         
-            <div class="radio" style="margin: 0px 0px 4px 0px; padding-left: 0px;" title="{{ obj.description.pt }}">
-              <label>
+
+            <div class="icheck-label">
+              <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
                 <input type="radio" name="base-maps" data-base-layer-id="{{ obj.id }}" value="{{ obj.id }}" class="js-base-map" {{ "checked" if obj.active }}>
                 {{ obj.title.pt }}
               </label>
@@ -152,7 +158,7 @@
 
     </div>
 
-    <div class="text-center" style="margin-top: 10px;">
+    <div class="text-center" style="margin-top: 15px;">
         <button class="btn btn-primary" style="border-radius: 10px; margin-right: 15px;" id="options-apply-filters">
             Actualizar o mapa
         </button>
@@ -164,6 +170,7 @@
 
 </div>
 </div>
+
 
 <div id="mn-r-list"></div>
 

@@ -7,11 +7,26 @@
 {# call super to common css #}
 {{ super() }}
 
-<link href="/static/leaflet/mapbox-2.2.2/mapbox.standalone.css" rel="stylesheet" />
+<link href="/static/leaflet/leaflet-1.0beta2/leaflet.css" rel="stylesheet" />
+<link href="/static/leaflet/leaflet-label-9c431d/leaflet.label.css" rel="stylesheet" />
+<link href="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css" rel="stylesheet" />
+<link href="/static/leaflet/leaflet-panel-layers-97f018/leaflet-panel-layers.src.css" rel="stylesheet" />
+
 
 <style>
     #map {
         height: 1200px;
+    }
+
+    .xyz {
+        min-width: 40px !important;
+        border-radius: 3px;
+        background-color: red;
+    }
+
+    .leaflet-panel-layers-item > span.xyz {
+        height: 16px;
+        margin: 0px 2px 4px 0px;
     }
 </style>
 {% endblock %}
@@ -93,36 +108,48 @@
 
                 <hr>
 
-                <div class="row" style="margin-bottom: 30px;">
+<!--                 <div class="row" style="margin-bottom: 30px;">
                     <div class="col-sm-12">
                     Coordenado por:
                     <img  class="img-responsive" src="/rc-app/_logos_catalise/logos_todos.png" alt="">
                     </div>
-                </div>
+                </div> -->
                 
                 <div class="row">
                     <div class="col-sm-12">
                     Coordenado por:
                     </div>
 
-                    <div class="col-sm-6">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/cics_logo_2.png" alt=""></a>
+                    <div class="col-sm-12">
+                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/cics_nova.jpg" alt=""></a>
                     </div>
-                    <div class="col-sm-6" style="margin-top: 15px;">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/logo_fcsh.jpg" alt=""></a>
+                    <div class="col-sm-12" style="margin-top: 15px;">
+                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/ce3c_fcul.jpg" alt=""></a>
                     </div>
                 </div>
 
-                <div class="row" style="margin-top: 10px;">
+<!--
+                 <div class="row" style="margin-top: 10px;">
 
-                    <div class="col-sm-6">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/ce3c-logo.png" alt=""></a>
-                    </div>
                     <div class="col-sm-6">
                         <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/Ciencias_UL_Azul_H.png" alt=""></a>
                     </div>
-                </div>
+                     <div class="col-sm-6">
+                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/ce3c-logo.png" alt=""></a>
+                    </div> 
 
+                </div>
+ -->
+
+                <div class="row" style="margin-top: 20px;">
+                    <div style="margin-bottom: 10px;" class="col-sm-12">
+                    Apoio de:
+                    </div>
+
+                    <div class="col-sm-6">
+                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/fct_fccn_2.jpg" alt=""></a>
+                    </div>
+                </div>
 
                 <div class="row" style="margin-top: 20px;">
                     <div class="col-sm-12">
@@ -151,6 +178,7 @@
                 <ul>
                     <li>adicionar legenda para fazer a ligação de "caso de estudo" / "participante" e as respectivas cores</li>
                     <li>clustering dos marcadores</li>
+                    <li>legenda com as cores dos marcadores</li>
                 </ul>
             </div>
 
@@ -161,15 +189,22 @@
 
 {{ super() }}
 
-<script src="/static/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script>
-<script src="/static/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js"></script>
+<script src="/static/underscore/underscore-1.6.0.js"></script>
+<script src="/static/leaflet/leaflet-1.0beta2/leaflet-src.js"></script>
+<script src="/static/leaflet/leaflet-label-9c431d/leaflet.label-src.js"></script>
+<script src="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
+<script src="/static/leaflet/leaflet-panel-layers-97f018/leaflet-panel-layers.src.js"></script>
+
+
 
 <script>
 
-RC.$readMoreBtn = $("a[href='#read-more'");
-RC.$readMoreBtn.on("click", function(){
+var Catalise = {};
 
-    var isOpen = RC.$readMoreBtn.data("isOpen");
+Catalise.$readMoreBtn = $("a[href='#read-more'");
+Catalise.$readMoreBtn.on("click", function(){
+
+    var isOpen = Catalise.$readMoreBtn.data("isOpen");
     var html = "";
     if(isOpen){
         html = 'Ler mais <i style="font-size: 115%; margin-left: 5px;" class="fa fa-arrow-circle-down"></i>'
@@ -178,24 +213,466 @@ RC.$readMoreBtn.on("click", function(){
         html = 'Recolher  <i style="font-size: 115%; margin-left: 5px;" class="fa fa-arrow-circle-up"></i>';
     }
 
-    RC.$readMoreBtn.data("isOpen", !isOpen);
+    Catalise.$readMoreBtn.data("isOpen", !isOpen);
 
     setTimeout(function(){
-        RC.$readMoreBtn.html(html);
+        Catalise.$readMoreBtn.html(html);
     }, 500);
    
 });
 
-var map = L.map('map').setView([39.5, -8], 8);
+Catalise.data = [
+    {
+        "projectName": "1000Lides Associação Cultural",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=95bfc7e1b40e690bf0ee623c7dc1ff3d",
+        "studyCase": "Caso de estudo",
+        "lat": "38.1470314",
+        "lng": "-8.7286323"
+    },
+    {
+        "projectName": "Academia Cidadã",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=b9d64a3667fec2a5719672e08f4cbd01",
+        "lat": "38.7311266",
+        "lng": "-9.1344953"
+    },
+    {
+        "projectName": "Associação Viver Telheiras - Centro de Convergência de Telheiras - Iniciativa de Transição em Telheiras",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=3ec1b64a1cb03fad61bb9e79488daf7f",
+        "studyCase": "Caso de estudo",
+        "lat": "38.7618914",
+        "lng": "-9.1686549"
+    },
+    {
+        "projectName": "Biovilla",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=5e96a26a6fe4c896f15553262937aada",
+        "lat": "38.539539",
+        "lng": "-8.937882"
+    },
+    {
+        "projectName": "Casa da Floresta Verdes Anos",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=7677c68c3bc4cc7c8339b79c130d3eaa",
+        "studyCase": "Caso de estudo",
+        "lat": "38.7405333",
+        "lng": "-9.1807221"
+    },
+    {
+        "projectName": "Centro de Convergência em Permacultura na Raia",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=5d5407eaae050951cd4b76ee248f6290",
+        "lat": "39.9174463",
+        "lng": "-7.2295734"
+    },
+    {
+        "projectName": "Círculos de Sementes - WAKESEED",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=482453a80de295bf42dc1ed1da7335f4",
+        "studyCase": "Caso de estudo",
+        "lat": "38.752412",
+        "lng": "-9.28054"
+    },
+    {
+        "projectName": "Coopérnico – Cooperativa de desenvolvimento sustentável C.R.L",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=1149992fe5550112371066d1a3deb239",
+        "studyCase": "Caso de estudo",
+        "lat": "38.70664687",
+        "lng": "-9.142962701"
+    },
+    {
+        "projectName": "Ecoaldeia de Janas",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=fd7864d9549d36973dcbafded355fd12",
+        "lat": "38.825527",
+        "lng": "-9.4355162"
+    },
+    {
+        "projectName": "Escola L.A.R.A. - Morgado, Monte da Luz",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=99884b42684e02955e8c95a60c4c8771",
+        "lat": "37.8760582",
+        "lng": "-8.1649833"
+    },
+    {
+        "projectName": "Espaço Musas e Quinta Musas da Fontinha - Quinta Musas da Fontinha",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=14bde2f145ca426f6f7d5478707c209d",
+        "lat": "41.1567445",
+        "lng": "-8.6076121"
+    },
+    {
+        "projectName": "Gaia in Harmonia - Iniciativas (Criativas) de Transição",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=7886ea7953d91892141a9ca41f0ed545",
+        "lat": "38.3330035",
+        "lng": "-8.0030628"
+    },
+    {
+        "projectName": "Há Festa no Campo",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=249e171da7bd917a29ab877b72569577",
+        "lat": "39.913691",
+        "lng": "-7.5671515"
+    },
+    {
+        "projectName": "ITLaV - Iniciativa de Transição de Linda-a-Velha",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=9f5122ef56c29a994b7a431d496e9a7e",
+        "lat": "38.70752723",
+        "lng": "-9.240665903"
+    },
+    {
+        "projectName": "Portalegre em Transição",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=0ab359007342eac1466d7630013c065f",
+        "lat": "39.29336055",
+        "lng": "-7.431370615"
+    },
+    {
+        "projectName": "projecto270",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=0884be9483b13fbaca48f1117bc352f3",
+        "studyCase": "Caso de estudo",
+        "lat": "38.6446842",
+        "lng": "-9.233385"
+    },
+    {
+        "projectName": "PROUTugal - Movimento PROUTugal",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=f99e3135cd87c7544fad6f7b1074fadb",
+        "lat": "38.7368843",
+        "lng": "-9.1373136"
+    },
+    {
+        "projectName": "Quinta do Alecrim",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=9b5fb70759c5f06332d1c398e059f44d",
+        "lat": "39.4127645",
+        "lng": "-8.595509264"
+    },
+    {
+        "projectName": "Quinta do Vale da Lama",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=745264eefb7e19694a83614c55226f4d",
+        "lat": "37.14062743",
+        "lng": "-8.630510642"
+    },
+    {
+        "projectName": "Quinta Ecológica da Moita - Quinta das Moitas",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=9a772a85fd791dc8b4a04dc9103dc582",
+        "lat": "40.5671596",
+        "lng": "-7.5145715"
+    },
+    {
+        "projectName": "Quinta Pedagógica do Mitra - Associação Movimento Terra Solta",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/index.php?pid=3fd1eadfc12e4cdcb399a5abc77b620b",
+        "lat": "41.1683484",
+        "lng": "-8.6265377"
+    },
+    {
+        "projectName": "Soalheira - Projecto Soalheira",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=ab87dd322de80f1a2e7b59352c876d7b",
+        "lat": "39.7360906",
+        "lng": "-8.4913272"
+    },
+    {
+        "projectName": "Tamera",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=120202232523",
+        "studyCase": "Caso de estudo",
+        "lat": "37.71876",
+        "lng": "-8.51999"
+    },
+    {
+        "projectName": "Vale da Sarvinda",
+        "network": "Rede Convergir",
+        "url": "http://www.redeconvergir.net/v2/?pid=dbd6eb4abb235604a3706b9951b0b977",
+        "studyCase": "Caso de estudo",
+        "lat": "39.71338754",
+        "lng": "-7.496421424"
+    },
+    {
+        "projectName": "VITAMIMOS- Saúde, Ambiente e Bem-Estar ",
+        "network": "Social Lab EDP Solidária",
+        "url": "http://www.vitamimos.pt/",
+        "lat": "38.6897329",
+        "lng": "-9.3413843"
+    },
+    {
+        "projectName": "2º oportunidade - Envio 24 - Cooperativa de Distribuição Porta a Porta, CRL (2ª oportunidade)",
+        "network": "Zoom CASES",
+        "url": "http://www.centrojovemtabor.com/noticia_semear_solidariedade.php?pag=1",
+        "lat": "38.6975709",
+        "lng": "-8.9572806"
+    },
+    {
+        "projectName": "AJHA - Associação Jovem \"Habi(li)tar Alentejo\"",
+        "network": "Zoom CASES",
+        "url": "http://www.ajha.pt/",
+        "lat": "38.0182779",
+        "lng": "-7.8726033"
+    },
+    {
+        "projectName": "Associação Mais Cidadania ",
+        "network": "Zoom CASES",
+        "url": "www.maiscidadania.pt/",
+        "lat": "38.7147553",
+        "lng": "-9.1471122"
+    },
+    {
+        "projectName": "Boa - Comunidade Colaborativa",
+        "network": "Zoom CASES",
+        "url": "boacolaborativa.org/",
+        "lat": "38.7257823",
+        "lng": "-9.1734061"
+    },
+    {
+        "projectName": "Equipa d'África",
+        "network": "Zoom CASES",
+        "url": "www.equipadafrica.com/",
+        "lat": "38.7143477",
+        "lng": "-9.1638306"
+    },
+    {
+        "projectName": "Mentes Empreendedoras",
+        "network": "Zoom CASES",
+        "url": "https://www.facebook.com/SomosMentes/",
+        "lat": "38.6893497",
+        "lng": "-9.3133236"
+    },
+    {
+        "projectName": "Ameixoeira Criativa ",
+        "network": "Bip Zip",
+        "url": "http://lisboasolidaria.cm-lisboa.pt/documentos/1395908896U3pUR1ck2Zw52OZ3.pdf",
+        "lat": "38.7861282",
+        "lng": "-9.1589106"
+    },
+    {
+        "projectName": "Projecto remix ",
+        "network": "Bip Zip",
+        "url": "https://www.facebook.com/ProjectoreMix",
+        "studyCase": "Caso de estudo",
+        "lat": "38.7469352",
+        "lng": "-9.1201641"
+    },
+    {
+        "projectName": "Aveiro em Transição",
+        "network": "Bola-de-neve",
+        "url": "https://aveiroemtransicao.wordpress.com/",
+        "lat": "40.6377",
+        "lng": "-8.6561861"
+    },
+    {
+        "projectName": "GASTagus",
+        "network": "Bola-de-neve",
+        "url": "www.gastagus.org/",
+        "lat": "38.7373408",
+        "lng": "-9.3053126"
+    },
+    {
+        "projectName": "João Sem Medo",
+        "network": "Bola-de-neve",
+        "url": "www.joaosemmedo.org/",
+        "lat": "38.7039573",
+        "lng": "-9.1778972"
+    },
+    {
+        "projectName": "Projecto SABI (NAVEGAR, IPSS) ",
+        "network": "Bola-de-neve",
+        "url": "www.navegar.pt/",
+        "lat": "38.7841585",
+        "lng": "-9.0973525"
+    },
+    {
+        "projectName": "Academia Ubuntu",
+        "network": "Cidadania Activa",
+        "url": "http://www.academiaubuntu.org",
+        "lat": "38.7104825",
+        "lng": "-9.1356409"
+    },
+    {
+        "projectName": "Operação Nariz Vermelho - Associação de Apoio à Criança",
+        "network": "Cidadania Activa",
+        "url": "www.narizvermelho.pt/",
+        "lat": "38.7062004",
+        "lng": "-9.1687885"
+    },
+    {
+        "projectName": "Agricultura Social para a inclusão ",
+        "network": "EDP Hortas Solidárias",
+        "url": "http://www.cercica.pt/noticias.php?ArticleID=370",
+        "lat": "38.7160287",
+        "lng": "-9.3730688"
+    },
+    {
+        "projectName": "Associação QE, Uma Nova Linguagem para a Incapacidade, IPSS",
+        "network": "EDP Hortas Solidárias",
+        "url": "http://quintaessencia.pt/quem-somos",
+        "lat": "38.7672387",
+        "lng": "-9.3631369"
+    },
+    {
+        "projectName": "horta dos sonhos",
+        "network": "EDP Hortas Solidárias",
+        "url": "http://hortadosonhos.blogs.sapo.pt/",
+        "lat": "38.6886347",
+        "lng": "-7.7739398"
+    },
+    {
+        "projectName": "SEMEAR MAIS SOLIDARIEDADE",
+        "network": "EDP Hortas Solidárias",
+        "url": "http://www.coopenvio24.com/html/quem-somos-coop-envio24.php#",
+        "studyCase": "Caso de estudo",
+        "lat": "38.5556879",
+        "lng": "-8.8541942"
+    },
+    {
+        "projectName": "Associação Tempo de Mudar para o Desenvolvimento do Bairro dos Lóios ",
+        "network": "Rede Animar",
+        "url": "atm.org.pt/",
+        "lat": "38.741024",
+        "lng": "-9.1039537"
+    },
+    {
+        "projectName": "Cabaz do Hortelão ",
+        "network": "Rede Animar",
+        "url": "http://www.monte-ace.pt/site/servicos_cabazdohortelao.html",
+        "lat": "38.722089",
+        "lng": "-7.9856204"
+    }
 
-L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
-    
-}).addTo(map);
+];
 
-L.marker([39.5, -8.2]).addTo(map).bindPopup('<a href="#">Associação Viver Telheiras - Centro de Convergência de Telheiras - Iniciativa de Transição em Telheiras</a>')
-L.marker([39.0, -8.0]).addTo(map).bindPopup('<a href="#">Gaia in Harmonia - Iniciativas (Criativas) de Transição</a>')
-L.marker([38.5, -8.7]).addTo(map).bindPopup('<a href="#">Centro Comunitário de Linda-a-Velha</a>')
+
+
+Catalise.baseLayers = [
+    {
+        active: true,
+        name: "Estradas",
+        layer: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {})
+    },
+    {
+        name: "Satélite",
+//        layer: L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"),
+        layer: L.featureGroup([
+            L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"),
+            L.tileLayer('http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png'),
+        ])
+    }
+
+
+
+];
+
+//Catalise.tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {});
+
+
+
+(function(){
+
+    Catalise.markersBook = {};
+    Catalise.markersSimple = {};
+
+    var color = ['red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpurple', 'cadetblue'];
+    for(var i=0; i<color.length; i++){
+        Catalise.markersBook[color[i]] = L.AwesomeMarkers.icon({
+            icon: "book",
+            prefix: "fa",
+            markerColor: color[i]
+        });    
+
+        Catalise.markersSimple[color[i]] = L.AwesomeMarkers.icon({
+            icon: "",
+            prefix: "fa",
+            markerColor: color[i]
+        });
+
+
+    }
+
+    Catalise.networkLayers = {};
+    Catalise.panelConfig = [];
+
+    var network = ["Rede Convergir", "Social Lab EDP Solidária", "Zoom CASES", "Bip Zip", "Bola-de-neve", "Cidadania Activa", "EDP Hortas Solidárias", "Rede Animar"];
+
+    var layer;
+    for(i=0; i<network.length; i++){
+        Catalise.networkLayers[network[i]] = L.layerGroup();
+
+
+        Catalise.panelConfig.push({
+            active: true,
+            name: "" + network[i],
+            
+            legend: true,
+            className: "xyz",
+            layer: Catalise.networkLayers[network[i]]
+        });
+        //debugger;
+    }
+
+
+})()
+
+Catalise.colorMapping = {
+    "Rede Convergir": "green",
+    "Social Lab EDP Solidária": "red",
+    "Zoom CASES": "darkred",
+    "Bip Zip": "orange",
+    "Bola-de-neve": "darkgreen",
+    "Cidadania Activa": "blue",
+    "EDP Hortas Solidárias": "purple",
+    "Rede Animar": "darkpurple"
+};
+
+
+Catalise.popupTemplate = _.template("<h4><a href='<%= url %>' target='_blank'><%= projectName %> <i class='fa fa-link'></i></a></h4> <span style='font-weight: bold;'>Caso de estudo:</span> <% if(studyCase){ %> sim <% }else{ %> não <% } %><br><span style='font-weight: bold;'>Rede de origem:</span> <%= network %>");
+
+
+
+var counter = 0;
+_.each(Catalise.data, function(obj){
+
+    obj.studyCase = !!obj.studyCase;
+
+    var latLng = [Number(obj.lat), Number(obj.lng)];
+    var popupMsg = Catalise.popupTemplate(obj);
+    var color = Catalise.colorMapping[obj.network];
+    var icon = obj.studyCase ? Catalise.markersBook[color] : Catalise.markersSimple[color];
+
+    var marker = L.marker(latLng, {
+            icon: icon
+        })
+        .bindPopup(popupMsg)
+
+    Catalise.networkLayers[obj.network].addLayer(marker);
+
+counter++;
+});
+
+Catalise.map = L.map('map', {
+    center: [39.4, -8],
+    zoom: 8,
+    //layers: [Catalise.tileLayer].concat(_.toArray(Catalise.networkLayers))
+    //layers: [Catalise.tileLayer].concat(_.toArray(Catalise.networkLayers))
+});
+
+// Catalise.map.addControl(L.control.layers(undefined, Catalise.networkLayers, {
+//     position: "topright",
+//     collapsed: false
+// }));
+
+Catalise.map.addControl( new L.Control.PanelLayers(Catalise.baseLayers, Catalise.panelConfig) );
+//Catalise.map.addControl( new L.Control.PanelLayers(Catalise.baseLayers, Catalise.baseLayers) );
+
+
 </script>
 
 {% endblock %}
-

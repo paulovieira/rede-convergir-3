@@ -9,6 +9,7 @@
 
 {% for obj in initiatives %}
 
+{% if obj.visible %}
 <div class="row initiative-container {{ 'initiative-selected' if obj.selected }}" data-slug={{ obj.slug }} >
 
     <div class="{{ 'col-sm-9' if obj.logo.filename else 'col-sm-12' }}" style="padding: 0;">
@@ -62,6 +63,8 @@
 </div>
 
 <hr class="initiative-separator"  style="margin: 10px 12px 15px 7px;">
+
+{% endif %}
 
 {% endfor %}
 

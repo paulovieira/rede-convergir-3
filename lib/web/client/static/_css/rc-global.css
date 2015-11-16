@@ -46,3 +46,10 @@
     border-color: #68B3C8;
 }
 
+.footer-link {
+    color: #777777;
+}
+
+.footer-link:hover {
+    color: #E3E3E3 !important;
+}

@@ -6,8 +6,31 @@
 
 {% block head %}
 
-{# call super to common css #}
-{{ super() }}
+{# here we don't call super because we want to avoid including some of the parent css (namely the sticky footer stuff) #}
+
+
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rede Convergir
+    </title>
+
+    {# paper kit css #}
+
+    <link href="/static/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="/static/bootstrap/x_paper_kit_1.0/assets/css/ct-paper.css" rel="stylesheet"/>
+    <link href="/static/bootstrap/x_paper_kit_1.0/assets/css/demo.css" rel="stylesheet" /> 
+    <link href="/static/bootstrap/x_paper_kit_1.0/assets/css/examples.css" rel="stylesheet" /> 
+    <link href="/static/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
+
+    <link href="/static/_css/paper-kit-override.css" rel="stylesheet" /> 
+    <link href="/static/_css/rc-global.css" rel="stylesheet"/>
+{#    <link href="/static/_css/sticky-footer.css" rel="stylesheet"/> #}
+
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+
 
 <link href="/static/leaflet/leaflet-1.0beta2/leaflet.css" rel="stylesheet" />
 <link href="/static/leaflet/leaflet-label-9c431d/leaflet.label.css" rel="stylesheet" />
@@ -21,10 +44,6 @@
 
 
 {% block body %}
-
-
-
-{{ navbar(ctx) }}
 
 <div id="main-container">
 
@@ -60,9 +79,9 @@
 {{ super() }}
 
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-	window.RCData = window.RCData || {};
+    window.RCData = window.RCData || {};
     RCData.initiatives = {{ ctx.initiatives | stringify }};
     RCData.definitionsAll = {{ ctx.definitions | stringify }};
 
@@ -78,7 +97,7 @@
         }
     };
 
-	</script>
+    </script>
 
 
     <!-- cartografia libs -->

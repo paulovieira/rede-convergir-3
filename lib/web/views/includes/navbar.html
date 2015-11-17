@@ -1,6 +1,4 @@
-
 {% macro navbar(ctx) %}
-
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -32,16 +30,23 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Liga-te <b class="caret-big"></b></a>
                     <ul class="dropdown-menu dropdown-menu-right">
 
-                        <li><a href="/newsletter" class="{{ 'active' if ctx.urlParam1=='newsletter' }}" title="Newsletter mensal">Newsletter</a></li>
+                        <li><a href="/newsletter" class="{{ 'active' if ctx.urlParam1=='newsletter' }}" title="Newsletter mensal">Subscrever a newsletter</a></li>
                         <li><a href="/exportar" class="{{ 'active' if ctx.urlParam1=='exportar' }}" title="Exportar o mapa das iniciativas ou o calendário para o seu website">Exportar</a></li>
-                        <li><a href="/recursos" class="{{ 'active' if ctx.urlParam1=='recursos' }}" title="Recursos e projectos associados">Recursos</a></li>
-                        <li><a href="/ligacoes-uteis" class="{{ 'active' if ctx.urlParam1=='ligacoes-uteis' }}" title="Links úteis">Ligações</a></li>
-{#
-                        <li><a href="/catalise" class="{{ 'active' if ctx.urlParam1=='catalise' }}">CATALISE</a></li>
-#}
 
                     </ul>
                 </li>
+
+                <li class="dropdown">
+                
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recursos <b class="caret-big"></b></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+                        <li><a href="/catalise" class="{{ 'active' if ctx.urlParam1=='catalise' }}">CATALISE</a></li>
+                        <li><a href="/ligacoes-uteis" class="{{ 'active' if ctx.urlParam1=='ligacoes-uteis' }}" title="Links úteis">Ligações Úteis</a></li>
+
+                    </ul>
+                </li>
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

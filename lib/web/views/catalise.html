@@ -1,6 +1,7 @@
 {% extends "layouts/index_paper_kit.html" %}
 
 {% from "includes/navbar.html" import navbar %}
+{% from "includes/footer.html" import footer %}
 
 {% block head %}
 
@@ -240,7 +241,9 @@
     </div>
 </div>
 
-<div style="height: 140px"></div>
+
+
+{{ footer() }}
 
 {{ super() }}
 
@@ -708,7 +711,7 @@ Catalise.awesomeMarkersColors = {
 
 
 
-Catalise.popupTemplate = _.template("<h4><a href='<%= url %>' target='_blank' title='Abrir numa nova tab'><%= projectName %> <i class='fa fa-link'></i></a></h4> <span style='font-weight: bold;'>Caso de estudo:</span> <% if(studyCase){ %> sim <% }else{ %> não <% } %><br><span style='font-weight: bold;'>Rede de origem:</span> <%= network %>");
+Catalise.popupTemplate = _.template("<h4><a href='<%= url %>' target='_blank' title='Abrir numa nova tab'><%= projectName %> <i class='fa fa-link'></i></a></h4> <span style='font-weight: bold;'>Caso de estudo:</span> <% if(studyCase){ %> sim <% }else{ %> não <% } %><br><span style='font-weight: bold;'>Rede de origem</span> <%= network %>");
 
 
 

@@ -10,32 +10,66 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rede Convergir</a>
+            <a style="padding: 8px 15px;" class="navbar-brand" href="/" title="Página de entrada">
+                {# Rede Convergir #}
+                <img alt="Rede Convergir - logotipo" src="/static/_images/convergir_logo.png">
+            </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="nav-menu-contents">
-            <ul class="nav navbar-nav navbar-left">
+            <ul class="nav navbar-nav">
 
-              <li><a href="/iniciativas" class="btn btn-simple {{ 'active' if ctx.urlParam1=='iniciativas' }}">Iniciativas</a></li>
+                <li><a href="/iniciativas" class="btn btn-simple {{ 'active' if ctx.urlParam1=='iniciativas' }}" title="Iniciativas">Iniciativas</a></li>
 
-              <li><a href="/eventos" class="btn btn-simple {{ 'active' if ctx.urlParam1=='eventos' }}">Eventos</a></li>
+                <li><a href="/eventos" class="btn btn-simple {{ 'active' if ctx.urlParam1=='eventos' }}" title="Eventos">Eventos</a></li>
 
-              <li class="dropdown">
-              
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recursos <b class="caret"></b></a>
-                  <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="/sobre" class="btn btn-simple {{ 'active' if ctx.urlParam1=='sobre' }}" title="O que é a Rede Convergir?">Sobre</a></li>
 
-                      <li><a href="/catalise" class="{{ 'active' if ctx.urlParam1=='catalise' }}">CATALISE</a></li>
+                <li class="dropdown">
+                
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Liga-te <b class="caret-big"></b></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
 
-                  </ul>
-              </li>
+                        <li><a href="/newsletter" class="{{ 'active' if ctx.urlParam1=='newsletter' }}" title="Newsletter mensal">Subscrever a newsletter</a></li>
+                        <li><a href="/exportar" class="{{ 'active' if ctx.urlParam1=='exportar' }}" title="Exportar o mapa das iniciativas ou o calendário para o seu website">Exportar</a></li>
+
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recursos <b class="caret-big"></b></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+
+                        <li><a href="/catalise" class="{{ 'active' if ctx.urlParam1=='catalise' }}">CATALISE</a></li>
+                        <li><a href="/ligacoes-uteis" class="{{ 'active' if ctx.urlParam1=='ligacoes-uteis' }}" title="Links úteis">Ligações Úteis</a></li>
+
+                    </ul>
+                </li>
 
             </ul>
+
             <ul class="nav navbar-nav navbar-right">
-                <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></a>
-                <a href="#" target="_blank" class="btn btn-simple"><i class="fa fa-facebook"></i></a>
-                <a href="/login" class="btn btn-simple"><i class="fa fa-user"></i></a>
+
+
+                            {# include js that will dinamically generate the appropriate mailto link. It will output the following string to the document:
+
+                            <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-at icon-navbar"></i></a>
+
+                            {% include "includes/email-enkoder.html" %}
+                            #}                
+
+                                
+<!--                 <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-at icon-navbar"></i></a> -->
+<!--                 <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i class="fa fa-envelope-o icon-navbar"></i></a> -->
+                <a href="mailto:info@redeconvergir.net" title="Clique para enviar um email"><i style="color: white;" class="fa fa-envelope icon-navbar"></i></a>
+
+                <a href="https://www.facebook.com/Rede-Convergir-789470407837483" target="_blank" title="Facebook da Rede Convergir (abre numa nova tab)"><i style="color: white; padding-left:3px; font-size: 21px !important;" class="fa fa-facebook-square icon-navbar"></i></a>
+
+                <a href="/login" title="Aceder à área reservada"><i style="color: white;" class="fa fa-user icon-navbar"></i></a>
+
             </ul>
+
         </div>
         <!-- /.navbar-collapse -->
     </div>

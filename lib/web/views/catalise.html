@@ -18,16 +18,78 @@
         height: 1200px;
     }
 
-    .xyz {
-        min-width: 40px !important;
+    .legend-strip {
+        min-width: 25px !important;
         border-radius: 3px;
-        background-color: red;
     }
 
-    .leaflet-panel-layers-item > span.xyz {
+    .leaflet-panel-layers-item > span.legend-strip {
         height: 16px;
-        margin: 0px 2px 4px 0px;
+        margin-bottom: 3px;
     }
+
+    .leaflet-panel-layers-item > span.legend-title {
+/*        padding-bottom: 1px;*/
+        font-size: 13px;
+    }
+
+    .icon-marker-lg {
+        font-size: 17px !important;
+    }
+
+
+    /* colors from the awesome markers plugin */
+    .leaflet-panel-layers-red {
+        background-color: #d63e2a;
+    }
+
+    .leaflet-panel-layers-orange {
+        background-color: #f69730;
+    }
+
+    .leaflet-panel-layers-green {
+        background-color: #72b026;
+    }
+
+    .leaflet-panel-layers-blue {
+        background-color: #38aadd;
+    }
+
+    .leaflet-panel-layers-purple {
+        background-color: #d252b9;
+    }
+
+    .leaflet-panel-layers-darkred {
+        background-color: #a23336;
+    }
+
+    .leaflet-panel-layers-darkblue {
+        background-color: #0067a3;
+    }
+
+    .leaflet-panel-layers-darkgreen {
+        background-color: #728224;
+    }
+
+    .leaflet-panel-layers-darkpurple {
+        background-color: #5b396b;
+    }
+
+    .leaflet-panel-layers-lightgray {
+        background-color: #a3a3a3;
+    }
+
+
+.leaflet-panel-layers-base .leaflet-panel-layers-item,
+.leaflet-panel-layers-overlays .leaflet-panel-layers-item {
+    height: 24px;
+}
+
+.leaflet-panel-layers-item {
+    padding-left: 6px;
+}
+
+
 </style>
 {% endblock %}
 
@@ -89,11 +151,14 @@
                 <hr>
 
                 <div>
-                    <h4>Publicações</h4>
-                    <ul>
-                        <li><a href="#">Guia de boas práticas</a></li>
+                    <h4>Publicações <span style="font-weight: normal; font-size: 18px;">(brevemente)</span></h4> 
+                    <ul style="padding-left: 30px;">
+<!--                         <li><a href="#">Guia de boas práticas</a></li>
                         <li><a href="">Caderno de recomendações políticas</a></li>
-                        <li><a href="">Relatório</a></li>
+                        <li><a href="">Relatório</a></li> -->
+                        <li>Guia de boas práticas</li>
+                        <li>Caderno de recomendações políticas</li>
+                        <li>Relatório</li>
                     </ul>
                 </div>
 
@@ -121,10 +186,10 @@
                     </div>
 
                     <div class="col-sm-12">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/cics_nova.jpg" alt=""></a>
+                        <a href="http://www.cics.nova.fcsh.unl.pt/"><img  class="img-responsive" src="/rc-app/_logos_catalise/cics_nova.jpg" alt=""></a>
                     </div>
                     <div class="col-sm-12" style="margin-top: 15px;">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/ce3c_fcul.jpg" alt=""></a>
+                        <a href="http://ce3c.ciencias.ulisboa.pt/"><img  class="img-responsive" src="/rc-app/_logos_catalise/ce3c_fcul.jpg" alt=""></a>
                     </div>
                 </div>
 
@@ -147,7 +212,7 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/fct_fccn_2.jpg" alt=""></a>
+                        <a href="https://www.fccn.pt/"><img  class="img-responsive" src="/rc-app/_logos_catalise/fct_fccn_2.jpg" alt=""></a>
                     </div>
                 </div>
 
@@ -157,7 +222,7 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <a href="#"><img  class="img-responsive" src="/rc-app/_logos_catalise/logo_fcg_novo.jpg" alt=""></a>
+                        <a href="http://www.gulbenkian.pt/"><img  class="img-responsive" src="/rc-app/_logos_catalise/logo_fcg_novo.jpg" alt=""></a>
                     </div>
                 </div>
 
@@ -172,20 +237,10 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top: 40px;">
-            <div class="col-sm-12">
-                PARA FAZER:
-                <ul>
-                    <li>adicionar legenda para fazer a ligação de "caso de estudo" / "participante" e as respectivas cores</li>
-                    <li>clustering dos marcadores</li>
-                    <li>legenda com as cores dos marcadores</li>
-                </ul>
-            </div>
-
-        </div>
     </div>
 </div>
 
+<div style="height: 140px"></div>
 
 {{ super() }}
 
@@ -580,10 +635,16 @@ Catalise.baseLayers = [
     Catalise.markersBook = {};
     Catalise.markersSimple = {};
 
-    var color = ['red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpurple', 'cadetblue'];
+
+
+    var network = ["Rede Convergir", "Social Lab EDP Solidária", "Zoom CASES", "Bip Zip", "Cidadania Activa", "EDP Hortas Solidárias", "Rede Animar", "Bola-de-neve"];
+    var color = ["green", "orange", "red", "blue", "purple", "darkblue", "darkpurple", "lightgray"];
+
     for(var i=0; i<color.length; i++){
         Catalise.markersBook[color[i]] = L.AwesomeMarkers.icon({
             icon: "book",
+            iconColor: "black",
+            extraClasses: "icon-marker-lg",
             prefix: "fa",
             markerColor: color[i]
         });    
@@ -597,10 +658,9 @@ Catalise.baseLayers = [
 
     }
 
+    Catalise.colorMapping = _.object(network, color);
     Catalise.networkLayers = {};
     Catalise.panelConfig = [];
-
-    var network = ["Rede Convergir", "Social Lab EDP Solidária", "Zoom CASES", "Bip Zip", "Bola-de-neve", "Cidadania Activa", "EDP Hortas Solidárias", "Rede Animar"];
 
     var layer;
     for(i=0; i<network.length; i++){
@@ -610,30 +670,45 @@ Catalise.baseLayers = [
         Catalise.panelConfig.push({
             active: true,
             name: "" + network[i],
-            
+            layer: Catalise.networkLayers[network[i]],
+
+            // custom properties - the plugin was changed to support these properties
             legend: true,
-            className: "xyz",
-            layer: Catalise.networkLayers[network[i]]
+            className: "legend-strip leaflet-panel-layers-" + Catalise.colorMapping[network[i]], 
+            
         });
-        //debugger;
     }
 
 
-})()
+})();
 
-Catalise.colorMapping = {
-    "Rede Convergir": "green",
-    "Social Lab EDP Solidária": "red",
-    "Zoom CASES": "darkred",
-    "Bip Zip": "orange",
-    "Bola-de-neve": "darkgreen",
-    "Cidadania Activa": "blue",
-    "EDP Hortas Solidárias": "purple",
-    "Rede Animar": "darkpurple"
+Catalise.awesomeMarkersColors = {
+    red: "#d63e2a",
+    orange: "#f69730",
+    green: "#72b026",
+    blue: "#38aadd",
+    purple: "#d252b9",
+    darkred: "#a23336",
+    darkblue: "#0067a3",
+    darkgreen: "#728224",
+    darkpurple: "#5b396b",
+    cadetblue: "#436978",
+    lightred: "#ff8e7f",
+    beige: "#ff8e7f",
+    lightgreen: "#ff8e7f",
+    lightblue: "#8adaff",
+    pink: "#ff91ea",
+    white: "#fbfbfb",
+    lightgray: "#a3a3a3",
+    gray: "#575757",
+    black: "#303030"
 };
 
+ 
 
-Catalise.popupTemplate = _.template("<h4><a href='<%= url %>' target='_blank'><%= projectName %> <i class='fa fa-link'></i></a></h4> <span style='font-weight: bold;'>Caso de estudo:</span> <% if(studyCase){ %> sim <% }else{ %> não <% } %><br><span style='font-weight: bold;'>Rede de origem:</span> <%= network %>");
+
+
+Catalise.popupTemplate = _.template("<h4><a href='<%= url %>' target='_blank' title='Abrir numa nova tab'><%= projectName %> <i class='fa fa-link'></i></a></h4> <span style='font-weight: bold;'>Caso de estudo:</span> <% if(studyCase){ %> sim <% }else{ %> não <% } %><br><span style='font-weight: bold;'>Rede de origem:</span> <%= network %>");
 
 
 
@@ -650,7 +725,7 @@ _.each(Catalise.data, function(obj){
     var marker = L.marker(latLng, {
             icon: icon
         })
-        .bindPopup(popupMsg)
+        .bindPopup(popupMsg);
 
     Catalise.networkLayers[obj.network].addLayer(marker);
 
@@ -660,17 +735,35 @@ counter++;
 Catalise.map = L.map('map', {
     center: [39.4, -8],
     zoom: 8,
-    //layers: [Catalise.tileLayer].concat(_.toArray(Catalise.networkLayers))
-    //layers: [Catalise.tileLayer].concat(_.toArray(Catalise.networkLayers))
 });
 
-// Catalise.map.addControl(L.control.layers(undefined, Catalise.networkLayers, {
-//     position: "topright",
-//     collapsed: false
-// }));
+
 
 Catalise.map.addControl( new L.Control.PanelLayers(Catalise.baseLayers, Catalise.panelConfig) );
-//Catalise.map.addControl( new L.Control.PanelLayers(Catalise.baseLayers, Catalise.baseLayers) );
+
+// hack directly the dom with jquery to make it look right
+
+$(".leaflet-panel-layers-list").append("<div class='leaflet-panel-layers-overlays' style='border: 1px solid rgb(147, 144, 140); padding: 1px; border-radius: 4px;'>  <label class='leaflet-panel-layers-item' style='cursor: default; border: none; margin: 0px; background-color: rgba(255, 255, 255, 0.8); font-size: 13px;'> <i class='fa fa-book' style='font-size: 16px;'></i>  Caso de estudo </div>")
+
+
+
+
+$(".leaflet-panel-layers-overlays").first().prepend("<div style='font-size: 15px; font-weight: bold; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 4px; background-color: rgba(255, 255, 255, 0.8);'>Redes de origem:</div>")
+
+$(".leaflet-panel-layers-item").css("border", "none");
+$(".leaflet-panel-layers-item").css("margin", 0);
+$(".leaflet-panel-layers-item").css("background-color", "rgba(255, 255, 255, 0.8)")
+
+$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("border" , "1px solid #93908c");
+$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("padding" , "1px 1px 1px 1px");
+$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("border-radius" , "4px");
+
+$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("margin-bottom", "8px");
+
+$(".leaflet-panel-layers-separator").remove();
+
+
+
 
 
 </script>

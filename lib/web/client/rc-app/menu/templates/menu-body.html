@@ -38,12 +38,157 @@
 
         <div class="col-sm-6">
 
+        {% for obj in types %}
+        
+            {% if loop.index0 % 2 == 0   %}
+
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+                <input type="checkbox" data-type-id="{{ obj.id }}" class="js-filter-type" {{ "checked" if obj.selected }}>
+                {{ obj.title.pt }}
+            </label>
+            </div>
+
+            {% endif %}
+            
+        {% endfor %}
+        
+        </div>
+
+        <div class="col-sm-6">
+
+        {% for obj in types %}
+         
+            {% if loop.index0 % 2 == 1  %}
+
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+                <input type="checkbox" data-type-id="{{ obj.id }}" class="js-filter-type" {{ "checked" if obj.selected }} >
+                {{ obj.title.pt }}
+            </label>
+            </div>
+
+            {% endif %}
+            
+        {% endfor %}
+        
+        </div>
+    </div>
+
+    <hr style="margin: 10px 15px 0px 0px;">
+
+
+
+    <div class="row" style="margin-top: 15px;">
+
+        <p style="padding-left: 15px;">Filtro: domínio de interesse</p>
+        <div class="col-sm-6">
+
+        {% for obj in domains %}
+        
+            {% if loop.index0 % 2 == 0 %}
+
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+                <input type="checkbox" data-domain-id="{{ obj.id }}" class="js-filter-domain" {{ "checked" if obj.selected }}>
+                {{ obj.title.pt }}
+            </label>
+            </div>
+
+            {% endif %}
+
+        {% endfor %}
+        
+        </div>
+
+        <div class="col-sm-6">
+
+        {% for obj in domains %}
+        
+            {% if loop.index0 % 2 == 1 %}
+
+            <div class="icheck-label">
+            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+                <input type="checkbox" data-domain-id="{{ obj.id }}" class="js-filter-domain" {{ "checked" if obj.selected }}>
+                {{ obj.title.pt }}
+            </label>
+            </div>
+
+            {% endif %}
+            
+        {% endfor %}
+        
+        </div>
+    </div>
+
+    <hr style="margin: 10px 15px 0px 0px;">
+
+
+    <div class="row" style="margin-top: 15px;">
+
+        <div class="col-sm-6">
+
+            <p style="">Mapa-base</p>
+
+            {% for obj in baseLayers %}
+    
+            <div class="icheck-label">
+              <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+                <input type="radio" name="base-maps" data-base-layer-id="{{ obj.id }}" value="{{ obj.id }}" class="js-base-map" {{ "checked" if obj.selected }}>
+                {{ obj.title.pt }}
+              </label>
+            </div>
+
+            {% endfor %}
+        
+        </div>
+
+        <div class="col-sm-6">
+
+            <a href="#" style="border-radius: 10px; margin-right: 15px; " class="btn btn-primary js-modal-export" data-toggle="modal" data-target="#export-map" title="Ver detalhes sobre como exportar o mapa">Exportar</a>
+            
+            <div style="margin-top: 10px; font-size: 13px;">
+            Clique no botão acima para exportar o mapa das iniciativas com as definições actuais (filtros, localização, nível de zoom, etc)
+            </div>
+        
+        </div>
+
+    </div>
+
+    <div class="text-center" style="margin-top: 15px;">
+        <button class="btn btn-primary" style="border-radius: 10px; margin-right: 15px;" id="options-apply-filters">
+            Actualizar o mapa
+        </button>
+
+        <button class="btn btn-default" style="border-radius: 10px;" id="options-cancel-filters">
+            Fechar
+        </button>
+    </div>
+
+</div>
+</div>
+
+
+<div id="mn-r-list"></div>
+
+
+
+
+
+
+{# OLD VERSION - to be deleted
+
+
+    <div class="row">
+
+        <p style="padding-left: 15px;">Filtro: tipo de iniciativa</p>
+
+        <div class="col-sm-6">
+
         {% set counter = 0 %}
 
-        {# NOTE - here we are iteration over an object (the values are also objects) #}
         {% for key, value in definitions.type %}
         
-            {# handmade tweak - we want the right column to have 5 items #}
             {% if counter % 2 == 0   %}
 
             <div class="icheck-label">
@@ -85,7 +230,12 @@
     </div>
 
     <hr style="margin: 10px 15px 0px 0px;">
-    
+#}
+
+
+
+{# OLD VERSION - to be deleted
+
     <div class="row" style="margin-top: 15px;">
 
         <p style="padding-left: 15px;">Filtro: domínio de interesse</p>
@@ -135,43 +285,4 @@
     </div>
 
     <hr style="margin: 10px 15px 0px 0px;">
-
-    <div class="row" style="margin-top: 15px;">
-
-        <p style="padding-left: 15px;">Mapa-base</p>
-        <div class="col-sm-12">
-
-        {# NOTE - here we are iteration over an array of objects #}
-        {% for obj in baseLayers %}
-        
-
-            <div class="icheck-label">
-              <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="radio" name="base-maps" data-base-layer-id="{{ obj.id }}" value="{{ obj.id }}" class="js-base-map" {{ "checked" if obj.active }}>
-                {{ obj.title.pt }}
-              </label>
-            </div>
-
-        {% endfor %}
-        
-        </div>
-
-    </div>
-
-    <div class="text-center" style="margin-top: 15px;">
-        <button class="btn btn-primary" style="border-radius: 10px; margin-right: 15px;" id="options-apply-filters">
-            Actualizar o mapa
-        </button>
-
-        <button class="btn btn-default" style="border-radius: 10px;" id="options-cancel-filters">
-            Fechar
-        </button>
-    </div>
-
-</div>
-</div>
-
-
-<div id="mn-r-list"></div>
-
-
+#}

@@ -3,6 +3,7 @@
 {% from "includes/navbar.html" import navbar %}
 
 {% from "includes/modal-types-more-info.html" import modal_types_more_info %}
+{% from "includes/modal-export-map.html" import modal_export_map %}
 
 {% block head %}
 
@@ -40,6 +41,12 @@
 
 <link href="/static/jquery/icheck-1.0.2/skins/minimal/grey.css" rel="stylesheet" />
 
+<style>
+    #map-container {
+        top: 0px;
+    }
+</style>
+
 {% endblock %}
 
 
@@ -72,6 +79,7 @@
 
 <!-- modal bodies -->
 {{ modal_types_more_info(ctx) }}
+{{ modal_export_map(ctx) }}
 <!--   end modal -->
 
 
@@ -96,6 +104,8 @@
             pt: "Outro"
         }
     };
+
+    RCData.initial = {{ ctx.query | stringify }};
 
     </script>
 

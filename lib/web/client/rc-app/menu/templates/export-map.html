@@ -1,0 +1,21 @@
+{% set url = host + "/exportar/iniciativas?zoom=" + zoom + "&amp;centerLat=" + lat + "&amp;centerLng=" + lng + "&amp;baseLayer=" + baseLayer %}
+
+{% if types %}
+	{% set url = url + types  %}
+{% endif %}
+
+{% if domains %}
+	{% set url = url + domains  %}
+{% endif %}
+
+<div>
+Faça copy-paste do seguinte elemento <code>&lt;iframe&gt;</code> para exportar o mapa para o seu website. Pode ler mais detalhes na página <a href="/exportar">"Exportar o mapa"</a>.
+</div>
+
+<div>
+	<textarea style="border: solid 1px; background-color: white;" class="form-control" rows="6">
+
+&lt;iframe width="400" height="700" src="{{ url }}"&gt; &lt;/iframe&gt;
+
+	</textarea>
+</div>

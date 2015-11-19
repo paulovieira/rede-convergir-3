@@ -1,0 +1,40 @@
+{% extends "layouts/index_paper_kit.html" %}
+
+{% from "includes/navbar.html" import navbar %}
+{% from "includes/footer.html" import footer %}
+
+{% block head %}
+
+{# call super to common css #}
+
+{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+{{ navbar(ctx) }}
+
+
+<div class="container">
+
+inserir iniciativa - em construção
+
+</div>
+
+
+{{ footer() }}
+
+
+{{ super() }}
+
+
+    <script type="text/javascript">
+    </script>
+
+
+{% endblock %}
+

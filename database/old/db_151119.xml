@@ -1831,36 +1831,6 @@
             <othercontact>917675529</othercontact>
         </project>
         <project>
-            <projectid>48ee2aa1d1ff93b890b11ecf4904d300</projectid>
-            <projectname>beCitrus</projectname>
-            <projecturl>http://www.becitrus.pt/</projecturl>
-            <logo/>
-            <street>Travessa das Cunhas 47</street>
-            <postalcode>8800-372</postalcode>
-            <city>Tavira</city>
-            <lat>37.1242648</lat>
-            <lng>-7.647782199999938</lng>
-            <startdate>03/07/2013</startdate>
-            <registrydate>04/07/2013</registrydate>
-            <updatedate>10/12/2014</updatedate>
-            <projecttype>Gestão da Terra e da Natureza</projecttype>
-            <domains>Agricultura,Arte,Educação,Saúde,Ferramentas Sociais</domains>
-            <companyproject>beCitrus</companyproject>
-            <visitors>Sim</visitors>
-            <groupsize>2</groupsize>
-            <scopearea>Urbano e Rural</scopearea>
-            <target>Geral</target>
-            <projectinfluence>&gt;10.000</projectinfluence>
-            <areaha>12</areaha>
-            <projectdescription>Projecto de tudo à base de citrinos, sobretudo laranja. Sumos, compotas, marmalade, laranja a granel. Produtos biológicos de parceiros locais seleccionados. Artesanato local e informações sobre Tavira e a região.</projectdescription>
-            <video/>
-            <docurl/>
-            <contactname>Manuel Trindade</contactname>
-            <email>manutri@gmail.com</email>
-            <phone>912288832</phone>
-            <othercontact>961114834</othercontact>
-        </project>
-        <project>
             <projectid>c8365cb0aeef1169c528047eaae33193</projectid>
             <projectname>Comunidade de Partilha</projectname>
             <projecturl>https://www.facebook.com/comunidadepartilha</projecturl>
@@ -4593,8 +4563,8 @@
         <project>
             <projectid>b5d70a38393a36345b17f86c07b15ae0</projectid>
             <projectname>Terra Purna</projectname>
-            <projecturl></projecturl>
-            <logo></logo>
+            <projecturl/>
+            <logo/>
             <street>Huerta Chica, Lanchuelas</street>
             <postalcode>10515</postalcode>
             <city>Valencia de Alcántara</city>
@@ -4605,19 +4575,139 @@
             <updatedate>19/10/2015</updatedate>
             <projecttype>Permacultura</projecttype>
             <domains>Agricultura,Bio-Construção,Eco-Tecnologia,Arte,Educação,Saúde,Espiritualidade</domains>
-            <companyproject></companyproject>
+            <companyproject/>
             <visitors>Sim</visitors>
-            <groupsize></groupsize>
+            <groupsize/>
             <scopearea>Rural</scopearea>
             <target>Geral</target>
-            <projectinfluence></projectinfluence>
+            <projectinfluence/>
             <areaha>2</areaha>
             <projectdescription>O Terra Purna é uma experiência familiar de vida integral. Usando a permacultura como principal ferramenta, procuramos desenvolver um modo de vida resiliente em sincronia com os ciclos naturais e investigar técnicas que permitam viver em frugal abundância. &lt;br /&gt;&lt;br /&gt;As componentes activas do projecto são um bosque comestível com variedades de fruteiras tradicionais e locais em risco de extinção, uma experiência de agricultura sinergética, várias experiências de contrução natural e bio-climática, sistemas de gestão da água com vários lagos, um sistema de tratamento de águas negras/cinzentas e o desenvolvimento de eco-tecnologias.&lt;br /&gt;&lt;br /&gt;Apesar de ser um espaço de vida familiar, o Terra Purna pertende ser também um espaço de partilha, aberto a todos os que se sintonizem com uma vida mais natural e consciente.</projectdescription>
-            <video></video>
-            <docurl></docurl>
+            <video/>
+            <docurl/>
             <contactname>António Surrécio</contactname>
             <email>a.surrecio@gmail.com</email>
-            <phone></phone>
+            <phone/>
+            <othercontact/>
+        </project>
+        <project>
+            <projectid>564100a58cd3f1bcf45b9a703526e242</projectid>
+            <projectname>HortaFCUL</projectname>
+            <projecturl>http://hortafcul.wix.com/home</projecturl>
+            <logo>LogoHortaFCULsmall.jpg</logo>
+            <street>Faculdade de Ciências da Universidade de Lisboa</street>
+            <postalcode>1749-016 </postalcode>
+            <city>Campo Grande</city>
+            <lat>38.7559991</lat>
+            <lng>-9.156958799999984</lng>
+            <startdate>01/10/2009</startdate>
+            <registrydate>26/10/2015</registrydate>
+            <updatedate>09/11/2015</updatedate>
+            <projecttype>Permacultura</projecttype>
+            <domains>Agricultura,Bio-Construção,Eco-Tecnologia,Arte,Educação,Ferramentas Sociais</domains>
+            <companyproject/>
+            <visitors>Sim</visitors>
+            <groupsize>15</groupsize>
+            <scopearea>Urbano</scopearea>
+            <target>Crianças,Adolescentes,Adultos,Idosos</target>
+            <projectinfluence>100 a 500</projectinfluence>
+            <areaha>0,1</areaha>
+            <projectdescription>O projecto HortaFCUL foi criado na Faculdade de Ciências da Universidade de Lisboa (FCUL) no ano de 2009, dinamizado por um grupo de estudantes interessados na temática da permacultura e de como esta poderá providenciar solução para alguns dos actuais problemas ecológicos, sociais e económicos.&lt;br /&gt; &lt;br /&gt;Com o apoio da FCUL e dedicação de alguns voluntários, a HortaFCUL é um jardim alimentício junto do edifício C2, um espaço que liga a agricultura ao jardim, com um misto de horticultura, ervas aromáticas e árvores de fruto, espaço este que é considerado o coração do projecto.&lt;br /&gt; &lt;br /&gt;Este projecto surgiu com o objectivo de sensibilizar e demonstrar práticas mais ecológicas, baseando-se nas éticas, principios, estratégias, técnicas e ferramentas propostas pela permacultura.​​​​​​​​​</projectdescription>
+            <video>FfO2bQNXWvE</video>
+            <docurl/>
+            <contactname>Horta FCUL</contactname>
+            <email>hortafcul@gmail.com</email>
+            <phone/>
+            <othercontact/>
+        </project>
+        <project>
+            <projectid>435854646a8af72d2b0abeb7975c80a9</projectid>
+            <projectname>Território Com Vida</projectname>
+            <projecturl>www.territoriocomvida.pt</projecturl>
+            <logo>logo120.jpg</logo>
+            <street>Lugar de Igreja - Rio Frio</street>
+            <postalcode>4970-318</postalcode>
+            <city>Rio Frio - Arcos de Valdevez</city>
+            <lat>41.8621115</lat>
+            <lng>-8.477100899999982</lng>
+            <startdate>11/06/2015</startdate>
+            <registrydate>26/10/2015</registrydate>
+            <updatedate>09/11/2015</updatedate>
+            <projecttype>Uso da Terra e Comunidade</projecttype>
+            <domains>Pecuária,Ferramentas Sociais</domains>
+            <companyproject>Território com vida - Associação</companyproject>
+            <visitors>Sim</visitors>
+            <groupsize>5</groupsize>
+            <scopearea>Rural</scopearea>
+            <target>Geral</target>
+            <projectinfluence>500 a 5.000</projectinfluence>
+            <areaha>400</areaha>
+            <projectdescription>A Associação “Território com vida” é uma organização sem fins lucrativos comprometida com a prevenção de incêndios em matas e florestas e com a conservação de recursos em espaço rural e, complementarmente, com a integração de pessoas vulneráveis ou em risco de exclusão no mundo do trabalho. &lt;br /&gt;Foi constituída no âmbito do concurso FAZ – Ideias de Origem Portuguesa, promovido pela Fundação Calouste Gulbenkian e pela COTEC Portugal, com o Alto Patrocínio de Sua Excelência o Senhor Presidente da República, sendo a vencedora da edição daquele concurso na sua edição de 2015.&lt;br /&gt;Está a desenvolver e a implementar um projeto piloto de controlo da vegetação com recurso ao pastoreio direto e segmentado com rebanhos de cabras autóctones da raça bravia e serrana na região do Alto Minho que pretende replicar a nível nacional, nomeadamente nos territórios de montanha. &lt;br /&gt;Este projeto de grande impacto social envolve as comunidades locais e a diáspora e conta com o apoio da Fundação Calouste Gulbenkian, do IES-Instituto de Empreendedorismo social e do IEFP-Instituto de Emprego e Formação Profissional na área da formação.&lt;br /&gt;</projectdescription>
+            <video>dwsZ5KB1p8w</video>
+            <docurl>Projeto.pdf</docurl>
+            <contactname>Joaquim Dantas</contactname>
+            <email>info@territoriocomvida.pt</email>
+            <phone>911833616</phone>
+            <othercontact>927227473</othercontact>
+        </project>
+        <project>
+            <projectid>a28ddf270b86bdc50a5902c93cfc54e0</projectid>
+            <projectname> A Casa do Colo</projectname>
+            <projecturl/>
+            <logo/>
+            <street>Azinhagão de Alagoa</street>
+            <postalcode>7300</postalcode>
+            <city>Alagoa</city>
+            <lat>39.3599886</lat>
+            <lng>-7.540412100000026</lng>
+            <startdate>27/05/2015</startdate>
+            <registrydate>09/11/2015</registrydate>
+            <updatedate>12/11/2015</updatedate>
+            <projecttype>Gestão da Terra e da Natureza</projecttype>
+            <domains>Agricultura,Bio-Construção,Arte,Educação,Saúde</domains>
+            <companyproject/>
+            <visitors>Sujeito a confirmação após contacto</visitors>
+            <groupsize>02</groupsize>
+            <scopearea>Urbano e Rural</scopearea>
+            <target>Geral</target>
+            <projectinfluence>&lt;10</projectinfluence>
+            <areaha>0,5</areaha>
+            <projectdescription>A Casa do Colo é um projecto familiar que pretende vir a ser uma fonte de rendimento sustentável.&lt;br /&gt;Integrada em meio rural onde os recursos naturais abundam, tem horta biológica, pomar de fruteiras autóctones, jardim de pedra de ervas aromáticas e comestíveis e instalações que primam pela reciclagem de materiais.&lt;br /&gt;Em comunhão com os animais que vivem em regime de semi-liberdade as actividades centram-se na prática de apicultura natural, de pedestrianismo e de oficinas de aprender a saber fazer.&lt;br /&gt;</projectdescription>
+            <video/>
+            <docurl/>
+            <contactname>Maria Fernandes</contactname>
+            <email>mariacbf60@hotmail.com</email>
+            <phone>968830609</phone>
+            <othercontact/>
+        </project>
+        <project>
+            <projectid>163758f91608ddde808d3100ad58c1a8</projectid>
+            <projectname>Sítio dos Faunos</projectname>
+            <projecturl>www.facebook.com/sitiodosfaunos</projecturl>
+            <logo>faunotam01logosmall.png</logo>
+            <street>Vale Romão</street>
+            <postalcode>2830</postalcode>
+            <city>Barreiro</city>
+            <lat>38.63584504836054</lat>
+            <lng>-9.053633275094626</lng>
+            <startdate>15/03/2015</startdate>
+            <registrydate>26/10/2015</registrydate>
+            <updatedate>13/11/2015</updatedate>
+            <projecttype>Gestão da Terra e da Natureza</projecttype>
+            <domains>Agricultura,Bio-Construção,Arte,Espiritualidade</domains>
+            <companyproject></companyproject>
+            <visitors>Sim</visitors>
+            <groupsize>1</groupsize>
+            <scopearea>Urbano e Rural</scopearea>
+            <target>Geral</target>
+            <projectinfluence></projectinfluence>
+            <areaha>0,5</areaha>
+            <projectdescription>O Sítio dos Faunos germina principalmente no amor pela Natureza. Nasce da criação de um espaço de permacultura, comunidade e espiritualidade de cariz pagã. O sítio era uma antiga plantação de árvores destinadas ao transplante para as ruas da cidade do Barreiro, mas foi abandonado há bastantes anos e acabou por formar um pequeno bosquete. Iniciou-se em Março de 2015 com acções de poda de modo a permitir uma melhor conformação das árvores e a utilização do espaço que estava com vegetação cerrada. Possui clareiras onde estão a ser cultivados espaços hortícolas em permacultura e onde poderão desenvolver-se actividades lúdicas e didácticas. Pretende-se vir a alargar a participação a mais elementos e desenvolver um espírito de comunidade que potencie o desenvolvimento pessoal sobretudo nos aspectos da comunicação, da confiança, da partilha e da cooperação. Tem um cariz pagão, pela exaltação da Natureza e do Divino e pela promoção das suas respectivas festividades ancestrais.</projectdescription>
+            <video></video>
+            <docurl></docurl>
+            <contactname>Carlos Palma</contactname>
+            <email>cpalma71@hotmail.com</email>
+            <phone>919604901</phone>
             <othercontact></othercontact>
         </project>
     </convergir>

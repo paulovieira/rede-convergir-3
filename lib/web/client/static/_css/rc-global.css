@@ -55,3 +55,17 @@
 .footer-link:hover {
     color: #E3E3E3 !important;
 }
+
+.label-inner {
+    font-weight: normal;
+    margin-bottom: 1px;    
+}
+
+.tooltip.in {
+    filter: alpha(opacity=93);
+    opacity: .93;
+}
+
+.tooltip-inner {
+    max-width: 400px;
+}

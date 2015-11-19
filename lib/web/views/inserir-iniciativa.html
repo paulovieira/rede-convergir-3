@@ -1,40 +1,582 @@
-{% extends "layouts/index_paper_kit.html" %}
+{% extends "layouts/index_paper_kit.html" %} {% from "includes/navbar.html" import navbar %} {% from "includes/footer.html" import footer %} {% block head %} {# call super to common css #} {{ super() }} 
 
-{% from "includes/navbar.html" import navbar %}
-{% from "includes/footer.html" import footer %}
-
-{% block head %}
-
-{# call super to common css #}
-
-{{ super() }}
-
-{% endblock %}
+<link href="/static/leaflet/leaflet-1.0beta2/leaflet.css" rel="stylesheet" />
+<link href="/static/leaflet/leaflet-control-geocoder-1.3.2/Control.Geocoder.css" rel="stylesheet" />
+<link href="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css" rel="stylesheet" />
+<link href="/static/jquery/icheck-1.0.2/skins/minimal/grey.css" rel="stylesheet" />
+<link href="/static/jquery/dropzone-4.2.0/dist/dropzone.css" rel="stylesheet" />
 
 
-{% block body %}
+<style>
+
+    #map {
+        height: 600px;
+    }
+
+    .icon-marker-lg {
+        font-size: 20px !important;
+    }
+
+</style>
+{% endblock %} {% block body %} {{ navbar(ctx) }}
 
 
-
-{{ navbar(ctx) }}
 
 
 <div class="container">
+    <h4>Inserir nova iniciativa</h4>
+    <p>
+        A Rede CONVERGIR pretende mapear todas as iniciativas sustentáveis e inspiradores para que em rede possamos cooperar, potenciar as nossas sinergias e contribuir para uma sociedade equilibrada e uma vida humana em harmonia com o meio envolvente.
+    </p>
+    <p>
+        Procuramos interligar iniciativas que nas suas actividades promovam a reflexão e tomada de consciência por parte de cada ser humano do seu papel na sociedade e na natureza, estimulando uma atitude crítica, construtiva, activa e emancipada. Se faz parte de uma iniciativa ou projecto com este intuito, queira preencher este inquérito...
+    </p>
+    <p>
+        <u>Tempo estimado de preenchimento</u>: 5 minutos.
+    </p>
 
-inserir iniciativa - em construção
+    <h6 style="font-size: 1em; margin-top: 30px; margin-bottom: 20px;"><i style="font-size: 18px; margin-right: 2px;" class="fa fa-hand-o-right"></i> Passo 1 &ndash;  informações básicas</h6>
 
+    <div class="row">
+        <div class="col-sm-6" style="padding-right: 40px;">
+            <div class="form-group">
+                <label for="initiative-name">Nome da iniciativa</label>
+                <input type="text" class="form-control" id="initiative-name">
+            </div>
+            <div class="form-group">
+                <label for="initiative-url">Website</label>
+                <input type="text" class="form-control" id="initiative-url">
+            </div>
+
+
+            <div class="form-group">
+                <label for="initiative-video-url">Vídeo (url do youtube, vimeo, etc)</label>
+                <input type="text" class="form-control" id="initiative-video-url" >
+            </div>
+
+            <div class="form-group">
+                <label for="initiative-logo">Logotipo</label>
+                <input type="file" class="form-control" name="file" id="initiative-logo" />
+            </div>
+
+            <div class="form-group">
+                <label for="initiative-doc-url">Anexar documento sobre a iniciativa</label>
+                <input type="file" class="form-control" name="file" id="initiative-doc-url" />
+            </div>
+
+            <div class="form-group">
+                <label for="initiative-start-date-month">Data de início da iniciativa</label>
+                <div class="row" style="">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="label-inner" for="start-data-month">Mês</label>
+                            <select class="form-control" id="initiative-start-date-month">
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-start-date-year">Ano</label>
+                            <input type="text" class="form-control" id="initiative-start-date-year">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-6" style="padding-right: 40px;">
+
+            <div class="form-group">
+                <label for="initiative-street">Morada</label>
+                <div class="row" style="">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-street">Rua</label>
+                            <input type="text" class="form-control" id="initiative-street">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-city">Localidade</label>
+                            <input type="text" class="form-control" id="initiative-city">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-postal-code">Código postal</label>
+                            <input type="text" class="form-control" id="initiative-postal-code">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="initiative-contact-name">Contactos</label>
+                <div class="row" style="">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-contact-name">Nome da pessoa de contacto</label>
+                            <input type="text" class="form-control" id="initiative-contact-name">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-email">Email</label>
+                            <input type="email" class="form-control" id="initiative-email">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-phone">Telefone</label>
+                            <input type="text" class="form-control" id="initiative-phone">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="label-inner" for="initiative-contact-other">Outro contacto</label>
+                            <input type="text" class="form-control" id="initiative-contact-other">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <h6 style="font-size: 1em; margin-top: 30px; margin-bottom: 20px;"><i style="font-size: 18px; margin-right: 2px;" class="fa fa-hand-o-right"></i> Passo 2 &ndash; caracterização da iniciativa</h6>
+
+    <div class="row">
+        <div class="col-sm-6" style="padding-right: 40px;">
+
+            <div class="form-group">
+                <label >Tipo de iniciativa</label>
+
+                {% for obj in ctx.definitions.type %}
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " title="{{ obj.description.pt }}" data-toggle="tooltip" data-placement="top">
+                        <input type="radio" name="initiative-type-id" value="{{ obj.id }}"> {{ obj.title.pt }}
+                    </label>
+                </div>
+                    
+                {% endfor %}
+
+            </div>
+
+            <div class="form-group">
+                <label class="label-inner" for="initiative-type-other">Se "outro", especifique:</label>
+                <input type="text" class="form-control" id="initiative-type-other">
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="form-group">
+                <label >Domínios chave</label>
+
+                {% for obj in ctx.definitions.domain %}
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " title="{{ obj.description.pt }}" data-toggle="tooltip" data-placement="top">
+                        <input type="checkbox" name="initiative-domains" value="{{ obj.id }}"> {{ obj.title.pt }}
+                    </label>
+                </div>
+                    
+                {% endfor %}
+
+            </div>
+
+            <div class="form-group">
+                <label class="label-inner" for="initiative-domain-other">Se "outro", especifique:</label>
+                <input type="text" class="form-control" id="initiative-domain-other">
+            </div>
+
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-6" style="padding-right: 40px;">
+
+            <div class="form-group">
+                <label >Aceita visitas?</label>
+
+                {% for obj in ctx.definitions.visitors %}
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " title="{{ obj.description.pt }}" data-toggle="tooltip" data-placement="top">
+                        <input type="radio" name="initiative-visitors-id" value="{{ obj.id }}"> {{ obj.title.pt }}
+                    </label>
+                </div>
+                    
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="form-group">
+                <label >Espaço de acção</label>
+
+                {% for obj in ctx.definitions.scope %}
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " title="{{ obj.description.pt }}" data-toggle="tooltip" data-placement="top">
+                        <input type="radio" name="initiative-scope-id" value="{{ obj.id }}"> {{ obj.title.pt }}
+                    </label>
+                 </div>
+                    
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-6" style="padding-right: 40px;">
+
+            <div class="form-group">
+                <label >Público alvo</label>
+
+                {% for obj in ctx.definitions.target %}
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " xtitle="{{ obj.description.pt }}" >
+                        <input type="checkbox" name="initiative-target" value="{{ obj.id }}" > {{ obj.title.pt }}
+                    </label>
+                </div>
+                    
+                {% endfor %}
+
+            </div>
+
+            <div class="form-group">
+                <label class="label-inner" for="initiative-target-other">Se "outro", especifique:</label>
+                <input type="text" class="form-control" id="initiative-target-other">
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <div class="form-group">
+                <label >Estimativa do Universo de interacção directa (número de pessoas)</label>
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="0-10"> 0 &ndash; 10
+                    </label>
+                </div>
+
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="10-25"> 10 &ndash; 25
+                    </label>
+                </div>                
+
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="25-100"> 25 &ndash; 100
+                    </label>
+                </div>                
+
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="100-500"> 100 &ndash; 500
+                    </label>
+                </div>                
+
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="500-5000"> 500 &ndash; 5000
+                    </label>
+                </div>                
+
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="5000-10000"> 5000 &ndash; 10000
+                    </label>
+                </div>                
+
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " >
+                        <input type="radio" name="initiative-influence" value="10000-999999"> &gt; 10000
+                    </label>
+                </div>                
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="initiative-group-size">Nº de pessoas envolvidas</label>
+                        <input type="text" class="form-control" id="initiative-group-size">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="initiative-physical-area">Área (ha)</label>
+                        <input type="text" class="form-control" id="initiative-physical-area">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="initiative-promoter">Caso exista, indique o nome da entidade promotora da iniciativa (ex.: empresa, associação)</label>
+                <input type="text" class="form-control" id="initiative-promoter">
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-12" style="">
+
+            <div class="form-group">
+                <label >Descrição da iniciativa</label>
+                <textarea class="form-control" rows="8"></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+    <h6 style="font-size: 1em; margin-top: 30px; margin-bottom: 20px;"><i style="font-size: 18px; margin-right: 2px;" class="fa fa-hand-o-right"></i> Passo 3 &ndash; localizar no mapa</h6>
+
+    <p>Clique na lupa para localizar a morada no mapa. Se a localização obtida não estiver certa, faça a correcção arrastando o marcador.</p>
+    <div class="row" style="padding: 0px 15px;">
+        <div class="col-sm-12" id="map">
+
+        </div>
+    </div>
+
+
+    <h6 style="font-size: 1em; margin-top: 30px; margin-bottom: 20px;"><i style="font-size: 18px; margin-right: 2px;" class="fa fa-hand-o-right"></i> Passo 4  &ndash; submeter! </h6>
+
+    <p>Reveja os dados e clique no botão "Submeter".</p>
+    <p>A iniciativa irá ser vista pelos moderadores da Rede Convergir para ser aprovada. Entraremos em contacto em breve!</p>
+
+    <div style="text-shadow: 1px 1px 1px rgba(100, 100, 100, .9);; margin-top: 40px; " class="text-center">
+        <button id="initiative-submit" style="font-size: 26px; font-weight: 700; padding: 10px 35px 11px 32px; letter-spacing: 1px;" class="btn btn-info  btn-lg btn-fill ">Submeter</button>
+    </div>
+
+    <div style="height: 100px;"></div>
 </div>
-
-
-{{ footer() }}
-
-
+{{ footer() }} 
 {{ super() }}
 
+<script src="/static/leaflet/leaflet-1.0beta2/leaflet-src.js"></script>
+<script src="/static/leaflet/leaflet-control-geocoder-1.3.2/Control.Geocoder.js"></script>
+<script src="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
+<script src="/static/jquery/icheck-1.0.2/icheck.js"></script>
+<script src="/static/jquery/dropzone-4.2.0/dist/dropzone.js"></script>
+<script src="/static/q/q-1.4.1.js"></script>
 
-    <script type="text/javascript">
-    </script>
+<script type="text/javascript">
 
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_minimal-grey',
+        radioClass: 'iradio_minimal-grey',
+        cursor: true
+    });
 
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"  // avoid show the tooltip on focus
+    });
+
+    RC.streetsLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {});
+    
+    RC.satelliteLayer = L.featureGroup([
+        L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"),
+        L.tileLayer('http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png'),
+    ]);
+
+    RC.map = L.map('map', {
+        center: [39.5676, -8.7068],
+        zoom: 7,
+        layers: [RC.streetsLayer]
+    });
+
+    RC.layersControl = L.control.layers(
+        {
+            "satélite&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;": RC.satelliteLayer,
+            "estradas": RC.streetsLayer,
+        }, 
+        undefined, 
+        { collapsed: false }
+    );
+
+    RC.geocoderControl = L.Control.geocoder({
+        collapsed: false,
+        placeholder: "Pesquisar morada",
+        errorMessage: "Morada não encontrada",
+        geocoder: L.Control.Geocoder.bing('AoArA0sD6eBGZyt5PluxhuN7N7X1vloSEIhzaKVkBBGL37akEVbrr0wn17hoYAMy'),
+    });
+
+    RC.icon = L.AwesomeMarkers.icon({
+        icon: "home",
+        iconColor: "white",
+        extraClasses: "icon-marker-lg",
+        prefix: "fa",
+        markerColor: "darkgreen",
+        popupAnchor: [1, -41],
+    });    
+
+    RC.geocoderControl.markGeocode = function(result) {
+
+        this._map.fitBounds(result.bbox, {
+            maxZoom: 15
+        });
+
+        if (this._geocodeMarker) {
+            this._map.removeLayer(this._geocodeMarker);
+        }
+
+        this._geocodeMarker = new L.Marker(result.center, {
+                icon: RC.icon,
+                draggable: true
+            })
+            .bindPopup(result.html || result.name)
+            .addTo(this._map)
+            .openPopup();
+
+        // make sure the popup does not show again after the marker is dragged for the first time
+        this._geocodeMarker.on("popupclose", function(){
+
+            this._geocodeMarker.unbindPopup();
+        }, this);
+
+        return this;
+    }
+
+    RC.map.addControl(RC.layersControl);
+    RC.map.addControl(RC.geocoderControl);
+    
+    
+    RC.$searchBox = $(".leaflet-control-geocoder-form > input[type='text']");
+    RC.$searchBox.css({
+        "width": "350px",
+        "height": "25px",
+        "font-size": "15px",
+        "font-weight": "bold"
+    });
+
+    RC.$street = $("input#initiative-street[type='text']");
+    RC.$city = $("input#initiative-city[type='text']");
+
+    $("input#initiative-street, input#initiative-city").on("focusout", function(){
+
+        var street = $.trim(RC.$street.val());
+        var city = $.trim(RC.$city.val());
+
+        if(city){
+            fullAddress = street ? street + ", " : "";
+            fullAddress += RC.$city.val() + ", Portugal";
+
+            RC.$searchBox.val(fullAddress);
+        }
+    });
+
+    RC.iCheckRead = function(name, type){
+
+        var selector = "input[type='" + type + "'][name='" + name + "']";
+
+        var checkedValues = $(selector)
+                .parent(".checked")
+                .children("input")
+                .map(function(){ 
+                    return $(this).val();
+                })
+                .get();
+
+        if(type==="radio"){
+            return checkedValues.length ? checkedValues[0] : undefined;
+        }
+        else if(type==="checkbox"){
+            return checkedValues;
+        }
+        else{
+            throw new Error("Invalid input type");
+        }
+    }
+
+    RC.readCoordinates = function(){
+        //debugger;
+        var coordinates, counter = 0;
+        RC.map.eachLayer(function(layer){
+            
+            if(layer instanceof L.Marker){
+                coordinates = layer.getLatLng()
+                counter++;
+            }
+        });
+
+        if(counter==0){
+            return undefined;
+        }
+
+        if(counter>1){
+            console.log("uh oh...");
+        }
+
+        return coordinates;
+    }
+
+    RC.readData = function(){
+
+        var typeId = RC.iCheckRead("initiative-type-id", "radio");
+        var typeOther = $("#initiative-type-other").val();
+        var domains = RC.iCheckRead("initiative-domains", "checkbox");
+        var domainOther = $("#initiative-domain-other").val();
+        var visitorsId = RC.iCheckRead("initiative-visitors-id", "radio");
+        var scopeId = RC.iCheckRead("initiative-scope-id", "radio");
+        var target = RC.iCheckRead("initiative-target", "checkbox");
+        var targetOther = $("#initiative-target-other").val();
+        var influence = RC.iCheckRead("initiative-influence", "radio").split("-");
+        var groupSize = $("#initiative-group-size").val();
+        var area = $("#initiative-area").val();
+        var promoter = $("#initiative-promoter").val();
+
+        var latLng = RC.readCoordinates();
+        if(latLng){
+            var coordinates = [latLng.lat, latLng.lng]
+        }
+        
+        debugger;
+    };
+
+    $("#initiative-submit").on("click", function(){
+
+        var data = RC.readData()
+    })
+</script>
 {% endblock %}
 

@@ -512,7 +512,7 @@ input.ct-red + span + label + span.switch-right {
   top: 50%;
   margin-top: -1px;
   right: 8px; }
-
+/*
 .form-control::-moz-placeholder {
   color: #DDDDDD;
   opacity: 1;
@@ -613,7 +613,7 @@ input.ct-red + span + label + span.switch-right {
   background-color: #E3E3E3;
   color: #66615B;
   cursor: not-allowed; }
-
+*/
 .input-group-btn .btn {
   border-width: 1px;
   padding: 9px 18px; }
@@ -623,10 +623,10 @@ input.ct-red + span + label + span.switch-right {
 
 .input-group-btn:last-child > .btn {
   margin-left: 0; }
-
+/*
 textarea.form-control {
   padding: 10px 18px; }
-
+*/
 .progress {
   background-color: #DDDDDD;
   border-radius: 3px;

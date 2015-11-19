@@ -100,8 +100,8 @@
 {{ navbar(ctx) }}
 
 
-<div class="wrapper">
-    <div class="container">
+<div class="wrapper" style="padding-bottom: 50px;">
+    <div class="container" >
         <div style="margin-top: 25px;" class="row">
 
             {# LEFT COLUMN #}
@@ -207,7 +207,7 @@
                 </div>
  -->
 
-                <div class="row" style="margin-top: 20px;">
+                <div class="row" style="margin-top: 30px;">
                     <div style="margin-bottom: 10px;" class="col-sm-12">
                     Apoio de:
                     </div>
@@ -217,7 +217,7 @@
                     </div>
                 </div>
 
-                <div class="row" style="margin-top: 20px;">
+                <div class="row" style="margin-top: 30px;">
                     <div class="col-sm-12">
                     Financiado por:
                     </div>
@@ -749,23 +749,30 @@ Catalise.map.addControl( new L.Control.PanelLayers(Catalise.baseLayers, Catalise
 $(".leaflet-panel-layers-list").append("<div class='leaflet-panel-layers-overlays' style='border: 1px solid rgb(147, 144, 140); padding: 1px; border-radius: 4px;'>  <label class='leaflet-panel-layers-item' style='cursor: default; border: none; margin: 0px; background-color: rgba(255, 255, 255, 0.8); font-size: 13px;'> <i class='fa fa-book' style='font-size: 16px;'></i>  Caso de estudo </div>")
 
 
-
-
 $(".leaflet-panel-layers-overlays").first().prepend("<div style='font-size: 15px; font-weight: bold; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 4px; background-color: rgba(255, 255, 255, 0.8);'>Redes de origem:</div>")
 
-$(".leaflet-panel-layers-item").css("border", "none");
-$(".leaflet-panel-layers-item").css("margin", 0);
-$(".leaflet-panel-layers-item").css("background-color", "rgba(255, 255, 255, 0.8)")
+$(".leaflet-panel-layers-item").css({
+    "border": "none",
+    "margin": 0,
+    "background-color": "rgba(255, 255, 255, 0.9)"
+});
 
-$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("border" , "1px solid #93908c");
-$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("padding" , "1px 1px 1px 1px");
-$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("border-radius" , "4px");
-
-$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css("margin-bottom", "8px");
+$(".leaflet-panel-layers-overlays, .leaflet-panel-layers-base").css({
+    "border": "1px solid #93908c",
+    "padding": "1px 1px 1px 1px",
+    "border-radius": "4px",
+    "margin-bottom": "8px"
+});
 
 $(".leaflet-panel-layers-separator").remove();
 
-
+$(".leaflet-panel-layers").css({
+    "height": "", 
+    "padding": "8px 8px 3px 8px",
+    "border-radius": "6px",
+    "top": "10px",
+    "right": "10px"
+});
 
 
 

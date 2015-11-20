@@ -81,11 +81,8 @@
 */
 
 /* the navbar-initiatives class is added by jquery when the page loads */
-nav.navbar-initiatives {
-    background-color: rgba(0,0,0,0.65);
-    z-index: 99999;
-}
 
+nav.navbar-initiatives,
 nav.navbar-homepage {
     background-color: rgba(0,0,0,0.65);
     z-index: 99999;
@@ -97,17 +94,20 @@ nav.navbar-initiatives a  {
 }
 
 nav.navbar-ct-transparent .icon-navbar, 
+nav.navbar-homepage .icon-navbar, 
 nav.navbar-initiatives .icon-navbar {
     color: white;
 }
 
+nav.navbar-homepage ul.dropdown-menu > li > a,
 nav.navbar-ct-transparent  ul.dropdown-menu > li > a,
 nav.navbar-initiatives ul.dropdown-menu > li > a {
     color: #66615b !important;
 }
 
+nav.navbar-homepage ul.dropdown-menu > li > a:hover,
 nav.navbar-ct-transparent ul.dropdown-menu > li > a:hover,
-nav.navbar-ct-transparent .dropdown-menu > li > a:focus 
+nav.navbar-ct-transparent .dropdown-menu > li > a:focus,
 nav.navbar-initiatives ul.dropdown-menu > li > a:hover, 
 nav.navbar-initiatives .dropdown-menu > li > a:focus {
     background-color: #6F6C66;

@@ -612,7 +612,7 @@
 
         RC.initiativeData.statusId = "status_pending";
         
-        debugger;
+        
     };
 
     RC.validate = function(){
@@ -621,21 +621,23 @@
 
         var requiredFields = ["name", "slug", "description", "typeId",  "domains", "url", "contactName", "email",    "city",  "countryCode", "coordinates",  "startDate", "visitorsId", "groupSize", "scopeId", "target",  "influence", "statusId"];
 
+        var allValid = true;
         for(var i=0; i<requiredFields.length; i++){
-            if(!RC.initiativeData[requiredFields[i]] ){
+            if(!RC.initiativeData[requiredFields[i]] && allValid){
                 alert("Por favor preencha os campos obrigatórios: " + requiredFields.join(", "));
-                return false;
+                allValid = false;
             }
         }
 
-        return true;
+        return allValid;
     },
 
     $("#initiative-submit").on("click", function(){
 
+        
         RC.readData();
         if(RC.validate()){
-
+debugger;
             var ajaxOptions = {
                 url: "/api/v1/initiatives",
                 method: "POST",

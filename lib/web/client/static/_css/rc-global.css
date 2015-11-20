@@ -69,3 +69,50 @@
 .tooltip-inner {
     max-width: 400px;
 }
+/*
+.navbar {
+    background-image: url("/static/_images/patterns/congruent_outline.png");
+    background-image: url("/static/_images/patterns/gplaypattern.png");
+    background-image: url("/static/_images/patterns/grey_wash_wall.png");
+    background-image: url("/static/_images/banda.jpg");
+    background-repeat: repeat-x;
+    
+}
+*/
+
+/* the navbar-initiatives class is added by jquery when the page loads */
+nav.navbar-initiatives {
+    background-color: rgba(0,0,0,0.65);
+    z-index: 99999;
+}
+
+nav.navbar-homepage {
+    background-color: rgba(0,0,0,0.65);
+    z-index: 99999;
+}
+
+nav.navbar-ct-transparent a, 
+nav.navbar-initiatives a  {
+    color: white !important;
+}
+
+nav.navbar-ct-transparent .icon-navbar, 
+nav.navbar-initiatives .icon-navbar {
+    color: white;
+}
+
+nav.navbar-ct-transparent  ul.dropdown-menu > li > a,
+nav.navbar-initiatives ul.dropdown-menu > li > a {
+    color: #66615b !important;
+}
+
+nav.navbar-ct-transparent ul.dropdown-menu > li > a:hover,
+nav.navbar-ct-transparent .dropdown-menu > li > a:focus 
+nav.navbar-initiatives ul.dropdown-menu > li > a:hover, 
+nav.navbar-initiatives .dropdown-menu > li > a:focus {
+    background-color: #6F6C66;
+    color: white !important;
+
+}
+
+

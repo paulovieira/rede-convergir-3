@@ -16,6 +16,7 @@ body {
     xbackground-color: green;
     position: absolute;
     top: 68px;
+    top: 0px; /* changed*/
     bottom: 0px;
     width: 100%;
 }

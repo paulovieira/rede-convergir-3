@@ -24,6 +24,7 @@ div.leaflet-control-container
 
 .leaflet-top .leaflet-control {
     margin-top: 5px;
+    margin-top: 73px;  /* changed */
 }
 
 .leaflet-left {
@@ -40,6 +41,7 @@ div.leaflet-control-container
      use those values for the right and bottom sides too;
   */
   padding-bottom: 10px !important;
+  padding-bottom: 78px !important;
 }
 
 .menu-container-open {

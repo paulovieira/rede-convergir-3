@@ -1,6 +1,7 @@
 {% extends "layouts/index_paper_kit.html" %}
 
 {% from "includes/navbar.html" import navbar %}
+{% from "includes/navbar-transparent.html" import navbarTransparent %}
 {% from "includes/footer.html" import footer %}
 
 {% block head %}
@@ -40,7 +41,7 @@ html {
 
 
 
-{{ navbar(ctx) }}
+{{ navbarTransparent(ctx) }}
 
 
   <div class="title">
@@ -68,6 +69,7 @@ html {
 
 
     <script type="text/javascript">
+      $("nav").addClass("navbar-homepage");
     </script>
 
 

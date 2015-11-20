@@ -45,6 +45,24 @@
             </div>
         </div>
 
+
+        {% if ctx.data.videoUrl %}
+        <div style="margin-top: 25px;" class="row">
+            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
+
+                <div class="list-block">
+
+                    <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px 10px 5px 10px;">
+                        {{ ctx.data.videoUrl }}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  
+        {% endif %}
+
+
         <div style="margin-top: 20px;" class="row">
 
             {# LEFT COLUMN #}
@@ -130,25 +148,7 @@
 
         
 
-        {% if ctx.data.videoUrl %}
-        <div style="margin-top: 25px;" class="row">
-            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
 
-                <div class="list-block">
-
-                    <div title="Vídeo de apresentação">
-                                    {#  <i class="fa fa-youtube-play"></i>  #}
-                        <span class="field-title">Vídeo de apresentação</span>
-                    </div>
-                    <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px 10px 5px 10px;">
-                        {{ ctx.data.videoUrl }}
-                    </div>
-
-                </div>
-
-            </div>
-        </div>  
-        {% endif %}
 
         <div style="margin-top: 25px;" class="row">
             <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">

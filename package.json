@@ -29,6 +29,7 @@
     "q": "^1.4.1",
     "seneca": "^0.7.2",
     "shelljs": "^0.5.3",
+    "strong-data-uri": "^1.0.3",
     "underscore": "^1.8.3",
     "underscore.string": "^3.2.2",
     "wreck": "^6.3.0"

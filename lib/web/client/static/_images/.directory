@@ -1,7 +1,8 @@
 [Dolphin]
 GroupedSorting=true
-SortRole=date
-Timestamp=2015,11,16,10,12,54
+SortOrder=1
+SortRole=size
+Timestamp=2015,11,20,10,3,31
 Version=3
 ViewMode=1
 VisibleRoles=Details_text,Details_size,Details_date,Details_type,CustomizedDetails

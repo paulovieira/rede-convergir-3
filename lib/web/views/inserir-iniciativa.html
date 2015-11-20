@@ -4,7 +4,7 @@
 <link href="/static/leaflet/leaflet-control-geocoder-1.3.2/Control.Geocoder.css" rel="stylesheet" />
 <link href="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css" rel="stylesheet" />
 <link href="/static/jquery/icheck-1.0.2/skins/minimal/grey.css" rel="stylesheet" />
-<link href="/static/jquery/dropzone-4.2.0/dist/dropzone.css" rel="stylesheet" />
+
 
 
 <style>
@@ -56,7 +56,7 @@
 
             <div class="form-group">
                 <label for="initiative-logo">Logotipo</label>
-                <input type="file" class="form-control" name="file" id="initiative-logo" />
+                <input type="file" onchange="encode()" class="form-control" name="file" id="initiative-logo" />
             </div>
 
             <div class="form-group">
@@ -71,18 +71,18 @@
                         <div class="form-group">
                             <label class="label-inner" for="start-data-month">Mês</label>
                             <select class="form-control" id="initiative-start-date-month">
-                                <option value="1">Janeiro</option>
-                                <option value="2">Fevereiro</option>
-                                <option value="3">Março</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Maio</option>
-                                <option value="6">Junho</option>
-                                <option value="7">Julho</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Setembro</option>
-                                <option value="10">Outubro</option>
-                                <option value="11">Novembro</option>
-                                <option value="12">Dezembro</option>
+                                <option value="0">Janeiro</option>
+                                <option value="1">Fevereiro</option>
+                                <option value="2">Março</option>
+                                <option value="3">Abril</option>
+                                <option value="4">Maio</option>
+                                <option value="5">Junho</option>
+                                <option value="6">Julho</option>
+                                <option value="7">Agosto</option>
+                                <option value="8">Setembro</option>
+                                <option value="9">Outubro</option>
+                                <option value="10">Novembro</option>
+                                <option value="11">Dezembro</option>
                             </select>
                         </div>
                     </div>
@@ -362,7 +362,7 @@
 
             <div class="form-group">
                 <label >Descrição da iniciativa</label>
-                <textarea class="form-control" rows="8"></textarea>
+                <textarea id="initiative-description" class="form-control" rows="8"></textarea>
             </div>
 
         </div>
@@ -371,7 +371,7 @@
 
     <h6 style="font-size: 1em; margin-top: 30px; margin-bottom: 20px;"><i style="font-size: 18px; margin-right: 2px;" class="fa fa-hand-o-right"></i> Passo 3 &ndash; localizar no mapa</h6>
 
-    <p>Clique na lupa para localizar a morada no mapa. Se a localização obtida não estiver certa, faça a correcção arrastando o marcador.</p>
+    <p>Clique na lupa do lado direito do mapa (<i class="fa fa-search"></i>) para localizar a morada indicada. Se a localização obtida não estiver certa, faça a correcção arrastando o marcador.</p>
     <div class="row" style="padding: 0px 15px;">
         <div class="col-sm-12" id="map">
 
@@ -397,8 +397,9 @@
 <script src="/static/leaflet/leaflet-control-geocoder-1.3.2/Control.Geocoder.js"></script>
 <script src="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
 <script src="/static/jquery/icheck-1.0.2/icheck.js"></script>
-<script src="/static/jquery/dropzone-4.2.0/dist/dropzone.js"></script>
 <script src="/static/q/q-1.4.1.js"></script>
+<script src="/static/underscore/underscore-1.6.0.js"></script>
+<script src="/static/underscore/underscore.string-3.2.1.js"></script>
 
 <script type="text/javascript">
 
@@ -431,7 +432,7 @@
             "estradas": RC.streetsLayer,
         }, 
         undefined, 
-        { collapsed: false }
+        { collapsed: false, position: "topleft" }
     );
 
     RC.geocoderControl = L.Control.geocoder({
@@ -552,31 +553,127 @@
 
     RC.readData = function(){
 
-        var typeId = RC.iCheckRead("initiative-type-id", "radio");
-        var typeOther = $("#initiative-type-other").val();
-        var domains = RC.iCheckRead("initiative-domains", "checkbox");
-        var domainOther = $("#initiative-domain-other").val();
-        var visitorsId = RC.iCheckRead("initiative-visitors-id", "radio");
-        var scopeId = RC.iCheckRead("initiative-scope-id", "radio");
-        var target = RC.iCheckRead("initiative-target", "checkbox");
-        var targetOther = $("#initiative-target-other").val();
-        var influence = RC.iCheckRead("initiative-influence", "radio").split("-");
-        var groupSize = $("#initiative-group-size").val();
-        var area = $("#initiative-area").val();
-        var promoter = $("#initiative-promoter").val();
+        RC.initiativeData = {};
+        RC.initiativeData.name = $.trim($("#initiative-name").val());
+        RC.initiativeData.slug = s.slugify(RC.initiativeData.name);
+
+        RC.initiativeData.url = $.trim($("#initiative-url").val());
+        RC.initiativeData.videoUrl = $.trim($("#initiative-video-url").val());
+        // to be done - read base64 encoded data
+        // RC.initiativeData.Logo = $("#initiative-logo").val();
+        // RC.initiativeData.DocUrl = $("#initiative-doc-url").val();
+        RC.initiativeData.logo = {
+            filename: "logo.jpg",
+            min: 100,
+            max: 130,
+            exclusive: false
+        };
+        RC.initiativeData.docUrl = "";
+
+        var startDateMonth = $.trim($("#initiative-start-date-month").val());
+        var startDateYear = $.trim($("#initiative-start-date-year").val());
+        RC.initiativeData.startDate = new Date(startDateYear, startDateMonth, 1).toISOString();
+
+        RC.initiativeData.street = $.trim($("#initiative-street").val());
+        RC.initiativeData.city = $.trim($("#initiative-city").val());
+        RC.initiativeData.postalCode = $.trim($("#initiative-postal-code").val());
+        RC.initiativeData.countryCode = "PT";
+
+        RC.initiativeData.contactName = $.trim($("#initiative-contact-name").val());
+        RC.initiativeData.email = $.trim($("#initiative-email").val());
+        RC.initiativeData.phone = $.trim($("#initiative-phone").val());
+        RC.initiativeData.contactOther = $.trim($("#initiative-contact-other").val());
+
+        RC.initiativeData.typeId = RC.iCheckRead("initiative-type-id", "radio");
+        RC.initiativeData.typeOther = $.trim($("#initiative-type-other").val());
+
+        RC.initiativeData.domains = RC.iCheckRead("initiative-domains", "checkbox");
+        RC.initiativeData.domainOther = $.trim($("#initiative-domain-other").val());
+
+        RC.initiativeData.visitorsId = RC.iCheckRead("initiative-visitors-id", "radio");
+        RC.initiativeData.scopeId = RC.iCheckRead("initiative-scope-id", "radio");
+
+        RC.initiativeData.target = RC.iCheckRead("initiative-target", "checkbox");
+        RC.initiativeData.targetOther = $.trim($("#initiative-target-other").val());
+        var influence = RC.iCheckRead("initiative-influence", "radio");
+        if(influence){
+            RC.initiativeData.influence = influence.split("-");
+        }
+        RC.initiativeData.groupSize = $.trim($("#initiative-group-size").val());
+        RC.initiativeData.physicalArea = $.trim($("#initiative-physical-area").val());
+        RC.initiativeData.promoter = $.trim($("#initiative-promoter").val());
+
+        RC.initiativeData.description = $.trim($("#initiative-description").val());
 
         var latLng = RC.readCoordinates();
         if(latLng){
-            var coordinates = [latLng.lat, latLng.lng]
+            RC.initiativeData.coordinates = [latLng.lat, latLng.lng]
         }
+
+        RC.initiativeData.statusId = "status_pending";
         
         debugger;
     };
 
+    RC.validate = function(){
+
+        //, "videoUrl", "street", "phone", "contactOther", "typeOther", "domainsOther",  "physicalArea", "promoter","targetOther","logo","postalCode","docUrl",
+
+        var requiredFields = ["name", "slug", "description", "typeId",  "domains", "url", "contactName", "email",    "city",  "countryCode", "coordinates",  "startDate", "visitorsId", "groupSize", "scopeId", "target",  "influence", "statusId"];
+
+        for(var i=0; i<requiredFields.length; i++){
+            if(!RC.initiativeData[requiredFields[i]] ){
+                alert("Por favor preencha os campos obrigatórios: " + requiredFields.join(", "));
+                return false;
+            }
+        }
+
+        return true;
+    },
+
     $("#initiative-submit").on("click", function(){
 
-        var data = RC.readData()
-    })
+        RC.readData();
+        if(RC.validate()){
+
+            var ajaxOptions = {
+                url: "/api/v1/initiatives",
+                method: "POST",
+                data: RC.initiativeData
+            };
+
+            Q($.ajax(ajaxOptions))
+            .delay(300)
+            .then(function(newInitiative) {
+                alert("A iniciativa foi submetida com sucesso!")
+            })
+            .catch(function(err) {
+                alert("ERRO: ")
+                debugger;
+            });
+
+        }
+    });
+
+    var encode = function(){
+
+        // more info here: http://blog.teamtreehouse.com/reading-files-using-the-html5-filereader-api
+/*
+        var file    = document.getElementById("initiative-logo").files[0];
+        var reader  = new FileReader();
+
+        if (file) {
+            reader.onloadend = function () {
+                // do something here
+                // $("#initiative-description").val(reader.result)
+                console.log("base64 string ready")
+            }
+
+            reader.readAsDataURL(file);
+        } 
+*/
+    }
+    
 </script>
 {% endblock %}
 

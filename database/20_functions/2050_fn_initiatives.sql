@@ -31,7 +31,8 @@
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
-    status_id TEXT
+    initiative_status_id TEXT,
+    moderation_status_id TEXT
 */
 
 
@@ -78,7 +79,9 @@ RETURNS TABLE(
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
-    status_id TEXT,
+    initiative_status_id TEXT,
+    moderation_status_id TEXT,
+    -------------------------------------------------
     domains JSON,  -- join with the domains CTE
     target JSON  -- join with the domains CTE
 )
@@ -236,7 +239,8 @@ DECLARE
     _physical_area TEXT;
     _video_url TEXT;
     _doc_url TEXT;
-    _status_id TEXT;
+    _initiative_status_id TEXT;
+    _moderation_status_id TEXT;
     -- temp variables used to update the initiatives_definitions table
     _array_definitions_ids JSON;
     _definition_id TEXT;
@@ -300,7 +304,8 @@ BEGIN
     _physical_area := COALESCE(input_obj->>'physical_area',            current_row.physical_area);
     _video_url     := COALESCE(input_obj->>'video_url',            current_row.video_url);
     _doc_url       := COALESCE(input_obj->>'doc_url',            current_row.doc_url);
-    _status_id     := COALESCE(input_obj->>'status_id',            current_row.status_id, 'status_alive');
+    _initiative_status_id := COALESCE(input_obj->>'initiative_status_id', current_row.initiative_status_id, 'initiative_status_003_alive');
+    _moderation_status_id := COALESCE(input_obj->>'moderation_status_id', current_row.moderation_status_id, 'moderation_status_001_pending');
 
 	-- todo: add entry to the session history
 
@@ -335,7 +340,8 @@ BEGIN
         physical_area,
         video_url,
         doc_url,
-        status_id
+        initiative_status_id,
+        moderation_status_id
 		)
 	VALUES (
         _id,
@@ -368,7 +374,8 @@ BEGIN
         _physical_area,
         _video_url,
         _doc_url,
-        _status_id
+        _initiative_status_id,
+        _moderation_status_id
 		)
 	ON CONFLICT (id) DO UPDATE SET 
         name = EXCLUDED.name,
@@ -400,7 +407,8 @@ BEGIN
         physical_area = EXCLUDED.physical_area,
         video_url = EXCLUDED.video_url,
         doc_url = EXCLUDED.doc_url,
-        status_id = EXCLUDED.status_id
+        initiative_status_id = EXCLUDED.initiative_status_id,
+        moderation_status_id = EXCLUDED.moderation_status_id
 	RETURNING 
 		*
 	INTO STRICT 
@@ -408,7 +416,7 @@ BEGIN
 
 	RETURN NEXT upserted_row;
 
-    -- update the initiative_definitions table (if the array of definitions, which is given in the form of array of foreign keys, have been given)
+    -- update the initiative_definitions table (if the array of definitions for "domains" or "target", which is given in the form of an array of foreign keys, is defined)
 
     -- domains
     SELECT (input_obj->>'domains')::json INTO _array_definitions_ids;
@@ -476,7 +484,7 @@ select * from initiatives_upsert('{
     "physical_area": "physical_area",
     "video_url": "video_url",
     "doc_url": "doc_url",
-    "status_id": null
+    "initiative_status_id": null
 }');
 
 
@@ -508,7 +516,7 @@ select * from initiatives_upsert('{
     "physical_area": "physical_area 2",
     "video_url": "video_url 2",
     "doc_url": "doc_url 2",
-    "status_id": null
+    "initiative_status_id": null
 }');
 
 to update one or more fields of an existing row, the id property should be given;

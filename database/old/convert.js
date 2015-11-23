@@ -8,8 +8,11 @@ var Fs = require("fs"),
 
 var parser = new Xml2js.Parser();
 
-var inputFile  = "./db_151022.xml";
-var outputFile = "./db_151022.json";
+var inputFile  = "./db_151119.xml";
+var outputFile = "./db_151119.json";
+
+
+var internals = {};
 
 Fs.readFile(inputFile, function(err, inputData) {
 
@@ -57,7 +60,7 @@ Fs.readFile(inputFile, function(err, inputData) {
 
 			// other informations
 			"visitors": "visitors.0",
-			"size": "groupsize.0",
+			"groupSize": "groupsize.0",
 			"scope": "scopearea.0",
 			"target": "target.0",
 			"influence": "projectinfluence.0",
@@ -67,13 +70,8 @@ Fs.readFile(inputFile, function(err, inputData) {
 
     	});
 
-        var types = [];
-
     	// execute some post-processing
     	outputData.forEach(function(obj, i){
-
-            types.push(obj.type);
-            types = _.uniq(types);
 
             // all values from the old database are strings; we should trim
             Object.keys(obj).forEach(function(key){
@@ -90,15 +88,27 @@ Fs.readFile(inputFile, function(err, inputData) {
                 obj.logo = _s.slugify(obj.name) + "-" + obj.id + Path.extname(obj.logo); 
             }
 
+            // correct the type (we should be using the corresponding id)
+            internals.correctType(obj);
+
+            // correct the scope
+            internals.correctScope(obj);
+
+            // correct the visitors
+            internals.correctVisitors(obj);
 
             // domains and target are comma-separated lists; makes more sense to use arrays
             obj.domains = obj.domains ? obj.domains.split(",") : [];
+            internals.correctDomain(obj);
+
+            // do the same for target
             obj.target  = obj.target  ? obj.target.split(",")  : [];
+            internals.correctTarget(obj);
 
             // dates should be in ISO8601
-            obj.startDate    = getISODate(obj.startDate);
-            obj.registryDate = getISODate(obj.registryDate);
-            obj.updateDate   = getISODate(obj.updateDate);
+            obj.startDate    = internals.getISODate(obj.startDate);
+            obj.registryDate = internals.getISODate(obj.registryDate);
+            obj.updateDate   = internals.getISODate(obj.updateDate);
 
             // coordinates should be an array: [lat, lng]
             obj.coordinates = [Number(obj.lat), Number(obj.lng)];
@@ -108,18 +118,23 @@ Fs.readFile(inputFile, function(err, inputData) {
             // influence should be an array with min/max
             var influence = [];
 
-            if(obj.influence.indexOf("<10") >= 0 || obj.influence === "10"){
+            if(obj.influence.indexOf("<10") >= 0 || obj.influence === "10" || obj.influence === ""){
                 //console.log("&lt;10")
                 influence[0] = 0;
                 influence[1] = 10;
             }
             else if(obj.influence.indexOf(">10.000") >= 0){
                 influence[0] = 10000;
+                influence[0] = 999999999;
             }
             else if(obj.influence.indexOf("a") >= 0){
                 influence = obj.influence.split("a");
                 influence[0] = Number(influence[0]);
                 influence[1] = Number(influence[1]);
+            }
+            else{
+                console.log(obj.name);
+                throw new Error("influence")
             }
 
             obj.influence = influence;
@@ -131,7 +146,6 @@ Fs.readFile(inputFile, function(err, inputData) {
 						
     	});
     	
-        //console.log("types: ", types);
 
         var numberOfProjects = outputData.length;
     	console.log("Number of projects: ", numberOfProjects);
@@ -194,7 +208,7 @@ Fs.readFile(inputFile, function(err, inputData) {
 });
 
 
-function getISODate(d){
+internals.getISODate = function(d){
 
     var dateParts = d.split("/");
     if(dateParts.length!==3){
@@ -202,4 +216,196 @@ function getISODate(d){
     }
 
     return (new Date(dateParts[2], dateParts[1], dateParts[0])).toJSON();
+};
+
+
+internals.correctDomain = function(payload){
+
+    var domains = payload.domains;
+    var domainsOther = [];
+
+    for(var i=0; i<domains.length; i++){
+        
+        if(domains[i] === "Agricultura"){
+            domains[i] = "domain_001_agriculture";
+        }
+        else if(domains[i] === "Pecuária"){
+            domains[i] = "domain_002_husbandry";
+        }
+        else if(domains[i] === "Bio-Construção"){
+            domains[i] = "domain_003_bioconstruction";
+        }
+        else if(domains[i] === "Eco-Tecnologia"){
+            domains[i] = "domain_004_ecotechnology";
+        }
+        else if(domains[i] === "Arte"){
+            domains[i] = "domain_005_art";
+        }
+        else if(domains[i] === "Educação"){
+            domains[i] = "domain_006_education";
+        }
+        else if(domains[i] === "Saúde"){
+            domains[i] = "domain_007_health";
+        }
+        else if(domains[i] === "Espiritualidade"){
+            domains[i] = "domain_008_spirituality";
+        }
+        else if(domains[i] === "Economia alternativa"){
+            domains[i] = "domain_009_economy";
+        }
+        else if(domains[i] === "Partilha de terra ou equipamentos"){
+            domains[i] = "domain_010_sharing";
+        }
+        else if(domains[i] === "Ferramentas Sociais"){
+            domains[i] = "domain_011_tools";
+        }
+        else if(domains[i] !== ""){
+            // this domain is not a pre-defined
+            domainsOther.push(domains[i]);
+            domains[i] = "domain_999_other";
+        }
+    }
+
+    payload.domains = _.compact(payload.domains);
+
+    // if the array is empty we get the empty string
+    payload.domainsOther = domainsOther.join("; ");
+
+};
+
+internals.correctTarget = function(payload){
+
+    var target = payload.target;
+    var targetOther = [];
+
+    for(var i=0; i<target.length; i++){
+        
+        if(target[i] === "Crianças"){
+            target[i] = "target_001_children";
+        }
+        else if(target[i] === "Adolescentes"){
+            target[i] = "target_002_teenagers";
+        }
+        else if(target[i] === "Adultos"){
+            target[i] = "target_003_adults";
+        }
+        else if(target[i] === "Idosos"){
+            target[i] = "target_004_seniors";
+        }
+        else if(target[i] === "Famílias"){
+            target[i] = "target_005_families";
+        }
+        else if(target[i] === "Pessoas com deficiência"){
+            target[i] = "target_006_handicapped";
+        }
+        else if(target[i] === "Crianças com necessidades educativas especiais"){
+            target[i] = "target_007_special_need_children";
+        }
+        else if(target[i] === "Geral"){
+            target[i] = "target_008_general";
+        }
+        else if(target[i] !== ""){
+            // this target is not a pre-defined
+            targetOther.push(target[i]);
+            target[i] = "target_999_other";
+        }
+    }
+
+    payload.target = _.compact(payload.target);
+
+    // if the array is empty we get the empty string
+    payload.targetOther = targetOther.join("; ");
+
+};
+
+internals.correctType = function(payload){
+
+    var type = payload.type;
+    payload.typeOther = undefined;
+
+    if(type==="Permacultura"){
+        payload.typeId = "type_001_permaculture";
+    }
+    else if(type==="Transição"){
+        payload.typeId = "type_002_transition"   ;
+    }
+    else if(type==="Gestão da Terra e da Natureza"){
+        payload.typeId = "type_003_soil_nature";
+    }
+    else if(type==="Espaço Construído"){
+        payload.typeId = "type_004_construction";
+    }
+    else if(type==="Ferramentas e Tecnologias"){
+        payload.typeId = "type_005_tools";
+    }
+    else if(type==="Cultura e Educação"){
+        payload.typeId = "type_006_culture";
+    }
+    else if(type==="Saúde e Bem-Estar Espiritual"){
+        payload.typeId = "type_007_health";
+    }
+    else if(type==="Economia e Finanças"){
+        payload.typeId = "type_008_economy";
+    }
+    else if(type==="Uso da Terra e Comunidade"){
+        payload.typeId = "type_009_community";
+    }
+    else{
+        payload.typeId = "type_999_other";
+        if(type===""){
+            throw new Error("type is 'other', but there's nothing");
+        }
+
+        console.log("type is other: ", type)
+        payload.typeOther = type;
+    }
+
+    delete payload.type;
+
+};
+
+internals.correctScope = function(payload){
+
+    var scope = payload.scope;
+
+    if(scope==="Urbano"){
+        payload.scopeId = "scope_001_urban";
+    }
+    else if(scope==="Rural"){
+        payload.scopeId = "scope_002_rural";
+    }
+    else if(scope==="Urbano e Rural" || scope === ""){
+        payload.scopeId = "scope_003_mixed";
+    }
+    else{
+        console.log("scope: ", scope)
+        console.log("name: ", payload.name)
+        throw new Error("scope is unknown");
+    }
+
+    delete payload.scope;
+
+};
+
+internals.correctVisitors = function(payload){
+
+    var visitors = payload.visitors;
+
+    if(visitors==="Sim" || visitors===""){
+        payload.visitorsId = "visitors_001_yes";
+    }
+    else if(visitors==="Não"){
+        payload.visitorsId = "visitors_002_no";
+    }
+    else if(visitors==="Sujeito a confirmação após contacto"){
+        payload.visitorsId = "visitors_003_confirmation";
+    }
+    else{
+        console.log("visitors: ", visitors)
+        console.log("name: ", payload.name)
+        throw new Error("visitors is unknown");
+    }
+
+    delete payload.visitors;
+
 };

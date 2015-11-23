@@ -10,7 +10,7 @@
 <style>
 
     #map {
-        height: 600px;
+        height: 640px;
     }
 
     .icon-marker-lg {
@@ -126,28 +126,28 @@
             <div class="form-group">
                 <label for="initiative-contact-name">Contactos</label>
                 <div class="row" style="">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <label class="label-inner" for="initiative-contact-name">Nome da pessoa de contacto</label>
                             <input type="text" class="form-control" id="initiative-contact-name">
                         </div>
                     </div>
 
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <label class="label-inner" for="initiative-email">Email</label>
                             <input type="email" class="form-control" id="initiative-email">
                         </div>
                     </div>
 
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <label class="label-inner" for="initiative-phone">Telefone</label>
                             <input type="text" class="form-control" id="initiative-phone">
                         </div>
                     </div>
 
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <div class="form-group">
                             <label class="label-inner" for="initiative-contact-other">Outro contacto</label>
                             <input type="text" class="form-control" id="initiative-contact-other">
@@ -205,8 +205,8 @@
             </div>
 
             <div class="form-group">
-                <label class="label-inner" for="initiative-domain-other">Se "outro", especifique:</label>
-                <input type="text" class="form-control" id="initiative-domain-other">
+                <label class="label-inner" for="initiative-domains-other">Se "outro", especifique:</label>
+                <input type="text" class="form-control" id="initiative-domains-other">
             </div>
 
         </div>
@@ -278,6 +278,23 @@
                 <input type="text" class="form-control" id="initiative-target-other">
             </div>
 
+
+            <div class="form-group">
+                <label >Estado da iniciativa</label>
+
+                {% for obj in ctx.definitions.initiative_status %}
+                
+                <div class="icheck-label">
+                    <label style="font-weight: normal; " title="{{ obj.description.pt }}" data-toggle="tooltip" data-placement="top">
+                        <input type="radio" name="initiative-status-id" value="{{ obj.id }}"> {{ obj.title.pt }}
+                    </label>
+                 </div>
+                    
+                {% endfor %}
+
+            </div>
+        
+
         </div>
 
         <div class="col-sm-6">
@@ -323,7 +340,7 @@
 
                 <div class="icheck-label">
                     <label style="font-weight: normal; " >
-                        <input type="radio" name="initiative-influence" value="10000-999999"> &gt; 10000
+                        <input type="radio" name="initiative-influence" value="10000-999999999"> &gt; 10000
                     </label>
                 </div>                
             </div>
@@ -371,7 +388,7 @@
 
     <h6 style="font-size: 1em; margin-top: 30px; margin-bottom: 20px;"><i style="font-size: 18px; margin-right: 2px;" class="fa fa-hand-o-right"></i> Passo 3 &ndash; localizar no mapa</h6>
 
-    <p>Clique na lupa do lado direito do mapa (<i class="fa fa-search"></i>) para localizar a morada indicada. Se a localização obtida não estiver certa, faça a correcção arrastando o marcador.</p>
+    <p>Clique na lupa do lado direito do mapa (<i class="fa fa-search"></i>) para localizar a morada indicada. Se preferir também pode arrastar o marcador directamente (sem pesquisa de morada). Se a localização obtida não estiver certa, faça uma correcção posterior arrastando o marcador. Pode fazer zoom out / zoom in para alcançar rapidamente qualquer parte do mapa.</p>
     <div class="row" style="padding: 0px 15px;">
         <div class="col-sm-12" id="map">
 
@@ -388,7 +405,10 @@
         <button id="initiative-submit" style="font-size: 26px; font-weight: 700; padding: 10px 35px 11px 32px; letter-spacing: 1px;" class="btn btn-info  btn-lg btn-fill ">Submeter</button>
     </div>
 
-    <div style="height: 100px;"></div>
+    <div class="row" style="height: 100px; margin-top: 20px;">
+        <div class="col-sm-6 col-sm-offset-3" id="alert-container">
+        </div>
+    </div>
 </div>
 {{ footer() }} 
 {{ super() }}
@@ -420,11 +440,45 @@
         L.tileLayer('http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png'),
     ]);
 
+    RC.center = [39.6945391,-8.1305599];
     RC.map = L.map('map', {
-        center: [39.5676, -8.7068],
+        center: RC.center,
         zoom: 7,
         layers: [RC.streetsLayer]
     });
+
+
+    RC.icon = L.AwesomeMarkers.icon({
+        icon: "home",
+        iconColor: "white",
+        extraClasses: "icon-marker-lg",
+        prefix: "fa",
+        markerColor: "darkgreen",
+        popupAnchor: [1, -41],
+    }); 
+
+    RC.getMarker = function(){
+
+        var marker = new L.Marker(undefined, {
+            icon: RC.icon,
+            draggable: true
+        });
+
+        marker.on("popupclose", function(e){
+
+            e.target.unbindPopup(e);
+        });
+
+        return marker;
+    };
+
+    RC.defaultMarker = RC.getMarker()
+                        .setLatLng(RC.center)
+                        .bindPopup("Clique na lupa ou arraste o marcador")
+                        .addTo(RC.map)
+                        .openPopup();
+
+
 
     RC.layersControl = L.control.layers(
         {
@@ -438,42 +492,39 @@
     RC.geocoderControl = L.Control.geocoder({
         collapsed: false,
         placeholder: "Pesquisar morada",
-        errorMessage: "Morada não encontrada",
+        errorMessage: "Morada não encontrada. Por favor arraste o marcador <br> para a localização da iniciativa (pode fazer zoom out / zoom in).",
         geocoder: L.Control.Geocoder.bing('AoArA0sD6eBGZyt5PluxhuN7N7X1vloSEIhzaKVkBBGL37akEVbrr0wn17hoYAMy'),
     });
 
-    RC.icon = L.AwesomeMarkers.icon({
-        icon: "home",
-        iconColor: "white",
-        extraClasses: "icon-marker-lg",
-        prefix: "fa",
-        markerColor: "darkgreen",
-        popupAnchor: [1, -41],
-    });    
+   
+
+
+
 
     RC.geocoderControl.markGeocode = function(result) {
-
+debugger;
         this._map.fitBounds(result.bbox, {
             maxZoom: 15
         });
 
-        if (this._geocodeMarker) {
-            this._map.removeLayer(this._geocodeMarker);
-        }
+        this._map.eachLayer(function(layer){
+            
+            if(layer instanceof L.Marker){
+                this._map.removeLayer(layer);
+            }
+        }, this);
 
-        this._geocodeMarker = new L.Marker(result.center, {
-                icon: RC.icon,
-                draggable: true
-            })
-            .bindPopup(result.html || result.name)
-            .addTo(this._map)
-            .openPopup();
+        this._geocodeMarker = RC.getMarker()
+                                .setLatLng(result.center)
+                                .bindPopup(result.html || result.name)
+                                .addTo(this._map)
+                                .openPopup();
 
         // make sure the popup does not show again after the marker is dragged for the first time
-        this._geocodeMarker.on("popupclose", function(){
+        // this._geocodeMarker.on("popupclose", function(){
 
-            this._geocodeMarker.unbindPopup();
-        }, this);
+        //     this._geocodeMarker.unbindPopup();
+        // }, this);
 
         return this;
     }
@@ -481,7 +532,15 @@
     RC.map.addControl(RC.layersControl);
     RC.map.addControl(RC.geocoderControl);
     
+    RC.removeAlert = function(){
+
+        // remove any eventual alert previsouly added
+        $("#alert-invalid-fields").alert("close");
+    };
     
+    $("input[type='radio'], input[type='checkbox']").on('ifToggled', RC.removeAlert);
+    $("textarea, input[type='text']").on("focusout", RC.removeAlert);
+
     RC.$searchBox = $(".leaflet-control-geocoder-form > input[type='text']");
     RC.$searchBox.css({
         "width": "350px",
@@ -505,6 +564,8 @@
             RC.$searchBox.val(fullAddress);
         }
     });
+
+    RC.alertTemplate = _.template('<div class="alert alert-danger" id="alert-invalid-fields">Os seguintes campos devem ser preenchidos: <ul style="padding-left: 25px; margin-top: 5px;"> <% for(var i=0; i<invalidKeys.length; i++){ %> <li> <%= invalidKeys[i] %> </li> <% } %> </ul></div>');
 
     RC.iCheckRead = function(name, type){
 
@@ -588,7 +649,7 @@
         RC.initiativeData.typeOther = $.trim($("#initiative-type-other").val());
 
         RC.initiativeData.domains = RC.iCheckRead("initiative-domains", "checkbox");
-        RC.initiativeData.domainOther = $.trim($("#initiative-domain-other").val());
+        RC.initiativeData.domainsOther = $.trim($("#initiative-domains-other").val());
 
         RC.initiativeData.visitorsId = RC.iCheckRead("initiative-visitors-id", "radio");
         RC.initiativeData.scopeId = RC.iCheckRead("initiative-scope-id", "radio");
@@ -610,26 +671,112 @@
             RC.initiativeData.coordinates = [latLng.lat, latLng.lng]
         }
 
-        RC.initiativeData.statusId = "status_pending";
+        RC.initiativeData.initiativeStatusId = RC.iCheckRead("initiative-status-id", "radio");
         
         
     };
 
     RC.validate = function(){
 
-        //, "videoUrl", "street", "phone", "contactOther", "typeOther", "domainsOther",  "physicalArea", "promoter","targetOther","logo","postalCode","docUrl",
+        var requiredFields = {
+            "name": {
+                "pt": "Nome da iniciativa"
+            },
+            "startDate": {
+                "pt": "Data de início"
+            },
+            "city": {
+                "pt": "Localidade"
+            },
+            "contactName": {
+                "pt": "Nome da pessoa de contacto"
+            },
+            "typeId": {
+                "pt": "Tipo de iniciativa"
+            },
+             "domains": {
+                "pt": "Domínios chave"
+            },
+            "visitorsId": {
+                "pt": "Aceita visitas?"
+            },
+            "scopeId": {
+                "pt": "Espaço de acção"
+            },
+            "target": {
+                "pt": "Público alvo"
+            },
+            "influence": {
+                "pt": "Estimativa do Universo de interacção directa"
+            },
+            "groupSize": {
+                "pt": "Nº de pessoas envolvidas"
+            },          
+            "initiativeStatusId": {
+                "pt": "Estado da iniciativa"
+            },
+            "description": {
+                "pt": "Descrição da iniciativa"
+            },
+            "coordinates": {
+                "pt": "Localização do marcador"
+            }
+        };
 
-        var requiredFields = ["name", "slug", "description", "typeId",  "domains", "url", "contactName", "email",    "city",  "countryCode", "coordinates",  "startDate", "visitorsId", "groupSize", "scopeId", "target",  "influence", "statusId"];
-
-        var allValid = true;
-        for(var i=0; i<requiredFields.length; i++){
-            if(!RC.initiativeData[requiredFields[i]] && allValid){
-                alert("Por favor preencha os campos obrigatórios: " + requiredFields.join(", "));
-                allValid = false;
+        
+        var invalidKeys = [], keys = _.keys(requiredFields);
+        for(var i=0; i<keys.length; i++){
+            if(!RC.initiativeData[keys[i]] || RC.initiativeData[keys[i]].length===0){
+                invalidKeys.push(requiredFields[keys[i]].pt);
             }
         }
 
-        return allValid;
+        if(invalidKeys.length > 0){
+            // show alert
+            $("#alert-container").html(RC.alertTemplate({invalidKeys: invalidKeys}));
+            return false;
+        }
+
+        var otherRequiredFields = {
+            "typeOther": {
+                "pt": "Tipo de iniciativa (outro)"
+            },
+            "domainsOther": {
+                "pt": "Domínios chave (outro)"
+            },
+            "targetOther": {
+                "pt": "Público alvo (outro)"
+            }
+        }
+
+
+        // if type is "other", the "other" input text must have something 
+        if(RC.initiativeData["typeId"].indexOf("other") > 0){
+            if(!RC.initiativeData["typeOther"]){
+                invalidKeys.push(otherRequiredFields["typeOther"].pt);   
+            }
+        }
+
+        // same for domains and target
+        if(RC.initiativeData["domains"].join(",").indexOf("other") > 0){
+            if(!RC.initiativeData["domainsOther"]){
+                invalidKeys.push(otherRequiredFields["domainsOther"].pt);   
+            }
+        }
+
+        if(RC.initiativeData["target"].join(",").indexOf("other") > 0){
+            if(!RC.initiativeData["targetOther"]){
+                invalidKeys.push(otherRequiredFields["targetOther"].pt);   
+            }
+        }
+
+        if(invalidKeys.length > 0){
+            // show alert
+            $("#alert-container").html(RC.alertTemplate({invalidKeys: invalidKeys}));
+            return false;
+        }
+
+        return true;
     },
 
     $("#initiative-submit").on("click", function(){
@@ -637,22 +784,24 @@
         
         RC.readData();
         if(RC.validate()){
-debugger;
+
             var ajaxOptions = {
                 url: "/api/v1/initiatives",
                 method: "POST",
                 data: RC.initiativeData
             };
 
+            $("#initiative-submit").prop("disabled", true);
             Q($.ajax(ajaxOptions))
-            .delay(300)
-            .then(function(newInitiative) {
-                alert("A iniciativa foi submetida com sucesso!")
-            })
-            .catch(function(err) {
-                alert("ERRO: ")
-                debugger;
-            });
+                .delay(300)
+                .then(function(newInitiative) {
+                    alert("A iniciativa foi submetida com sucesso!");
+
+                })
+                .catch(function(err) {
+                    alert("ERRO: " + err.msg)
+                    debugger;
+                });
 
         }
     });

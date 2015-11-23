@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS initiatives(
     physical_area TEXT,
     video_url TEXT,
     doc_url TEXT,
-    status_id TEXT references definitions(id) ON DELETE SET NULL default 'status_alive',  -- the possible status are defined with the prefix "status"
+    initiative_status_id TEXT references definitions(id) ON DELETE SET NULL default 'initiative_status_003_alive',  -- the possible status are defined with the prefix "initiative_status"
+    moderation_status_id TEXT references definitions(id) ON DELETE SET NULL default 'moderation_status_001_pending',  -- the possible status are defined with the prefix "moderation_status"
 
     CONSTRAINT logo_must_be_object       CHECK (jsonb_typeof(logo)        = 'object'),
     CONSTRAINT coordinates_must_be_array CHECK (jsonb_typeof(coordinates) = 'array'),

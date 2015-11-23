@@ -7,6 +7,7 @@
  'Economia e Finanças',
  'Ferramentas e Tecnologias',
  'Espaço Construído',
+
  'Centro Comunitário',
  'tradições gastronómicas',
  'Bem- Estar e desenvolvimento pessoal',
@@ -21,3 +22,4 @@
  'Produção de hortofrutícolas e projecto pedagógico',
  'Turismo de Natureza',
  'Associação de defesa da natureza e educação'
+

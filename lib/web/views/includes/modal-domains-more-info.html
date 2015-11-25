@@ -10,49 +10,14 @@
             </div>
             <div class="modal-body">
                 <ul class="list-initiative-definitions">
-                    <li>
-                        <b>{{ ctx.definitions.domain_agriculture.title.pt }}:</b> {{ ctx.definitions.domain_agriculture.description.pt }}
+
+                    {% for obj in ctx.definitions.domain %}
+
+                    <li style="margin-bottom: 8px;">
+                        <b>{{ obj['title']['pt'] }}:</b> {{ obj['description']['pt'] }} 
                     </li>
 
-                    <li>
-                        <b>{{ ctx.definitions.domain_husbandry.title.pt }}:</b> {{ ctx.definitions.domain_husbandry.description.pt }}
-                    </li>
-
-                    <li>
-                         <b>{{ ctx.definitions.domain_bioconstruction.title.pt }}:</b> {{ ctx.definitions.domain_bioconstruction.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_ecotechnology.title.pt }}:</b> {{ ctx.definitions.domain_ecotechnology.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_art.title.pt }}:</b> {{ ctx.definitions.domain_art.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_education.title.pt }}:</b> {{ ctx.definitions.domain_education.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_health.title.pt }}:</b> {{ ctx.definitions.domain_health.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_spirituality.title.pt }}:</b> {{ ctx.definitions.domain_spirituality.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_economy.title.pt }}:</b> {{ ctx.definitions.domain_economy.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_sharing.title.pt }}:</b> {{ ctx.definitions.domain_sharing.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.domain_tools.title.pt }}: </b> {{ ctx.definitions.domain_tools.description.pt }}
-                    </li>
+                    {% endfor %}
 
                 </ul>
             </div>

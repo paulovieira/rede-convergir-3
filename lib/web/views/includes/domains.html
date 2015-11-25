@@ -3,62 +3,28 @@
 <div class="row" style="margin: 0;">
 
     <div style="" class="col-sm-6">
-        <div title="{{ ctx.definitions['domain_agriculture']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_agriculture') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_agriculture') }}"></i> 
-            {{ ctx.definitions['domain_agriculture']['title']['pt'] }}
-        </div>
 
-        <div title="{{ ctx.definitions['domain_husbandry']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_husbandry') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_husbandry') }}"></i> 
-            {{ ctx.definitions['domain_husbandry']['title']['pt'] }}
-        </div>
-
-        <div title="{{ ctx.definitions['domain_bioconstruction']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_bioconstruction') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_bioconstruction') }}"></i>
-            {{ ctx.definitions['domain_bioconstruction']['title']['pt'] }}
-        </div>
-
-        <div title="{{ ctx.definitions['domain_ecotechnology']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_ecotechnology') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_ecotechnology') }}"></i>
-            {{ ctx.definitions['domain_ecotechnology']['title']['pt'] }}
-        </div>
         
-        <div title="{{ ctx.definitions['domain_art']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_art') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_art') }}"></i>
-            {{ ctx.definitions['domain_art']['title']['pt'] }}
+        {% for obj in ctx.definitions.domain %}
+        {% if loop.index <= 6 %}
+        <div title="{{ obj['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass(obj.id) }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo(obj.id) }}"></i> 
+            {{ obj['title']['pt'] }}
         </div>
+        {% endif %}
+        {% endfor %}
 
-        <div title="{{ ctx.definitions['domain_education']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_education') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_education') }}"></i>
-            {{ ctx.definitions['domain_education']['title']['pt'] }}
-        </div>
     </div>
     <div style="" class="col-sm-6">
 
-        <div title="{{ ctx.definitions['domain_health']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_health') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_health') }}"></i>
-            {{ ctx.definitions['domain_health']['title']['pt'] }}
+        {% for obj in ctx.definitions.domain %}
+        {% if loop.index > 6 %}
+        <div title="{{ obj['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass(obj.id) }}">
+            <i class="fa {{ ctx.data.domains | getDomainLogo(obj.id) }}"></i> 
+            {{ obj['title']['pt'] }}
         </div>
-
-        <div title="{{ ctx.definitions['domain_spirituality']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_spirituality') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_spirituality') }}"></i>
-            {{ ctx.definitions['domain_spirituality']['title']['pt'] }}
-        </div>
-
-        <div title="{{ ctx.definitions['domain_economy']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_economy') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_economy') }}"></i>
-            {{ ctx.definitions['domain_economy']['title']['pt'] }}
-        </div>
-
-        <div title="{{ ctx.definitions['domain_sharing']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_sharing') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_sharing') }}"></i>
-            {{ ctx.definitions['domain_sharing']['title']['pt'] }}
-        </div>
-
-        <div title="{{ ctx.definitions['domain_tools']['description']['pt'] }}" class="{{ ctx.data.domains | getDefinitionClass('domain_tools') }}">
-            <i class="fa {{ ctx.data.domains | getDomainLogo('domain_tools') }}"></i>
-            {{ ctx.definitions['domain_tools']['title']['pt'] }}
-        </div>
+        {% endif %}
+        {% endfor %}
 
         {% if ctx.data.domainsOther %}
         <div style="margin-top: 3px;" title="Outro domínios de interesse" class="has-definition">

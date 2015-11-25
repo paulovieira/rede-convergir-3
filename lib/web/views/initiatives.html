@@ -88,19 +88,9 @@
 
 	window.RCData = window.RCData || {};
     RCData.initiatives = {{ ctx.initiatives | stringify }};
-    RCData.definitionsAll = {{ ctx.definitions | stringify }};
+//    RCData.definitionsAll = {{ ctx.definitions | stringify }};
+    RCData.definitions = {{ ctx.definitions | stringify }};
 
-    // manually add the "other" type (this is like a dummy type but must be to be shown in the filters)
-    RCData.definitionsAll["type_other"] = {
-        id: "type_other",
-        description: {
-            pt: "Outro",
-            _order: "type999"
-        },
-        title: {
-            pt: "Outro"
-        }
-    };
     
     RCData.initial = {{ ctx.query | stringify }};
     $("nav").addClass("navbar-initiatives");

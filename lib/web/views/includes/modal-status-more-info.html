@@ -11,21 +11,13 @@
             <div class="modal-body">
                 <ul class="list-initiative-definitions">
 
-                    <li>
-                        <b>{{ ctx.definitions.initiative_status_germinate.title.pt }}:</b> {{ ctx.definitions.initiative_status_germinate.description.pt }}
+                    {% for obj in ctx.definitions.initiative_status %}
+
+                    <li style="margin-bottom: 8px;">
+                        <b>{{ obj['title']['pt'] }}:</b> {{ obj['description']['pt'] }} 
                     </li>
 
-                    <li>
-                        <b>{{ ctx.definitions.initiative_status_root.title.pt }}:</b> {{ ctx.definitions.initiative_status_root.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.initiative_status_alive.title.pt }}:</b> {{ ctx.definitions.initiative_status_alive.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.initiative_status_inactive.title.pt }}:</b> {{ ctx.definitions.initiative_status_inactive.description.pt }}
-                    </li>
+                    {% endfor %}
 
                 </ul>
             </div>

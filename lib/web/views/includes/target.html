@@ -3,54 +3,34 @@
 <div class="row" style="margin: 0;">
 
     <div style="" class="col-sm-6">
-        <div class="{{ ctx.data.target | getDefinitionClass('target_children') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_children') }}"></i> 
-            {{ ctx.definitions['target_children']['title']['pt'] }}
-        </div>
 
-        <div class="{{ ctx.data.target | getDefinitionClass('target_teenagers') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_teenagers') }}"></i> 
-            {{ ctx.definitions['target_teenagers']['title']['pt'] }}
+        {% for obj in ctx.definitions.target %}
+        {% if loop.index <= 4 %}
+        <div title="{{ obj['description']['pt'] }}" class="{{ ctx.data.target | getDefinitionClass(obj.id) }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo(obj.id) }}"></i> 
+            {{ obj['title']['pt'] }}
         </div>
-
-        <div class="{{ ctx.data.target | getDefinitionClass('target_adults') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_adults') }}"></i> 
-            {{ ctx.definitions['target_adults']['title']['pt'] }}
-        </div>
-
-        <div class="{{ ctx.data.target | getDefinitionClass('target_seniors') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_seniors') }}"></i> 
-            {{ ctx.definitions['target_seniors']['title']['pt'] }}
-        </div>
+        {% endif %}
+        {% endfor %}
 
     </div>
     <div style="" class="col-sm-6">
 
-        <div class="{{ ctx.data.target | getDefinitionClass('target_families') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_families') }}"></i> 
-            {{ ctx.definitions['target_families']['title']['pt'] }}
+        {% for obj in ctx.definitions.target %}
+        {% if loop.index > 4 %}
+        <div title="{{ obj['description']['pt'] }}" class="{{ ctx.data.target | getDefinitionClass(obj.id) }}">
+            <i class="fa {{ ctx.data.target | getDomainLogo(obj.id) }}"></i> 
+            {{ obj['title']['pt'] }}
         </div>
-
-        <div class="{{ ctx.data.target | getDefinitionClass('target_handicapped') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_handicapped') }}"></i> 
-            {{ ctx.definitions['target_handicapped']['title']['pt'] }}
-        </div>
-
-        <div class="{{ ctx.data.target | getDefinitionClass('target_special_need_children') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_special_need_children') }}"></i> 
-            {{ ctx.definitions['target_special_need_children']['title']['pt'] }}
-        </div>
-
-        <div class="{{ ctx.data.target | getDefinitionClass('target_general') }}">
-            <i class="fa {{ ctx.data.target | getDomainLogo('target_general') }}"></i> 
-            {{ ctx.definitions['target_general']['title']['pt'] }}
-        </div>
+        {% endif %}
+        {% endfor %}
 
         {% if ctx.data.targetOther %}
         <div style="margin-top: 3px;" title="Outro público-alvo" class="has-definition">
             Outros: {{ ctx.data.targetOther }}
         </div>
         {% endif %}
+
     </div>
 
 </div>

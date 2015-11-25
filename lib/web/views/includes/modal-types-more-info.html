@@ -10,42 +10,14 @@
             </div>
             <div class="modal-body">
                 <ul class="list-initiative-definitions">
-                    <li>
-                        <b>{{ ctx.definitions.type_permaculture.title.pt }}:</b> {{ ctx.definitions.type_permaculture.description.pt }}
-                    </li>
-                    
-                    <li>
-                         <b>{{ ctx.definitions.type_transition.title.pt }}:</b> {{ ctx.definitions.type_transition.description.pt }}
+
+                    {% for obj in ctx.definitions.type %}
+
+                    <li style="margin-bottom: 8px;">
+                        <b>{{ obj['title']['pt'] }}:</b> {{ obj['description']['pt'] }} 
                     </li>
 
-                    <li>
-                         <b>{{ ctx.definitions.type_soil_nature.title.pt }}:</b> {{ ctx.definitions.type_soil_nature.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.type_construction.title.pt }}:</b> {{ ctx.definitions.type_construction.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.type_tools.title.pt }}:</b> {{ ctx.definitions.type_tools.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.type_culture.title.pt }}:</b> {{ ctx.definitions.type_culture.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.type_health.title.pt }}:</b> {{ ctx.definitions.type_health.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.type_economy.title.pt }}:</b> {{ ctx.definitions.type_economy.description.pt }}
-                    </li>
-
-                    <li>
-                        <b>{{ ctx.definitions.type_community.title.pt }}:</b> {{ ctx.definitions.type_community.description.pt }}
-                    </li>
-
+                    {% endfor %}
 
                 </ul>
             </div>

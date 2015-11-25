@@ -72,8 +72,8 @@
 
                     <div >
                         <span class="field-title" title="Tipe de iniciativa">Tipo de iniciativa:</span> 
-                        <span title="{{ ctx.definitions[ctx.data.typeId]['description']['pt'] }}">
-                        {{ ctx.definitions[ctx.data.typeId]['title']['pt'] | default(ctx.data.typeOther, true) }}
+                        <span title="{{ ctx.definitionsById.type[ctx.data.typeId]['description']['pt'] }}">
+                        {{ ctx.definitionsById.type[ctx.data.typeId]['title']['pt'] }}
                         </span>
                         <a href="#" data-toggle="modal" data-target="#types-more-info" title="Clique para ver mais detalhes sobre os diferentes tipos de iniciativa">
                             <i style="font-size: 80%;" class="fa fa-info-circle"></i>
@@ -89,9 +89,9 @@
                     </div>
 
                     <div > 
-                        <span class="field-title" title="Estado da iniciativa">Estado:</span> 
-                        <span title="{{ ctx.definitions[ctx.data.statusId]['description']['pt'] }}">
-                        {{ ctx.definitions[ctx.data.statusId]['title']['pt'] }}
+                        <span class="field-title" title="Estado da iniciativa">Estado da iniciativa:</span> 
+                        <span title="{{ ctx.definitionsById.initiative_status[ctx.data.initiativeStatusId]['description']['pt'] }}">
+                        {{ ctx.definitionsById.initiative_status[ctx.data.initiativeStatusId]['title']['pt'] }}
                         </span>
                         <a href="#" data-toggle="modal" data-target="#status-more-info" title="Clique para ver mais detalhes sobre os diferentes estados">
                             <i style="font-size: 80%;" class="fa fa-info-circle"></i>

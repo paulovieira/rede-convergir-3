@@ -165,6 +165,11 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
         command := command || format(' AND i.type_id = %L', input_obj->>'type_id');
     END IF;
 
+    -- criteria: moderation_status_id
+    IF input_obj->>'moderation_status_id' IS NOT NULL THEN
+        command := command || format(' AND i.moderation_status_id = %L', input_obj->>'moderation_status_id');
+    END IF;
+
 	command := command || ' ORDER BY i.id;';
 
 --	raise notice 'command: %', command;
@@ -191,6 +196,8 @@ insert into initiatives values
 
 
 select * from  initiatives_read('{"id": 1}');
+
+select * from  initiatives_read('[{"moderation_status_id": "moderation_status_002_approved"}]');
 
 select * from  initiatives_read('[{"slug": "biovilla"}, {"id": 2778}]');
 */

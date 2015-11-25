@@ -6,31 +6,72 @@ var Fs = require("fs"),
     _s = require("underscore.string");
 
 
-var parser = new Xml2js.Parser();
+var parser = new Xml2js.Parser({
+    trim: true,
+    async: false
+});
 
-var inputFile  = "./db_151119.xml";
-var outputFile = "./db_151119.json";
+var inputFiles  = {
+    pending: "./prjinquery.xml",
+    approved: "./db.xml",
+    rejected: "./archive.xml",
+};
+
+var outputFile = "db_151125.json";
+
+var outputData = [];
+
+var pending = Fs.readFileSync(inputFiles.pending, "utf8");
+var approved = Fs.readFileSync(inputFiles.approved, "utf8");
+var rejected = Fs.readFileSync(inputFiles.rejected, "utf8");
+
+parser.parseString(pending, function(err, data) {
+
+    data.convergir.project.forEach(function(obj){
+        obj.moderationStatusId = "moderation_status_001_pending";
+    });
+    outputData = outputData.concat(data.convergir.project);
+});
+
+parser.parseString(approved, function(err, data) {
+
+    data.convergir.project.forEach(function(obj){
+        obj.moderationStatusId = "moderation_status_002_approved";
+    });
+    outputData = outputData.concat(data.convergir.project);
+});
+
+parser.parseString(rejected, function(err, data) {
+
+    data.convergir.project.forEach(function(obj){
+        obj.moderationStatusId = "moderation_status_003_rejected";
+    });
+    outputData = outputData.concat(data.convergir.project);
+});
 
 
-var internals = {};
 
-Fs.readFile(inputFile, function(err, inputData) {
 
-    parser.parseString(inputData, function(err, outputData) {
+// Fs.readFile(inputFile, function(err, inputData) {
+//     console.log(inputData.length)
+//     parser.parseString(inputData, function(err, outputData) {
+//        console.log(outputData)
+
+
 
     	// make sure all objects have known keys
-		var knownKeys = ["projectid","projectname","projectdescription","projecttype","domains","projecturl","logo","street","postalcode","city","lat","lng","startdate","registrydate","updatedate","companyproject","visitors","groupsize","scopearea","target","projectinfluence","areaha","video","docurl","contactname","email","phone","othercontact"];
+		var knownKeys = ["projectid","projectname","projectdescription","projecttype","domains","projecturl","logo","street","postalcode","city","lat","lng","startdate","registrydate","updatedate","companyproject","visitors","groupsize","scopearea","target","projectinfluence","areaha","video","docurl","contactname","email","phone","othercontact", "moderationStatusId"];
 
-		outputData.convergir.project.forEach(function(obj){
+		outputData.forEach(function(obj){
 
-			if(_.difference(Object.keys(obj), knownKeys).length>0){
+			if(_.difference(Object.keys(obj), knownKeys).length > 0){
 				console.log("WARNING: project " + obj.projectid + " has some unknown key");
                 console.log(_.difference(Object.keys(obj), knownKeys));
 			}
 		});
 
-		// the keys should be more clear
-    	outputData = Hoek.transform(outputData.convergir.project, {
+		// the keys should be more clear; some of these properties will be changed and or deleted
+    	outputData = Hoek.transform(outputData, {
 
     		// basic fields
 			"id": "projectid.0",
@@ -68,15 +109,32 @@ Fs.readFile(inputFile, function(err, inputData) {
 			"videoUrl": "video.0",
 			"docUrl": "docurl.0",
 
+            "moderationStatusId": "moderationStatusId"
+
     	});
+
+        // remove the projects in archive.xml that have "<projectname>1</projectname>" (it's a bug)
+        for(var i=0; i<outputData.length; i++){
+            if(outputData[i].name==="1" || outputData[i].name==="-1'"){
+                outputData[i] = undefined;
+            }
+        }
+        outputData = _.compact(outputData);
+
+
+        outputData.forEach(function(obj){
+            obj.registryDate = getISODate(obj.registryDate);
+            obj.registryTimestamp = new Date(obj.registryDate).getTime();
+            obj.slug = _s.slugify(obj.name);
+        });
+
+        outputData.sort(function(objA, objB){
+            return objA.registryTimestamp - objB.registryTimestamp;
+        });
+
 
     	// execute some post-processing
     	outputData.forEach(function(obj, i){
-
-            // all values from the old database are strings; we should trim
-            Object.keys(obj).forEach(function(key){
-                obj[key] = _s.trim(obj[key]);
-            });
 
             // id should start from 1
             obj.idOld = obj.id;
@@ -88,27 +146,28 @@ Fs.readFile(inputFile, function(err, inputData) {
                 obj.logo = _s.slugify(obj.name) + "-" + obj.id + Path.extname(obj.logo); 
             }
 
+
+
             // correct the type (we should be using the corresponding id)
-            internals.correctType(obj);
+            correctType(obj);
 
             // correct the scope
-            internals.correctScope(obj);
+            correctScope(obj);
 
             // correct the visitors
-            internals.correctVisitors(obj);
+            correctVisitors(obj);
 
             // domains and target are comma-separated lists; makes more sense to use arrays
             obj.domains = obj.domains ? obj.domains.split(",") : [];
-            internals.correctDomain(obj);
+            correctDomain(obj);
 
             // do the same for target
             obj.target  = obj.target  ? obj.target.split(",")  : [];
-            internals.correctTarget(obj);
+            correctTarget(obj);
 
             // dates should be in ISO8601
-            obj.startDate    = internals.getISODate(obj.startDate);
-            obj.registryDate = internals.getISODate(obj.registryDate);
-            obj.updateDate   = internals.getISODate(obj.updateDate);
+            obj.startDate    = getISODate(obj.startDate);
+            obj.updateDate   = getISODate(obj.updateDate);
 
             // coordinates should be an array: [lat, lng]
             obj.coordinates = [Number(obj.lat), Number(obj.lng)];
@@ -140,12 +199,43 @@ Fs.readFile(inputFile, function(err, inputData) {
             obj.influence = influence;
 
             // videosUrl are simply an id to an youtube video
-    		if(obj.videoUrl){
+    		if(obj.videoUrl && obj.videoUrl.indexOf("youtube.com")===-1){
     			obj.videoUrl = "https://www.youtube.com/watch?v=" + obj.videoUrl;
     		}
 						
     	});
     	
+
+        // make sure the slugs are unique
+        countSlugs = {};
+        var allSlugsUnique = _.chain(outputData)
+                            .pluck("slug")
+                            .unique()
+                            .each(function(slug){ countSlugs[slug] = 0; })
+                            .value();
+
+        // how many for each slug?
+        repeatedSlugs = [];
+        outputData.forEach(function(obj){
+            if(countSlugs[obj.slug ]===undefined){
+                throw new Error("unknown slug")
+            }
+
+            countSlugs[obj.slug]++;
+            if(countSlugs[obj.slug]>1){
+                repeatedSlugs.push(obj.slug);
+            }
+
+            repeatedSlugs = _.unique(repeatedSlugs);
+        });
+
+        // change the objects where the slug is repeated       
+        outputData.forEach(function(obj){
+            if(_.contains(repeatedSlugs, obj.slug)){
+                obj.slug = _s.slugify(obj.name) + "-" + obj.id;
+            }
+        });
+
 
         var numberOfProjects = outputData.length;
     	console.log("Number of projects: ", numberOfProjects);
@@ -167,7 +257,7 @@ Fs.readFile(inputFile, function(err, inputData) {
         outputData.forEach(function(obj){
 
             if(obj.logo){
-                wgetLogos += "wget http://www.redeconvergir.net/projects/" + obj.idOld + "/" + obj.logoOld + " -O " + obj.logo +  "\n";    
+                wgetLogos += "wget http://v2.redeconvergir.net/projects/" + obj.idOld + "/" + obj.logoOld + " -O " + obj.logo +  "\n";    
                 logosCount++;
             }
             else{
@@ -182,7 +272,7 @@ Fs.readFile(inputFile, function(err, inputData) {
 
         outputData.forEach(function(obj){
             if(obj.docUrl){
-                wgetDocs += "wget http://www.redeconvergir.net/projects/" + obj.id + "/" + obj.docUrl + "\n";    
+                wgetDocs += "wget http://v2.redeconvergir.net/projects/" + obj.id + "/" + obj.docUrl + "\n";    
                 docCount++;
             }
         });
@@ -204,11 +294,12 @@ Fs.readFile(inputFile, function(err, inputData) {
             });        
         }
 
-    });
-});
+
+//     });
+// });
 
 
-internals.getISODate = function(d){
+function getISODate(d){
 
     var dateParts = d.split("/");
     if(dateParts.length!==3){
@@ -219,7 +310,7 @@ internals.getISODate = function(d){
 };
 
 
-internals.correctDomain = function(payload){
+function correctDomain(payload){
 
     var domains = payload.domains;
     var domainsOther = [];
@@ -273,7 +364,7 @@ internals.correctDomain = function(payload){
 
 };
 
-internals.correctTarget = function(payload){
+function correctTarget(payload){
 
     var target = payload.target;
     var targetOther = [];
@@ -318,7 +409,7 @@ internals.correctTarget = function(payload){
 
 };
 
-internals.correctType = function(payload){
+function correctType(payload){
 
     var type = payload.type;
     payload.typeOther = undefined;
@@ -353,18 +444,21 @@ internals.correctType = function(payload){
     else{
         payload.typeId = "type_999_other";
         if(type===""){
-            throw new Error("type is 'other', but there's nothing");
+            payload.typeOther = "(dados não introduzidos)";
+        }
+        else{
+            payload.typeOther = type;    
         }
 
-        console.log("type is other: ", type)
-        payload.typeOther = type;
+        console.log("type is other: ", payload.typeOther);
+        
     }
 
     delete payload.type;
 
 };
 
-internals.correctScope = function(payload){
+function correctScope(payload){
 
     var scope = payload.scope;
 
@@ -378,8 +472,8 @@ internals.correctScope = function(payload){
         payload.scopeId = "scope_003_mixed";
     }
     else{
+        console.log("ERROR AT: '" + payload.name + "'");
         console.log("scope: ", scope)
-        console.log("name: ", payload.name)
         throw new Error("scope is unknown");
     }
 
@@ -387,7 +481,7 @@ internals.correctScope = function(payload){
 
 };
 
-internals.correctVisitors = function(payload){
+function correctVisitors(payload){
 
     var visitors = payload.visitors;
 
@@ -401,6 +495,7 @@ internals.correctVisitors = function(payload){
         payload.visitorsId = "visitors_003_confirmation";
     }
     else{
+        console.log("ERROR AT: ", payload.name);
         console.log("visitors: ", visitors)
         console.log("name: ", payload.name)
         throw new Error("visitors is unknown");
@@ -409,3 +504,5 @@ internals.correctVisitors = function(payload){
     delete payload.visitors;
 
 };
+
+

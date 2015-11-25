@@ -57,7 +57,8 @@ internals.fromDbToPublicAPI = {
     "physicalArea": "physical_area",
     "videoUrl": "video_url",
     "docUrl": "doc_url",
-    "statusId": "status_id"
+    "initiativeStatusId": "initiative_status_id",
+    "moderationStatusId": "moderation_status_id"
 };
 
 

@@ -1,3 +1,4 @@
+ 
 
 <div class="row search-container" style="padding-right: 20px;">
 
@@ -5,7 +6,7 @@
         <div class="form-group">
           <div class="input-group" style="background-color: white;">
 
-              <input type="text" style="background-color: white; border: 2px solid #7A9E9F; border-radius: 10px; border-top-right-radius: 0; border-bottom-right-radius: 0;" class="form-control" id="search-initiative">
+              <input type="text" style="background-color: white; border: 2px solid #7A9E9F; border-radius: 10px; border-top-right-radius: 0; border-bottom-right-radius: 0;" class="form-control" id="search-initiative" placeholder="Pesquisar">
               <span class="input-group-addon" style="background-color: white; border: 2px solid #7A9E9F; border-left: 0; border-radius: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; cursor: pointer;">
                   <i style="color: #7A9E9F; font-size: 125%;" class="fa fa-search"></i>
               </span>
@@ -44,7 +45,7 @@
 
             <div class="icheck-label">
             <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="checkbox" data-type-id="{{ obj.id }}" class="js-filter-type" {{ "checked" if obj.selected }}>
+                <input type="checkbox" data-type-id="{{ obj.id }}" value="{{ obj.id }}" name="filter-type" class="js-filter-type" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
             </label>
             </div>
@@ -63,7 +64,7 @@
 
             <div class="icheck-label">
             <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="checkbox" data-type-id="{{ obj.id }}" class="js-filter-type" {{ "checked" if obj.selected }} >
+                <input type="checkbox" data-type-id="{{ obj.id }}" value="{{ obj.id }}" name="filter-type" class="js-filter-type" {{ "checked" if obj.selected }} >
                 {{ obj.title.pt }}
             </label>
             </div>
@@ -90,7 +91,7 @@
 
             <div class="icheck-label">
             <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="checkbox" data-domain-id="{{ obj.id }}" class="js-filter-domain" {{ "checked" if obj.selected }}>
+                <input type="checkbox" value="{{ obj.id }}"  data-domain-id="{{ obj.id }}" name="filter-domain" class="js-filter-domain" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
             </label>
             </div>
@@ -109,7 +110,7 @@
 
             <div class="icheck-label">
             <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="checkbox" data-domain-id="{{ obj.id }}" class="js-filter-domain" {{ "checked" if obj.selected }}>
+                <input type="checkbox" value="{{ obj.id }}" data-domain-id="{{ obj.id }}"  name="filter-domain" class="js-filter-domain" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
             </label>
             </div>
@@ -134,7 +135,7 @@
     
             <div class="icheck-label">
               <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="radio" name="base-maps" data-base-layer-id="{{ obj.id }}" value="{{ obj.id }}" class="js-base-map" {{ "checked" if obj.selected }}>
+                <input type="radio" name="base-layers" value="{{ obj.id }}" data-base-layer-id="{{ obj.id }}" class="js-base-layer" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
               </label>
             </div>

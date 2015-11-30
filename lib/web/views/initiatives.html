@@ -90,11 +90,9 @@
 
 	window.RCData = window.RCData || {};
     RCData.initiatives = {{ ctx.initiatives | stringify }};
-//    RCData.definitionsAll = {{ ctx.definitions | stringify }};
     RCData.definitions = {{ ctx.definitions | stringify }};
-
-    
-    RCData.initial = {{ ctx.query | stringify }};
+ //   RCData.initial = {{ ctx.query | stringify   }};
+ 
     $("nav").addClass("navbar-initiatives");
 
 	</script>
@@ -125,6 +123,7 @@
     <script src="/static/backbone/backbone.select-1.5.2.js"></script>
     <script src="/static/backbone/backbone.radio-1.0.2.js"></script>
     <script src="/static/backbone/backbone.marionette-2.4.4.js"></script>
+    <script src="/static/backbone/backbone.base-router-1.2.0.js"></script>
     <script src="/static/backbone/renderer-nunjucks.js"></script>
 
 

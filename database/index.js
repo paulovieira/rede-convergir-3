@@ -10,7 +10,7 @@ var pgpOptions = {
     promiseLib: Promise
 };
 
-PgMonitor.attach(pgpOptions, null, true);
+PgMonitor.attach(pgpOptions);
 
 var pgp = pgpLib(pgpOptions); 
 

@@ -39,7 +39,7 @@
 
                 {% if ctx.data.logo.filename %}
                 <a target="_blank" href="{{ ctx.data.url }}">
-                    <img style="min-width:{{ ctx.data.logo.min | default(100) }}px; max-width:{{ ctx.data.logo.max | default(100) }}px;" src="/static/_images/logos/{{ ctx.data.logo.filename }}" class="center-block img-responsive" alt="{{ ctx.data.name }} - logotipo">
+                    <img style="min-width:{{ ctx.data.logo.min | default(100, true) }}px; max-width:{{ ctx.data.logo.max | default(100, true) }}px;" src="/static/_images/logos/{{ ctx.data.logo.filename }}" class="center-block img-responsive" alt="{{ ctx.data.name }} - logotipo">
                 </a>
                 {% endif %}
             </div>
@@ -111,7 +111,7 @@
                     </div>
 
                     <div title="Telefone">
-                        <i class="fa fa-phone"></i> <span class="field-title">Telefone:</span> {{ ctx.data.phone | default("(não disponível)") }}
+                        <i class="fa fa-phone"></i> <span class="field-title">Telefone:</span> {{ ctx.data.phone | default("(não disponível, true)") }}
                     </div>
 
                     <div title="Pessoa de contacto">

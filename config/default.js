@@ -6,8 +6,8 @@ var Nunjucks = require('hapi-nunjucks');
 // absolute paths
 var internals = {
     rootDir:      Path.resolve(__dirname, ".."),
-    viewsDir:     Path.resolve(__dirname, "..", "lib/web/views"),
-    env:process.env.NODE_ENV 
+    //viewsDir:     Path.resolve(__dirname, "..", "lib/web/views"),
+    //env:process.env.NODE_ENV 
 };
 
 internals.bundles = JSON.parse(Fs.readFileSync(Path.join(internals.rootDir, "bundles.json"), "utf8"));
@@ -20,10 +20,37 @@ module.exports = {
     publicPort: 6001,  // probably 80
 
     rootDir: internals.rootDir,
-    viewsDir: internals.viewsDir,
-    
+    //viewsDir: internals.viewsDir,
+
     bundles: internals.bundles,
-    
+
+    email: {
+        mandrill: {
+            apiKey: ""
+        },
+    },
+
+    ironPassword: "",
+
+    db: {
+
+        postgres: {
+            host: "",
+            port: 5432,
+            database: "",
+            username: "",
+            password: "",
+
+            getConnectionString: function(){
+                return "postgres://" +
+                        this.username + ":" +
+                        this.password + "@" +
+                        this.host + ":" + this.port +  "/" +
+                        this.database;
+            }
+        },
+    },
+
     hapi: {
 
         // options for the Hapi.Server object (to be used in the main index.js)
@@ -37,13 +64,13 @@ module.exports = {
         },
 
         // options for the views (to be used in the main index.js)
-        views: {
-            path: internals.viewsDir,
-            allowAbsolutePaths: true,
-            engines: {
-                "html": Nunjucks
-            },
-        },
+        // views: {
+        //     path: internals.viewsDir,
+        //     allowAbsolutePaths: true,
+        //     engines: {
+        //         "html": Nunjucks
+        //     },
+        // },
 
         // documentation: https://github.com/hapijs/joi#validatevalue-schema-options-callback
         joi: {

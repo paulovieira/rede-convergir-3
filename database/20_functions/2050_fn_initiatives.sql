@@ -212,6 +212,7 @@ $BODY$
 DECLARE
 	upserted_row initiatives%ROWTYPE;
 	current_row initiatives%ROWTYPE;
+    n INT;  
 
 	-- fields to be used in WHERE clause
 	_id INT;
@@ -253,24 +254,36 @@ DECLARE
     _definition_id TEXT;
 BEGIN
 
-	
-	SELECT (input_obj->>'id')::int INTO _id;
+
+    _id   := (input_obj->>'id')::int;
+    _slug := COALESCE(input_obj->>'slug',  current_row.slug);
 
     IF _id IS NULL THEN
-        SELECT nextval(pg_get_serial_sequence('initiatives', 'id')) INTO _id;     
-    ELSE
-        -- check if the row exists; if not an exception will be thrown with error code
-        -- P0002 (query returned no rows); this happens automatically because we are
-        -- using STRICT INTO ("the query must return exactly one row or a run-time error will
-        -- be reported" - http://www.postgresql.org/docs/9.5/static/plpgsql-statements.html)
+        _id := nextval(pg_get_serial_sequence('initiatives', 'id'));
+
+        -- check if there is some existing row with the given slug; if so, change the slug by adding a
+        -- random suffix (TODO: we should have a more robust solution)
 
         -- note: FOR UPDATE prevents the row from being locked, modified or deleted by other 
         -- transactions until the current transaction ends. See:
         -- http://www.postgresql.org/docs/9.4/static/explicit-locking.html
-        --SELECT * FROM initiatives where id = _id FOR UPDATE INTO STRICT current_row;
-        SELECT * FROM initiatives where id = _id FOR UPDATE INTO current_row;
 
-        IF NOT FOUND THEN
+        SELECT * FROM initiatives where slug = _slug FOR UPDATE INTO current_row;
+        GET DIAGNOSTICS n := ROW_COUNT;
+
+        IF n != 0 THEN
+            _slug := _slug || '-' || get_random_string();
+        END IF;
+    ELSE
+        -- check if the row actually exists; if not the special variable FOUND is set to  false;
+        -- see http://www.postgresql.org/docs/9.5/static/plpgsql-statements.html
+        -- section "40.5.5. Obtaining the Result Status"
+        -- in that case, we throw an exception with error code P0002 (query returned no rows); 
+
+        SELECT * FROM initiatives where id = _id FOR UPDATE INTO current_row;
+        GET DIAGNOSTICS n := ROW_COUNT;
+
+        IF n = 0 THEN
             RAISE EXCEPTION USING 
                     ERRCODE = 'no_data_found',
                     MESSAGE = 'row with id ' || _id ||' does not exist';
@@ -279,11 +292,12 @@ BEGIN
     END IF;
 
 
+
+
 	--raise notice 'current: %s', current_row.email;
 	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
 
 	_name          := COALESCE(input_obj->>'name',      current_row.name);
-    _slug          := COALESCE(input_obj->>'slug',  current_row.slug);
 	_description   := COALESCE(input_obj->>'description', current_row.description);
 	_type_id       := COALESCE(input_obj->>'type_id',  current_row.type_id);
 	_type_other    := COALESCE(input_obj->>'type_other',  current_row.type_other);
@@ -423,10 +437,10 @@ BEGIN
 
 	RETURN NEXT upserted_row;
 
-    -- update the initiative_definitions table (if the array of definitions for "domains" or "target", which is given in the form of an array of foreign keys, is defined)
+    -- update the initiative_definitions table (if the array of definitions for "domains" or "target" is defined, which is given in the form of an array of foreign keys)
 
     -- domains
-    SELECT (input_obj->>'domains')::json INTO _array_definitions_ids;
+    _array_definitions_ids := (input_obj->>'domains')::json;
     IF json_typeof(_array_definitions_ids) = 'array' THEN
 
         DELETE FROM initiatives_definitions WHERE initiative_id = upserted_row.id AND definition_id LIKE 'domain%';
@@ -438,7 +452,7 @@ BEGIN
     END IF;
 
     -- target
-    SELECT (input_obj->>'target')::json INTO _array_definitions_ids;
+    _array_definitions_ids := (input_obj->>'target')::json;
     IF json_typeof(_array_definitions_ids) = 'array' THEN
 
         DELETE FROM initiatives_definitions WHERE initiative_id = upserted_row.id AND definition_id LIKE 'target%';

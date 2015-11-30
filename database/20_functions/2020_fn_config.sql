@@ -95,8 +95,7 @@ DECLARE
 	_value JSON;
 BEGIN
 
-	SELECT input_obj->>'key'   INTO _key;
-
+	_key := input_obj->>'key';
 	if _key IS NULL THEN
 		RETURN;
 	END IF;
@@ -104,7 +103,7 @@ BEGIN
 	-- add an explicit row lock (if the row does not exist, it won't have effect)
 	SELECT * FROM config where key = _key FOR UPDATE INTO current_row;
 
-	SELECT COALESCE((input_obj->>'value')::jsonb, current_row.value) INTO _value;
+	_value := COALESCE((input_obj->>'value')::jsonb, current_row.value);
 
 	INSERT INTO config(
 		key,
@@ -176,7 +175,7 @@ DECLARE
 BEGIN
 
 	-- extract values to be used in the WHERE clause
-	SELECT input_obj->>'key' INTO _key;
+	_key := input_obj->>'key';
 
 	DELETE FROM config
 	WHERE key = _key

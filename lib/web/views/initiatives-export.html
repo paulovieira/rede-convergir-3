@@ -92,20 +92,7 @@
     window.RCData = window.RCData || {};
     RCData.initiatives = {{ ctx.initiatives | stringify }};
     RCData.definitions = {{ ctx.definitions | stringify }};
-
-    // manually add the "other" type (this is like a dummy type but must be to be shown in the filters)
-    // RCData.definitionsAll["type_other"] = {
-    //     id: "type_other",
-    //     description: {
-    //         pt: "Outro",
-    //         _order: "type999"
-    //     },
-    //     title: {
-    //         pt: "Outro"
-    //     }
-    // };
-
-    RCData.initial = {{ ctx.query | stringify }};
+    //RCData.initial = {{ ctx.query | stringify }};
 
     </script>
 

@@ -535,7 +535,7 @@ debugger;
     RC.removeAlert = function(){
 
         // remove any eventual alert previsouly added
-        $("#alert-invalid-fields").alert("close");
+        $(".alert.alert-danger").alert("close");
     };
     
     $("input[type='radio'], input[type='checkbox']").on('ifToggled', RC.removeAlert);
@@ -565,7 +565,7 @@ debugger;
         }
     });
 
-    RC.alertTemplate = _.template('<div class="alert alert-danger" id="alert-invalid-fields">Os seguintes campos devem ser preenchidos: <ul style="padding-left: 25px; margin-top: 5px;"> <% for(var i=0; i<invalidKeys.length; i++){ %> <li> <%= invalidKeys[i] %> </li> <% } %> </ul></div>');
+    RC.alertTemplate = _.template('<div class="alert alert-danger">Os seguintes campos devem ser preenchidos: <ul style="padding-left: 25px; margin-top: 5px;"> <% for(var i=0; i<invalidKeys.length; i++){ %> <li> <%= invalidKeys[i] %> </li> <% } %> </ul></div>');
 
     RC.iCheckRead = function(name, type){
 
@@ -784,11 +784,14 @@ debugger;
         
         RC.readData();
         if(RC.validate()){
-
+debugger;
             var ajaxOptions = {
                 url: "/api/v1/initiatives",
                 method: "POST",
-                data: RC.initiativeData
+                contentType: "application/json",
+                // processData: false  ???
+                data: JSON.stringify(RC.initiativeData),
+                
             };
 
             $("#initiative-submit").prop("disabled", true);
@@ -799,8 +802,16 @@ debugger;
 
                 })
                 .catch(function(err) {
-                    alert("ERRO: " + err.msg)
-                    debugger;
+
+                    var message = "ERRO: ";
+                    if(err.responseJSON && err.responseJSON.message){
+                        message += err.responseJSON.message;
+                    }
+                    else {
+                        message += err.responseText;
+                    }
+
+                    $("#alert-container").html("<div class='alert alert-danger'>" + message + "</div>");
                 });
 
         }

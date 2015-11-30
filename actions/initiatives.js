@@ -10,6 +10,7 @@ var ChangeCase = require("change-case-keys");
 var Utils = require("../lib/common/utils");
 var Db = require("../database");
 
+
 var internals = {};
 
 module.exports = function(options){
@@ -18,7 +19,7 @@ module.exports = function(options){
 
     seneca.add("role:initiatives, cmd:read, test:hello-world" ,    internals.initiativesReadTest);
     seneca.add("role:initiatives, cmd:read",    internals.initiativesRead);
-    seneca.add("role:initiatives, cmd:create",  internals.initiativesCreate);
+//    seneca.add("role:initiatives, cmd:create",  internals.initiativesCreate);
     seneca.add("role:initiatives, cmd:upsert",  internals.initiativesUpsert);
     seneca.add("role:initiatives, cmd:delete",  internals.initiativesDelete);
 };

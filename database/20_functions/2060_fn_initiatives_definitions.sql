@@ -111,21 +111,21 @@ BEGIN
 
 	-- if the json argument is an object, convert it to an array (of 1 object)
 	IF  json_typeof(input) = 'object' THEN
-		SELECT json_build_array(input) INTO input;
+	    input := json_build_array(input);
 	END IF;
 
 	FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
-		SELECT input_obj->>'id' INTO _id;
-		SELECT input_obj->>'initiative_id' INTO _initiative_id;
-		SELECT input_obj->>'definition_id' INTO _definition_id;
+		_id            := (input_obj->>'id')::int;
+		_initiative_id := (input_obj->>'initiative_id')::int;
+		_definition_id := input_obj->>'definition_id';
 
 		-- for tables with surrogate primary key (serial),
 		-- if an id is not given, the intention is to create/insert a new row; 
 		-- otherwise, the intention is always to update an existing row; in other words
 		-- we can't insert a new row with a pre-defined id
 		IF _id IS NULL THEN
-			SELECT nextval(pg_get_serial_sequence('initiatives_definitions', 'id')) INTO _id;		
+			_id := nextval(pg_get_serial_sequence('initiatives_definitions', 'id'));
 		ELSE
 
 			-- add an explicit row lock
@@ -138,8 +138,8 @@ BEGIN
 
 		--raise notice 'current: %s', current_row.email;
 		--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
-		SELECT COALESCE((input_obj->>'initiative_id')::int, current_row.initiative_id) INTO _initiative_id;
-		SELECT COALESCE(input_obj->>'definition_id',  current_row.definition_id)  INTO _definition_id;
+		_initiative_id := COALESCE((input_obj->>'initiative_id')::int, current_row.initiative_id);
+		_definition_id := COALESCE(input_obj->>'definition_id',  current_row.definition_id);
 
 		-- todo: add entry to the session history
 
@@ -233,13 +233,13 @@ BEGIN
 
 	-- if the json argument is an object, convert it to an array (of 1 object)
 	IF  json_typeof(input) = 'object' THEN
-	    SELECT json_build_array(input) INTO input;
+		input := json_build_array(input);
 	END IF;
 
 	FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 		-- extract values to be used in the WHERE clause
-		SELECT (input_obj->>'id')::int INTO _id;
+		_id := (input_obj->>'id')::int;
 
 		DELETE FROM initiatives_definitions
 		WHERE id = _id
@@ -249,6 +249,7 @@ BEGIN
 		deleted_id   := deleted_row.id;
 
 		IF deleted_row.id IS NOT NULL THEN
+			-- can we change here to the "deleted_id := deleted_row.id" syntax?
 			SELECT deleted_row.id INTO deleted_id;
 			RETURN NEXT;
 		END IF;
@@ -295,14 +296,14 @@ BEGIN
 
 	-- if the json argument is an object, convert it to an array (of 1 object)
 	IF  json_typeof(input) = 'object' THEN
-	    SELECT json_build_array(input) INTO input;
+		input := json_build_array(input);
 	END IF;
 
 	FOR input_obj IN ( select json_array_elements(input) ) LOOP
 
 		-- extract values to be used in the WHERE clause
-		SELECT input_obj->>'initiative_id' INTO _initiative_id;
-		SELECT input_obj->>'definition_id' INTO _definition_id;
+		_initiative_id := (input_obj->>'initiative_id')::int;
+		_definition_id := input_obj->>'definition_id';
 		
 		DELETE FROM initiatives_definitions
 		WHERE initiative_id = _initiative_id AND definition_id = _definition_id
@@ -312,6 +313,7 @@ BEGIN
 		deleted_id   := deleted_row.id;
 
 		IF deleted_row.id IS NOT NULL THEN
+			-- can we change here to the "deleted_id := deleted_row.id" syntax?
 			SELECT deleted_row.id INTO deleted_id;
 			RETURN NEXT;
 		END IF;

@@ -1,3 +1,19 @@
+151129
+no servidor e na fcul
+  update nodejs to 0.10.40 (no servidor já está)
+  reinstall all the modules
+  mudar directoria do codigo: github/rede-conevrgir-3 (para ficar como no portatil)
+  actualizar ficheiro configuracao nginx
+
+adicionar analytics
+indicar campos obrigatorios
+mudar repo para rede-convergir + melhorar estrutura das directories
+on each list refresh, the selected initiative should be deselected (?)
+selectTimestamp - avoid show the loading icon if we just selected the initiative 
+run the sql scripts (have been updated)
+
+
+
 
 1) execute shp2pgsql
 shp2pgsql -D -I -s 4326                 "/path/to/shape_file.shp" geo.shape_file | psql --dbname=150608

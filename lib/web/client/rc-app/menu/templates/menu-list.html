@@ -1,6 +1,6 @@
 <div class="row" style="margin: 0px 10px 0px 5px; padding: 0px 0px 0px 10px;">
     <div class="col-sm-12" style="padding: 0px 0px 0px 0px; margin-left: -1px;">
-    <span style="font-size: 12px; font-family: 'Montserrat'">{{ numFilteredMsg }} {{ "(toda a rede)" if numFiltered == initiatives.length }}</span>
+    <span style="font-size: 12px; font-family: 'Montserrat'">{{ numFilteredMsg }} </span>
     </div>
 </div>
 
@@ -9,7 +9,7 @@
 
 {% for obj in initiatives %}
 
-{% if obj.visible %}
+{% if obj.inFilters and obj.inVisibleBounds %}
 <div class="row initiative-container {{ 'initiative-selected' if obj.selected }}" data-slug={{ obj.slug }} >
 
     <div class="{{ 'col-sm-9' if obj.logo.filename else 'col-sm-12' }}" style="padding: 0;">

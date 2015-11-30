@@ -5,7 +5,20 @@ no servidor e na fcul
   actualizar ficheiro configuracao nginx
     repetir processo para garantir que o pm2 inicia a aplicacao no reboot (porque mudamos a diretoria)
 adicionar analytics
+Adicionar aos links uteis o site www.transicaoportugal.net:
+    https://docs.google.com/document/d/1QHwylFFTCplf3xk_cq96c7qUH1tpt_EcPH1EHwM9-D0/edit
 indicar campos obrigatorios
+
+o   Resolver Inserir Eventos
+o   Criar Area de utilizador e moderador
+o   Assinalar Campos Obrigatórios na ficha de inserção do projecto
+o   Escrever na pagina de calendário que esta está em fase de testes
+o   Adicionar aos links uteis o site www.transicaoportugal.net
+o   Internacionalização: Criar excel aberto online para todos poderem traduzir o site para inglês
+o   Internacionalização: enviar email para projectos da rede a convidar a apoiar na tradução
+o   escrever texto sobre tradução para newsletter
+
+
 mudar repo para rede-convergir + melhorar estrutura das directories
 on each list refresh, the selected initiative should be deselected (?)
 

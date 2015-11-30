@@ -209,7 +209,7 @@
 
                         <div title="Disponibilidade para visitas">
                             <span class="field-title">Disponibilidade para visitas: </span>
-                            {{ ctx.definitions[ctx.data.visitorsId].title.pt }}
+                            {{ ctx.definitionsById.visitors[ctx.data.visitorsId].title.pt }}
                         </div>
 
                         <div title="Número de membros envolvidos no projecto">
@@ -223,12 +223,17 @@
 
                         <div title="Universo de accção">
                             <span class="field-title">Universo de accção: </span>
+                            {% if ctx.data.influence[0] >= 10000 %}
+                            >= 10&thinsp;000 pessoas
+                            {% else %}
                             {{ ctx.data.influence | join(" &ndash; ") }} pessoas
+                            {% endif %}
+                            
                         </div>
 
                         <div title="Projecto inserido em espaço">
                             <span class="field-title">Projecto inserido em espaço: </span>
-                            {{ ctx.definitions[ctx.data.scopeId].title.pt }}
+                            {{ ctx.definitionsById.scope[ctx.data.scopeId].title.pt }}
                         </div>
 
                         <div title="Área">

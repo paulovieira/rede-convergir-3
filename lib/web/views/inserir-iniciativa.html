@@ -418,8 +418,9 @@
 <script src="/static/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
 <script src="/static/jquery/icheck-1.0.2/icheck.js"></script>
 <script src="/static/q/q-1.4.1.js"></script>
-<script src="/static/underscore/underscore-1.6.0.js"></script>
-<script src="/static/underscore/underscore.string-3.2.1.js"></script>
+<script src="/static/underscore/underscore-1.8.3.js"></script>
+<script src="/static/slug-0.9.1.js"></script>
+
 
 <script type="text/javascript">
 
@@ -616,7 +617,7 @@ debugger;
 
         RC.initiativeData = {};
         RC.initiativeData.name = $.trim($("#initiative-name").val());
-        RC.initiativeData.slug = s.slugify(RC.initiativeData.name);
+        RC.initiativeData.slug = slug(RC.initiativeData.name, {lower: true});
 
         RC.initiativeData.url = $.trim($("#initiative-url").val());
         RC.initiativeData.videoUrl = $.trim($("#initiative-video-url").val());

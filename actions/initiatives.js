@@ -5,7 +5,8 @@ var Hoek = require("hoek");
 var Boom = require("boom");
 //var Config = require("config");
 var _ = require("underscore");
-var _s = require("underscore.string");
+//var _s = require("underscore.string");
+var slug = require("slug");
 var ChangeCase = require("change-case-keys");
 var Utils = require("../lib/common/utils");
 var Db = require("../database");
@@ -166,7 +167,8 @@ internals.initiativesUpsert = function(args, done){
     Utils.logCallsite(Hoek.callStack()[0]);
 
     if(!args.data.slug){
-        args.data.slug = _s.slugify(args.data.name);
+        //args.data.slug = _s.slugify(args.data.name);
+        args.data.slug = slug(args.data.name, {lower: true});
     }
 
     ChangeCase(args.data, "underscored");

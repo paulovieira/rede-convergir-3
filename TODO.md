@@ -1,7 +1,7 @@
 151129
 no servidor e na fcul
-  update nodejs to 0.10.40 (no servidor já está)
-  reinstall all the modules
+  done update nodejs to 0.10.40 (no servidor já está)
+  done reinstall all the modules
   actualizar ficheiro configuracao nginx
     repetir processo para garantir que o pm2 inicia a aplicacao no reboot (porque mudamos a diretoria)
 adicionar analytics

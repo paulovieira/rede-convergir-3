@@ -75,6 +75,17 @@
 </div>
 
 
+
+{# container for options modal #}
+<div class="modal x-fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="mn-r-modal1-contents">
+
+        </div>
+    </div>
+</div>
+
+
 <!-- modal bodies -->
 {{ modal_types_more_info(ctx) }}
 {{ modal_export_map(ctx) }}
@@ -134,7 +145,7 @@
     <script src="/rc-app/index.js"></script>
     <script src="/rc-app/leaflet-backbone-view.js"></script>
     <script src="/rc-app/entities.js"></script>
-{#    <script src="/rc-app/behaviors.js"></script> #}
+   <script src="/rc-app/behaviors.js"></script> 
     <script src="/rc-app/menu/menu.js"></script>
     <script src="/rc-app/map/map.js"></script>
     <script src="/rc-app/init.js"></script>

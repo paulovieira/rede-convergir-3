@@ -2,9 +2,9 @@
 no servidor e na fcul
   done update nodejs to 0.10.40 (no servidor já está)
   done reinstall all the modules
-  actualizar ficheiro configuracao nginx
+  done actualizar ficheiro configuracao nginx
     repetir processo para garantir que o pm2 inicia a aplicacao no reboot (porque mudamos a diretoria)
-adicionar analytics
+    done adicionar analytics
 Adicionar aos links uteis o site www.transicaoportugal.net:
     https://docs.google.com/document/d/1QHwylFFTCplf3xk_cq96c7qUH1tpt_EcPH1EHwM9-D0/edit
 indicar campos obrigatorios

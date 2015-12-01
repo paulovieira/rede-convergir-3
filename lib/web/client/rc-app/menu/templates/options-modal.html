@@ -6,26 +6,20 @@
 
 <div class="modal-body">
 
+    <p style="margin-bottom: 5px;">Filtro: tipo de iniciativa</p>
 
     <div class="row">
-
-        <p style="padding-left: 15px;">Filtro: tipo de iniciativa</p>
-
         <div class="col-sm-6">
 
         {% for obj in types %}
-        
             {% if loop.index0 % 2 == 0   %}
 
-            <div class="icheck-label">
-            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+            <label style="display: block; font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
                 <input type="checkbox" data-type-id="{{ obj.id }}" value="{{ obj.id }}" name="filter-type" class="js-filter-type" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
             </label>
-            </div>
 
             {% endif %}
-            
         {% endfor %}
         
         </div>
@@ -33,45 +27,35 @@
         <div class="col-sm-6">
 
         {% for obj in types %}
-         
             {% if loop.index0 % 2 == 1  %}
 
-            <div class="icheck-label">
-            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+            <label style="display: block; font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
                 <input type="checkbox" data-type-id="{{ obj.id }}" value="{{ obj.id }}" name="filter-type" class="js-filter-type" {{ "checked" if obj.selected }} >
                 {{ obj.title.pt }}
             </label>
-            </div>
 
             {% endif %}
-            
         {% endfor %}
         
         </div>
     </div>
 
 
-    <hr style="margin: 10px 15px 0px 0px;">
+    <hr style="margin: 10px 0px 15px 0px;">
 
-
+    <p style="margin-bottom: 5px;">Filtro: domínio de interesse</p>
     <div class="row" style="margin-top: 15px;">
-
-        <p style="padding-left: 15px;">Filtro: domínio de interesse</p>
         <div class="col-sm-6">
 
         {% for obj in domains %}
-        
             {% if loop.index0 % 2 == 0 %}
 
-            <div class="icheck-label">
-            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+            <label style="display: block; font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
                 <input type="checkbox" value="{{ obj.id }}"  data-domain-id="{{ obj.id }}" name="filter-domain" class="js-filter-domain" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
             </label>
-            </div>
 
             {% endif %}
-
         {% endfor %}
         
         </div>
@@ -79,41 +63,31 @@
         <div class="col-sm-6">
 
         {% for obj in domains %}
-        
             {% if loop.index0 % 2 == 1 %}
 
-            <div class="icheck-label">
-            <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+            <label style="display: block; font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
                 <input type="checkbox" value="{{ obj.id }}" data-domain-id="{{ obj.id }}"  name="filter-domain" class="js-filter-domain" {{ "checked" if obj.selected }}>
                 {{ obj.title.pt }}
             </label>
-            </div>
 
             {% endif %}
-            
         {% endfor %}
         
         </div>
     </div>
 
 
-    <hr style="margin: 10px 15px 0px 0px;">
+    <hr style="margin: 10px 0px 15px 0px;">
 
 
+    <p style="margin-bottom: 5px;">Mapa-base</p>
     <div class="row" style="margin-top: 15px;">
-
         <div class="col-sm-6">
-
-            <p style="">Mapa-base</p>
-
+        
             {% for obj in baseLayers %}
-    
-            <div class="icheck-label">
-              <label style="font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
-                <input type="radio" name="base-layers" value="{{ obj.id }}" data-base-layer-id="{{ obj.id }}" class="js-base-layer" {{ "checked" if obj.selected }}>
-                {{ obj.title.pt }}
-              </label>
-            </div>
+            <label style="display: block; font-weight: normal; font-size: 13px;" title="{{ obj.description.pt }}">
+                <input type="radio" name="base-layers" value="{{ obj.id }}" data-base-layer-id="{{ obj.id }}" class="js-base-layer" {{ "checked" if obj.selected }}> {{ obj.title.pt }}
+            </label>
 
             {% endfor %}
         
@@ -131,31 +105,18 @@
 
     </div>
 
-{#
-    <div class="text-center" style="margin-top: 15px;">
-        <button class="btn btn-primary" style="border-radius: 10px; margin-right: 15px;" id="options-apply-filters">
-            Actualizar o mapa
-        </button>
-
-        <button class="btn btn-default" style="border-radius: 10px;" id="options-cancel-filters">
-            Fechar
-        </button>
-    </div>
-#}
-
-
 </div>
 
 <div class="modal-footer">
 
     <div class="left-side">
-        <button type="button" class="btn btn-default btn-simple" data-dismiss="modal"><b>Cancelar</b></button>
+        <button style="font-size: 20px;" type="button" class="btn btn-default btn-simple" data-dismiss="modal"><b>Cancelar</b></button>
     </div>
 
     <div class="divider"></div>
 
     <div class="right-side">
-        <button type="button" class="btn btn-info btn-simple js-modal-apply"><b>Aplicar filtros</b></button>
+        <button style="font-size: 20px;" type="button" class="btn btn-info btn-simple js-modal-apply"><b>Aplicar filtros</b></button>
     </div>
 
 </div>

@@ -189,3 +189,14 @@ hr.initiative-separator:last-of-type {
     content: "";
 }
 
+
+.icheckbox_minimal-grey, .iradio_minimal-grey {
+    margin: 0px 5px 0px 0px;
+}
+
+.btn-export {
+    margin-top: 8px;
+    font-size: 13px;
+    border-radius: 4px;
+    line-height: 26px;
+}

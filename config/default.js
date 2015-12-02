@@ -18,6 +18,7 @@ module.exports = {
     port: 6001,
     publicUri: "localhost",  // host
     publicPort: 6001,  // probably 80
+    publicIp: "127.0.0.1",
 
     rootDir: internals.rootDir,
     //viewsDir: internals.viewsDir,

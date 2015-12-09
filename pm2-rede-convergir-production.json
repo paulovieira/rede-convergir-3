@@ -7,5 +7,7 @@
     "NODE_ENV": "production"
   },
   "max_memory_restart" : "200M",
-  "treekill": true
+  "treekill": true,
+  "restart_delay": 5000,
+  "out_file": "/dev/null"
 }

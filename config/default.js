@@ -53,17 +53,35 @@ module.exports = {
     },
 
     hapi: {
-
+/*
         // options for the Hapi.Server object (to be used in the main index.js)
         server: {
+
+            //  default connections configuration
             connections: {
+
+                // controls how incoming request URIs are matched against the routing table
                 router: {
                     isCaseSensitive: false,
                     stripTrailingSlash: true
-                }            
+                },
+
+                // default configuration for every route.
+                routes: {
+                    state: {
+                        // determines how to handle cookie parsing errors ("ignore" = take no action)
+                        failAction: "ignore"
+                    },
+
+                    // disable node socket timeouts (useful for debugging)
+                    timeout: {
+                        server: false,
+                        socket: false
+                    }
+                }
             }
         },
-
+*/
         // options for the views (to be used in the main index.js)
         // views: {
         //     path: internals.viewsDir,

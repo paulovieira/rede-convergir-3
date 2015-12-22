@@ -28,17 +28,31 @@
                 <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1 ">
                     <div class="register-card">
                         <h3 class="title">Bem-vindo</h3>
-                        <form class="register-form">
+
+                        {% if ctx.query["auth-fail-reason"] == "missing" %}
+                        <div style="" class="alert alert-danger alert-dismissible" role="alert">Nome de utilizador ou password em falta</div>
+                        {% endif %}
+                        {% if ctx.query["auth-fail-reason"] == "unknown-user" %}
+                        <div style="" class="alert alert-danger alert-dismissible" role="alert">Nome de utilizador desconhecido</div>
+                        {% endif %}
+                        {% if ctx.query["auth-fail-reason"] == "wrong-password" %}
+                        <div style="" class="alert alert-danger alert-dismissible" role="alert">Password errada</div>
+                        {% endif %}
+
+                        <form class="register-form" method="post" action="/login">
                             <label>Email</label>
-                            <input class="form-control" placeholder="">
+                            <input type="text" class="form-control" name="user">
 
                             <label>Password</label>
-                            <input class="form-control" placeholder="">
+                            <input type="password" class="form-control" name="password">
+
                             <button class="btn btn-danger btn-block">Entrar</button>
                         </form>
+
                         <div class="forgot">
                             <a href="#" class="btn btn-simple btn-danger">Password esquecida?</a>
                         </div>
+
                     </div>
                 </div>
             </div>

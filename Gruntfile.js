@@ -17,6 +17,7 @@ module.exports = function(grunt) {
     internals.timestamp = grunt.template.today('yymmdd-HHMMss');
     internals.staticsDir = Path.join("lib", "web", "client", "static");
     internals.rcDir = Path.join("lib", "web", "client", "rc-app");
+    internals.dashboardDir = Path.join("lib", "web", "client", "rc-dashboard");
 
     internals.statics = {};
 
@@ -84,6 +85,7 @@ module.exports = function(grunt) {
 */
 
 
+    // nunjuck templates
     internals.templates = {};
 
 
@@ -98,6 +100,16 @@ module.exports = function(grunt) {
         "rc-templates-" +  internals.timestamp
     );
 
+    // templates target - dashboard
+    internals.templates.dashboard = {};
+    internals.templates.dashboard.input = [
+        internals.dashboardDir + '/**/*.html'
+    ];
+    internals.templates.dashboard.output = Path.join(
+        internals.staticsDir, 
+        "_js",
+        "dashboard-templates-" +  internals.timestamp
+    );
 
     // the tasks configuration starts here
 
@@ -144,6 +156,15 @@ module.exports = function(grunt) {
                 autoescape: true
             }
         },
+
+        "dashboard-templates": {
+            baseDir: internals.dashboardDir,
+            src: internals.templates.dashboard.input,
+            dest: internals.templates.dashboard.output + ".js",
+            options: {
+                autoescape: true
+            }
+        },
     };
 
     grunt.config("nunjucks", nunjucksConfig);
@@ -176,6 +197,11 @@ module.exports = function(grunt) {
         "rc-templates": {
             src: internals.templates.rc.output + ".js",
             dest: internals.templates.rc.output + ".min.js"
+        },
+
+        "dashboard-templates": {
+            src: internals.templates.dashboard.output + ".js",
+            dest: internals.templates.dashboard.output + ".min.js"
         },
     };
 
@@ -211,6 +237,11 @@ module.exports = function(grunt) {
         "rc-templates": {
             src: internals.templates.rc.output + ".min.js",
             dest: internals.templates.rc.output + ".min.js.gz"
+        },
+
+        "dashboard-templates": {
+            src: internals.templates.dashboard.output + ".min.js",
+            dest: internals.templates.dashboard.output + ".min.js.gz"
         },
     };
 
@@ -255,6 +286,15 @@ module.exports = function(grunt) {
 
         "rc-templates-uncompressed": {
             src: internals.templates.rc.output + ".js"
+        },
+
+
+        "dashboard-templates": {
+            src: Path.join(internals.staticsDir, "_js", "dashboard-templates-*")
+        },
+
+        "dashboard-templates-uncompressed": {
+            src: internals.templates.dashboard.output + ".js"
         }
 
     };
@@ -315,6 +355,18 @@ module.exports = function(grunt) {
                 "update-bundles-info"
             ]
         },
+
+        "dashboard-templates": {
+            files: internals.templates.dashboard.input,
+            tasks: [
+                "clean:dashboard-templates",
+                "nunjucks:dashboard-templates",
+                "uglify:dashboard-templates",
+                "clean:dashboard-templates-uncompressed", 
+                "compress:dashboard-templates",
+                "update-bundles-info"
+            ]
+        },
     };
 
 
@@ -345,6 +397,9 @@ module.exports = function(grunt) {
         // bundles - rc templates
         paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "rc-templates*.min.js"));
         obj["rc-templates"] = Path.basename(paths[0]);
+
+        paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "dashboard-templates*.min.js"));
+        obj["dashboard-templates"] = Path.basename(paths[0]);
 
         grunt.file.write(filename, JSON.stringify(obj, null, 4));
     });
@@ -378,6 +433,12 @@ module.exports = function(grunt) {
         "uglify:rc-templates",
         "compress:rc-templates",
         "clean:rc-templates-uncompressed",
+
+        "clean:dashboard-templates",
+        "nunjucks:dashboard-templates",
+        "uglify:dashboard-templates",
+        "compress:dashboard-templates",
+        "clean:dashboard-templates-uncompressed",
 
         "update-bundles-info"
     ]);

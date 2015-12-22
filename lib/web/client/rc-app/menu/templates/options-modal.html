@@ -129,16 +129,27 @@
         <div class="col-sm-12">
 
             <div style="font-size: 13px;">
-            Em breve.
-            </div>   
-{#                     
-            <div style="font-size: 13px;">
             Pode exportar o mapa para o seu website usando as opções actualmente seleccionadas  (filtros, localização, iniciativa seleccionada, etc) 
             </div>
             <div class="text-center">
-                <button style="" class="btn btn-success btn-export">Mostrar o código</button>
+                <button style="" class="btn btn-success btn-export" data-toggle="collapse" data-target="#iframe-export">Mostrar as instruções</button>
             </div>
-#}
+
+            <div style="margin-top: 10px; xborder: 1px solid; font-size: 13px;" id="iframe-export" class="collapse">
+
+                Faça copy-paste do seguinte código HTML para o seu website. Pode ler mais detalhes na página <a href="/exportar" target="_blank">Exportar</a>.
+
+                <div style="margin-top: 10px; font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;">
+                    
+                    <textarea style="border: solid 1px #DDDDDD; background-color: white;" class="code form-control" rows="6">
+&lt;iframe width="400" height="700" src="{{ currentHref }}"&gt; &lt;/iframe&gt;
+                    </textarea>
+
+                </div>
+
+            </div>
+
+
         </div>
     </div>
 

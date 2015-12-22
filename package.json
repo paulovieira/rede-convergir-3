@@ -25,6 +25,7 @@
     "json5": "^0.4.0",
     "mandrill-api": "^1.0.45",
     "moment": "^2.10.6",
+    "node-uuid": "^1.4.7",
     "nunjucks": "^2.2.0",
     "pg-monitor": "^0.4.2",
     "pg-promise": "^2.5.3",

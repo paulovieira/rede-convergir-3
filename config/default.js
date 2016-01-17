@@ -6,8 +6,6 @@ var Nunjucks = require('hapi-nunjucks');
 // absolute paths
 var internals = {
     rootDir:      Path.resolve(__dirname, ".."),
-    //viewsDir:     Path.resolve(__dirname, "..", "lib/web/views"),
-    //env:process.env.NODE_ENV 
 };
 
 internals.bundles = JSON.parse(Fs.readFileSync(Path.join(internals.rootDir, "bundles.json"), "utf8"));
@@ -90,6 +88,8 @@ module.exports = {
         //         "html": Nunjucks
         //     },
         // },
+
+        viewsDir: Path.resolve(__dirname, "..", "lib/web/views"),
 
         // documentation: https://github.com/hapijs/joi#validatevalue-schema-options-callback
         joi: {

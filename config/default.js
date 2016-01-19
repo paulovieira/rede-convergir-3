@@ -1,16 +1,13 @@
-
 var Path = require("path");
 var Fs = require("fs");
-var Nunjucks = require('hapi-nunjucks');
 
-// absolute paths
-var internals = {
-    rootDir:      Path.resolve(__dirname, ".."),
-};
+var internals = {};
 
+internals.rootDir = Path.resolve(__dirname, "..")
+internals.viewsDir = Path.join(internals.rootDir, "lib/web/views");
 internals.bundles = JSON.parse(Fs.readFileSync(Path.join(internals.rootDir, "bundles.json"), "utf8"));
 
-module.exports = {
+internals.defaultOptions = {
 
     host: "localhost",
     port: 6001,
@@ -19,17 +16,15 @@ module.exports = {
     publicIp: "127.0.0.1",
 
     rootDir: internals.rootDir,
-    //viewsDir: internals.viewsDir,
-
+    viewsDir: internals.viewsDir,
     bundles: internals.bundles,
 
     email: {
+        send: false,
         mandrill: {
             apiKey: ""
         },
     },
-
-    ironPassword: "",
 
     db: {
 
@@ -51,6 +46,8 @@ module.exports = {
     },
 
     hapi: {
+
+        ironPassword: "",
 /*
         // options for the Hapi.Server object (to be used in the main index.js)
         server: {
@@ -80,16 +77,6 @@ module.exports = {
             }
         },
 */
-        // options for the views (to be used in the main index.js)
-        // views: {
-        //     path: internals.viewsDir,
-        //     allowAbsolutePaths: true,
-        //     engines: {
-        //         "html": Nunjucks
-        //     },
-        // },
-
-        viewsDir: Path.resolve(__dirname, "..", "lib/web/views"),
 
         // documentation: https://github.com/hapijs/joi#validatevalue-schema-options-callback
         joi: {
@@ -116,3 +103,4 @@ module.exports = {
     },
 };
 
+module.exports = internals.defaultOptions;

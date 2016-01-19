@@ -3,9 +3,8 @@ var Fs = require("fs");
 
 var internals = {};
 
-internals.rootDir = Path.resolve(__dirname, "..")
+internals.rootDir  = Path.join(__dirname, "..")
 internals.viewsDir = Path.join(internals.rootDir, "lib/web/views");
-internals.bundles = JSON.parse(Fs.readFileSync(Path.join(internals.rootDir, "bundles.json"), "utf8"));
 
 internals.defaultOptions = {
 
@@ -17,7 +16,6 @@ internals.defaultOptions = {
 
     rootDir: internals.rootDir,
     viewsDir: internals.viewsDir,
-    bundles: internals.bundles,
 
     email: {
         send: false,

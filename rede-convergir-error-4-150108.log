@@ -1,0 +1,49 @@
+WARNING: NODE_APP_INSTANCE value of '0' did not match any instance config file names.
+WARNING: See https://github.com/lorenwest/node-config/wiki/Strict-Mode
+Debug: internal, implementation, error 
+    Error: reply interface called twice
+    at Object.exports.assert (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/hoek/lib/index.js:723:11)
+    at Function.internals.response (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/reply.js:132:10)
+    at Function.view (/home/pvieira/github/rede-convergir-3/node_modules/vision/lib/index.js:55:21)
+    at server.route.config.handler (/home/pvieira/github/rede-convergir-3/lib/web/index.js:222:30)
+    at Object.internals.handler (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:93:36)
+    at /home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:60:26
+    at done (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/items/lib/index.js:30:25)
+    at done (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/items/lib/index.js:63:25)
+    at /home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:47:28
+    at finalize (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:278:20)
+    at wrapped (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/hoek/lib/index.js:858:20)
+    at internals.Response._processPrepare (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/response.js:422:16)
+    at internals.Response._prepare (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/response.js:361:21)
+    at /home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/reply.js:162:22
+    at process._tickDomainCallback (node.js:492:13)
+Debug: internal, implementation, error 
+    Error: reply interface called twice
+    at Object.exports.assert (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/hoek/lib/index.js:723:11)
+    at Function.internals.response (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/reply.js:132:10)
+    at Function.view (/home/pvieira/github/rede-convergir-3/node_modules/vision/lib/index.js:55:21)
+    at server.route.config.handler (/home/pvieira/github/rede-convergir-3/lib/web/index.js:222:30)
+    at Object.internals.handler (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:93:36)
+    at /home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:60:26
+    at done (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/items/lib/index.js:30:25)
+    at done (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/items/lib/index.js:63:25)
+    at /home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:47:28
+    at finalize (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/handler.js:278:20)
+    at wrapped (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/node_modules/hoek/lib/index.js:858:20)
+    at internals.Response._processPrepare (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/response.js:422:16)
+    at internals.Response._prepare (/home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/response.js:361:21)
+    at /home/pvieira/github/rede-convergir-3/node_modules/glue/node_modules/hapi/lib/reply.js:162:22
+    at process._tickDomainCallback (node.js:492:13)
+Error: assertion error
+    at process.assert (node.js:328:21)
+    at process.removeListener (node.js:808:9)
+    at /home/pvieira/github/rede-convergir-3/node_modules/seneca/seneca.js:1238:17
+    at /home/pvieira/github/rede-convergir-3/node_modules/seneca/node_modules/lodash/index.js:3073:15
+    at baseForOwn (/home/pvieira/github/rede-convergir-3/node_modules/seneca/node_modules/lodash/index.js:2046:14)
+    at /home/pvieira/github/rede-convergir-3/node_modules/seneca/node_modules/lodash/index.js:3043:18
+    at Function.<anonymous> (/home/pvieira/github/rede-convergir-3/node_modules/seneca/node_modules/lodash/index.js:3346:13)
+    at Seneca.api_close [as close] (/home/pvieira/github/rede-convergir-3/node_modules/seneca/seneca.js:1236:7)
+    at process.handleClose (/home/pvieira/github/rede-convergir-3/node_modules/seneca/seneca.js:2208:10)
+    at process.g (events.js:180:16)
+    at process.emit (events.js:92:17)
+    at Signal.wrap.onsignal (node.js:790:46)

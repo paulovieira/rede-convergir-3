@@ -1,0 +1,321 @@
+{% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
+
+{% from (commonTemplatesPath + "/includes/navbar.html")                  import navbar                  %}
+{% from (commonTemplatesPath + "/includes/footer.html")                  import footer                  %}
+{% from (commonTemplatesPath + "/includes/domains.html")                 import domains                 %}
+{% from (commonTemplatesPath + "/includes/target.html")                  import target                  %}
+{% from (commonTemplatesPath + "/includes/modal-domains-more-info.html") import modal_domains_more_info %}
+{% from (commonTemplatesPath + "/includes/modal-types-more-info.html")   import modal_types_more_info   %}
+{% from (commonTemplatesPath + "/includes/modal-status-more-info.html")  import modal_status_more_info  %}
+
+
+{% block head %}
+
+{# call super to common css #}
+{{ super() }}
+
+<link href="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.css" rel="stylesheet" />
+<link href="/public/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css" rel="stylesheet" />
+
+<link href="/public/css/initiative.css" rel="stylesheet" />
+
+<style>
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+{{ navbar(ctx) }}
+
+<div class="wrapper">
+    <div class="container">
+
+        <div style="margin-top: 40px;" class="row">
+        
+            <div style=""  class="col-sm-offset-1 col-sm-10">
+
+                {% if not ctx.data.logo.exclusive %}
+                <h2 style="margin-top: 0px; letter-spacing: 1px; xfont-size: 2.2em;" class="text-center">{{ ctx.data.name }}</h2>
+                {% endif %}
+
+                {% if ctx.data.logo.filename %}
+                <a target="_blank" href="{{ ctx.data.url }}">
+                    <img style="min-width:{{ ctx.data.logo.min | default(100, true) }}px; max-width:{{ ctx.data.logo.max | default(100, true) }}px;" src="/public/images/logos/{{ ctx.data.logo.filename }}" class="center-block img-responsive" alt="{{ ctx.data.name }} - logotipo">
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+
+        {% if ctx.data.videoUrl %}
+        <div style="margin-top: 25px;" class="row">
+            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
+
+                <div class="list-block">
+
+                    <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px 10px 5px 10px;">
+                        {{ ctx.data.videoUrl }}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  
+        {% endif %}
+
+
+        <div style="margin-top: 20px;" class="row">
+
+            {# LEFT COLUMN #}
+            <div style="xborder: 1px solid #bdbdbd; xborder-radius: 5px; xpadding: 0px;"  class="col-sm-offset-1 col-sm-6">
+
+                <div class="list-block">
+
+                    <div >
+                        <span class="field-title" title="Tipe de iniciativa">Tipo de iniciativa:</span> 
+                        <span title="{{ ctx.definitionsById.type[ctx.data.typeId]['description']['pt'] }}">
+                        {{ ctx.definitionsById.type[ctx.data.typeId]['title']['pt'] }}
+                        </span>
+                        <a href="#" data-toggle="modal" data-target="#types-more-info" title="Clique para ver mais detalhes sobre os diferentes tipos de iniciativa">
+                            <i style="font-size: 80%;" class="fa fa-info-circle"></i>
+                        </a>
+                    </div>
+
+                    <div title="Website (abrir numa nova janela / tab)"> 
+                        <span class="field-title">Website:</span>
+                        <a target="_blank" href="{{ ctx.data.url }}">{{ ctx.data.url }}</a>
+                        <a target="_blank" href="{{ ctx.data.url }}">
+                            <i style="font-size: 75%;" class="fa fa-external-link"></i>
+                        </a>
+                    </div>
+
+                    <div > 
+                        <span class="field-title" title="Estado da iniciativa">Estado da iniciativa:</span> 
+                        <span title="{{ ctx.definitionsById.initiative_status[ctx.data.initiativeStatusId]['description']['pt'] }}">
+                        {{ ctx.definitionsById.initiative_status[ctx.data.initiativeStatusId]['title']['pt'] }}
+                        </span>
+                        <a href="#" data-toggle="modal" data-target="#status-more-info" title="Clique para ver mais detalhes sobre os diferentes estados">
+                            <i style="font-size: 80%;" class="fa fa-info-circle"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="list-block">
+
+                    <div title="Endereço"> 
+                        <i class="fa fa-map-marker"></i> <span class="field-title">Localização:</span> {{ ctx.data.fullAddress }}
+                    </div>
+
+                    <div title="Email de contacto">
+                        <i class="fa fa-at"></i> <span class="field-title">Email:</span> <a href="mailto:{{ ctx.data.email }}">{{ ctx.data.email }}</a>
+                    </div>
+
+                    <div title="Telefone">
+                        <i class="fa fa-phone"></i> <span class="field-title">Telefone:</span> {{ ctx.data.phone | default("(não disponível, true)") }}
+                    </div>
+
+                    <div title="Pessoa de contacto">
+                        <i class="fa fa-user"></i> <span class="field-title">Contacto:</span> {{ ctx.data.contactName }}
+                    </div>
+
+                    {% if ctx.data.contactOther %}
+                    <div title="Outro contacto">
+                        <i class="fa fa-phone"></i> Contacto alternativo: {{ ctx.data.contactOther }}
+                    </div>
+                    {% endif %}
+
+                    {% if ctx.data.promoter %}
+                    <div title="Promotor / Desenvolvido por">
+                        <i class="fa fa-user-plus"></i> Promotor: {{ ctx.data.promoter }}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {# RIGHT COLUMN #}
+            <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px; xmargin-right: 0px;" class="col-sm-4">
+
+                 <div id="map" style="height: 300px;"></div> 
+
+            </div>
+
+            <div class="col-sm-offset-1 col-sm-10" style="padding: 0px; margin-top: 15px;">
+                <hr>
+            </div>
+        </div>
+
+        
+
+
+
+        <div style="margin-top: 25px;" class="row">
+            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
+
+                <div class="list-block">
+
+                    <div title="Domínios de interesse">
+                        <span class="field-title">Domínios de interesse</span>
+
+                        <a href="#" data-toggle="modal" data-target="#domains-more-info" title="Clique para ver mais detalhes sobre os diferentes domínios de interesse">
+                            <i style="font-size: 80%;" class="fa fa-info-circle"></i>
+                        </a>
+
+                    </div>
+
+                    <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 15px 20px; margin: 0;">
+                    {{ domains(ctx) }}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>  
+
+
+
+        <div style="margin-top: 25px;" class="row">
+            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
+
+                <div class="list-block">
+
+                    <div title="Público-alvo">
+                        <span class="field-title">Público-alvo</span>
+                    </div>
+
+                    <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 15px 20px; margin: 0;">
+                    {{ target(ctx) }}
+                    </div>
+
+                </div>
+
+            </div>
+        </div> 
+
+
+
+        <div style="margin-top: 25px;" class="row">
+            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
+
+                <div class="row" style="margin: 0;">
+
+                    <div style="padding: 0;" class="col-sm-6 list-block">
+
+                        <div title="Fundado em">
+                            <span class="field-title">Fundado em: </span>
+                            {{ ctx.data.startDateHuman }}
+                        </div>
+
+                        <div title="Disponibilidade para visitas">
+                            <span class="field-title">Disponibilidade para visitas: </span>
+                            {{ ctx.definitionsById.visitors[ctx.data.visitorsId].title.pt }}
+                        </div>
+
+                        <div title="Número de membros envolvidos no projecto">
+                            <span class="field-title">Número de membros envolvidos no projecto: </span>
+                            {{ ctx.data.groupSize }}
+                        </div>
+
+                    </div>
+
+                    <div style="padding: 0;" class="col-sm-6 list-block">
+
+                        <div title="Universo de accção">
+                            <span class="field-title">Universo de accção: </span>
+                            {% if ctx.data.influence[0] >= 10000 %}
+                            >= 10&thinsp;000 pessoas
+                            {% else %}
+                            {{ ctx.data.influence | join(" &ndash; ") }} pessoas
+                            {% endif %}
+                            
+                        </div>
+
+                        <div title="Projecto inserido em espaço">
+                            <span class="field-title">Projecto inserido em espaço: </span>
+                            {{ ctx.definitionsById.scope[ctx.data.scopeId].title.pt }}
+                        </div>
+
+                        <div title="Área">
+                            <span class="field-title">Área (ha): </span>
+                            {{ ctx.data.physicalArea }}
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div> 
+
+
+        <div style="margin-top: 25px;" class="row">
+            <div style="padding: 0;"  class="col-sm-offset-1 col-sm-10">
+
+                <div class="list-block">
+                    <div title="Descrição">
+                        <span class="field-title">Descrição: </span>
+                        {{ ctx.data.description | safe | parseNewLines }}
+                    </div>
+                </div>
+
+            </div>
+        </div> 
+
+        <div style="height: 100px;" class="row">
+        </div>
+    </div>
+</div>
+
+
+<!-- modal bodies -->
+{{ modal_domains_more_info(ctx) }}
+
+{{ modal_types_more_info(ctx) }}
+
+{{ modal_status_more_info(ctx) }}
+<!--   end modal -->
+
+
+
+{{ super() }}
+
+<script src="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script>
+<script src="/public/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
+<script>
+
+RC.videoHeight = parseInt((9/16)*$("iframe").width());
+$("iframe").attr("height", RC.videoHeight);
+
+RC.coordinates = {{ ctx.data.coordinates | stringify }};
+RC.map = L.map('map', { attributionControl: false })
+            .setView(RC.coordinates, 7);
+
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+
+}).addTo(RC.map);
+
+RC.marker = L.AwesomeMarkers.icon({
+    icon: "fa-home",
+    prefix: "fa",
+    markerColor: "blue",
+    extraClasses: "marker-icon"
+});
+
+RC.popupMessage = "<div class='text-center' style='padding: 0px 10px;'>";
+RC.popupMessage += "    <div style='margin-bottom: 5px;'><b style='font-size: 115%;'>{{ ctx.data.name }}</b></div>"
+RC.popupMessage += "    <div>Latitude: {{ ctx.data.coordinates[0] | toFixed(4) }}</div>";
+RC.popupMessage += "    <div>Longitude: {{ ctx.data.coordinates[1] | toFixed(4) }}</div>";
+RC.popupMessage +=  "</div>";
+
+L.marker(RC.coordinates, {icon: RC.marker} )
+    .addTo(RC.map)
+    .bindPopup(RC.popupMessage)
+
+</script>
+
+{% endblock %}
+

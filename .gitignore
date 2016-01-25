@@ -21,7 +21,7 @@ config/dev.js
 config/dev-no-auth.js
 config/dev-email.js
 config/production.js
-lib/web/client/static/_js/*min.js*
+#lib/web/client/static/_js/*min.js*
 .tern-port
 bundles.json
 tiles

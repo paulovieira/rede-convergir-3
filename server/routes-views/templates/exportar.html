@@ -1,0 +1,78 @@
+{% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
+
+{% from (commonTemplatesPath + "/includes/navbar.html")             import navbar            %}
+{% from (commonTemplatesPath + "/includes/footer.html")             import footer            %}
+
+
+
+{% block head %}
+
+{# call super to common css #}
+
+{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+{{ navbar(ctx) }}
+
+
+<div class="container">
+
+<div class="row" style="">
+
+    <div style="padding: 0px 15px; margin-top: 45px;"  class="col-sm-12">
+    
+        <h4>Exportar o mapa</h4>
+        <p>Poderá incluir o mapa das iniciativas no seu website usando um elemento <code>&lt;iframe&gt;</code> no código html. O aspecto do mapa pode ser adaptado através as opções descritas abaixo</p>
+
+        
+        <h6 style="margin-top: 20px; text-decoration: underline;">Utilização básica</h6>
+        <p>
+        Basta fazer um copy-paste do seguinte código para a página do seu website onde irá ser incluído o mapa. O mapa irá mostrar a lista completa de todas as iniciativas. Se desejar aplicar algum filtro veja em baixo a secção "Utilização avançada".
+        </p>
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1" >
+                <code style="border: 1px solid; padding: 8px; margin-top: 5px;">
+                &lt;iframe width="400" height="700" src="http://redeconvergir.net/iniciativas/exportar"&gt; &lt;/iframe&gt;
+                </code>
+            </div>
+        </div>
+        <p style="margin-top: 20px;">
+        Note que as opções <code>width="x"</code> e <code>height="y"</code> controlam as dimensões da caixa onde mapa irá ser incluído.
+        </p>
+
+        <h6 style="margin-top: 40px; text-decoration: underline;">Utilização avançada</h6>
+        <p>(em breve)</p>
+    </div>
+
+
+    <div style="padding: 0px 15px; margin-top: 45px;"  class="col-sm-12">
+    
+        <h4>Exportar o calendário</h4>
+        <p>(em breve)</p>
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+{{ footer() }}
+
+
+{{ super() }}
+
+
+    <script type="text/javascript">
+    </script>
+
+
+{% endblock %}
+

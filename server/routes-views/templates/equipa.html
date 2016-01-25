@@ -1,0 +1,88 @@
+{% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
+
+{% from (commonTemplatesPath + "/includes/navbar.html")             import navbar            %}
+{% from (commonTemplatesPath + "/includes/footer.html")             import footer            %}
+
+
+{% block head %}
+
+{# call super to common css #}
+
+{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+{{ navbar(ctx) }}
+
+
+<div class="container">
+
+
+<div class="row">
+
+    <div style="xpadding: 0px 15px; margin-top: 25px;"  class="col-sm-12">
+
+        <h4>Colaboradores e amigos da rede convergir</h4>
+        <p style="xfont-size: 18px;">
+        A Rede CONVERGIR é um projecto que tem tido o contributo de imensas pessoas individuais e colectivas. Está a ser desenvolvido desde Junho de 2011 e não é propriedade de ninguém. Existem dois grupos rotativos de pessoas que assegurarão a sua gestão e integridade: os <b>Moderadores</b> e os <b>Guardiãos</b>.
+        </p>
+
+        <h4>Moderadores</h4>
+        <p>
+        Os moderadores são voluntários que estão mais activos no projecto e cuja responsabilidade e dedicação é considerável. Na prática estas pessoas estão a 
+        <ol type="i">
+            <li style="margin-bottom: 8px;"> moderar a entrada de projectos no site</li>
+            <li> interagir (responder a e-mails) com os utilizadores</li>
+        </ol>
+        </p>
+        <p>        
+        Neste momento, o grupo consiste em Pedro Garrett (webmaster), André Vizinho, Carolina Madeira, Patrícia Santos, Paulo Vieira e David Avelar.
+        </p>
+
+        <h4>Guardiãos</h4>
+        <p>
+        Os guardiãos são voluntários que estão responsáveis por assegurar a integridade e promoão do projecto.
+        Estas pessoas estão a 
+        <ol type="i">
+            <li style="margin-bottom: 8px;">
+                reflectir em conjunto sobre o processo/essência que a rede está a levar (e propor melhorias)        
+            </li>
+            <li style="margin-bottom: 8px;">
+                promover a rede junto de potenciais utilizadores (convidando os projectos a "auto-mapearem-se" e convidando pessoas emergentes na sustentabilidade a irem ao website para conhecerem projectos e eventos a ocorrer ao seu redor) e têm a confiança do grupo para 
+            </li>
+            <li>
+                apresentarem e "representarem" o projecto em conferências, reuniões ou seminários
+            </li>
+        </ol>
+        </p>
+
+        <p>
+        Neste momento, o grupo consiste em: Miguel Leal, Annelieke van der Sluijs, Filipe Alves, Pedro Serpa, Luís Bello Moraes, Ricardo C., Luís Amaral, Gil Penha-Lopes, João Gonçalves, Hélder Valente, Marcos Pais, Paulo Bessa, Abi Mordin e Raquel Ribeiro.            
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+{{ footer() }}
+
+
+{{ super() }}
+
+
+    <script type="text/javascript">
+    </script>
+
+
+{% endblock %}
+

@@ -1,0 +1,202 @@
+html,
+body {
+    height: 100%;
+}
+
+
+#navbar-container {
+    xbackground-color: blue;
+    position: absolute;
+    top: 0px;
+    height: 52px;
+    width: 100%;
+}
+
+#map-container {
+    xbackground-color: green;
+    position: absolute;
+    top: 68px;
+    top: 0px; /* changed*/
+    bottom: 0px;
+    width: 100%;
+}
+/*
+#footer-container {
+    xbackground-color: yellow;
+    position: absolute;
+    bottom: 0px;
+    height: 20px;
+    border: 1px #e7e7e7 solid;
+    xborder-color: black;
+    border-width: 1px 0px 0px 0px;
+    width: 100%;
+}
+*/
+
+/* make sure the header in the menu is not selectable*/
+.menu-header {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+      -webkit-user-drag: none;
+}
+
+.menu-container {
+
+    padding: 6px 8px;
+/*    font: 14px/16px Arial, Helvetica, sans-serif;*/
+    background: white;
+/*    background: rgba(255, 255, 255);*/
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 6px;
+    /*position: absolute;
+    height: 100%;*/
+
+}
+
+.scale-10 {
+    transition: all .20s ease;
+}
+
+.scale-10:hover {
+    transform: scale(1.10);
+}
+
+
+.scale-40 {
+    transition: all .20s ease;
+}
+
+.scale-40:hover {
+    transform: scale(1.50);
+}
+
+
+
+
+
+
+
+
+
+ /* override bootstrap */
+/*
+ @media (min-width: 200px) {
+   .form-horizontal .control-label {
+     padding-top: 8px;
+     margin-bottom: 0;
+     text-align: right;
+   }
+ }
+
+
+ .icon-margin {
+    margin-right: 5px;
+ }
+
+ .icon-check {
+    color: green;
+ }
+
+ .icon-close {
+    
+    color: #ff6666;
+    color: #a60404;
+ }
+
+.attribute-title {
+    color: #3783a7;
+}
+*/
+
+/*img.leaflet-marker-icon {
+    transition: transform 0.2s;
+}
+*/
+
+
+.initiative-container {
+    margin: 0px 10px 0px 5px;
+    padding: 10px 0px 10px 10px;
+
+    /* we actually want a transparent border here */
+    border: 1px solid rgba(255,255,255, 0);
+}
+
+.initiative-container:hover {
+    background-color: rgba(234,234,255, 0.3);
+/*
+    background-color: rgba(255,244, 220, 0.4);
+    background-color: rgba(255, 252, 245, 1.0);
+*/
+}
+
+
+.initiative-selected {
+    background-color: rgba(234,234,255, 0.6);
+/*
+    background-color: rgba(255, 252, 245, 1.0);
+    background-color: rgba(255,244, 220, 0.5);
+*/
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+}
+
+hr.initiative-separator:last-of-type {
+    display:none;
+}
+
+/* equal to initiative-container */
+.search-container {
+    margin: 0px 10px -10px 5px;
+    padding: 10px 0px 10px 10px;
+}
+
+.invisible {
+    display: none;
+}
+
+
+/* based on the arrow effect from bootstrap's popover */
+.arrow {
+    position: relative;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+
+    border-width: 13px;
+    border-top-width: 0;
+    border-bottom-color: #7A9E9F;
+
+    left: 85%;
+}
+.arrow::after {
+    position: relative;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+
+    border-width: 13px;
+    border-top-width: 0;
+    border-bottom-color: #fff;
+
+    top: 3px;
+    margin-left: -13px;
+    content: "";
+}
+
+
+.icheckbox_minimal-grey, .iradio_minimal-grey {
+    margin: 0px 5px 0px 0px;
+}
+
+.btn-export {
+    margin-top: 8px;
+    font-size: 13px;
+    border-radius: 4px;
+    line-height: 26px;
+}

@@ -1,0 +1,132 @@
+{% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
+
+{% from (commonTemplatesPath + "/includes/navbar.html")             import navbar            %}
+{% from (commonTemplatesPath + "/includes/footer.html")             import footer            %}
+
+
+{% block head %}
+
+{# call super to common css #}
+
+{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+{{ navbar(ctx) }}
+
+
+<div class="container">
+
+<div class="row" style="margin-bottom: 100px;">
+
+    <div style="padding: 0px 15px; margin-top: 45px;"  class="col-sm-12">
+
+        <p style="font-size: 18px;">
+        A Rede CONVERGIR pretende mapear todos os projectos sustentáveis e inspiradores para que em rede possamos cooperar, potenciar as nossas sinergias e contribuir para uma sociedade equilibrada e uma vida humana em harmonia com o meio envolvente. 
+        </p>
+        <p style="font-size: 18px;">
+        Procuramos interligar projectos que nas suas actividades promovam a reflexão e tomada de consciência por parte de cada ser humano do seu papel na sociedade e na natureza, estimulando uma atitude crítica, construtiva, activa e emancipada.
+        </p>
+
+    </div>
+
+    <div style="padding: 0px 15px; margin-top: 25px;"  class="col-sm-12">
+
+        <div class="list-block">
+
+            <div style="border: 1px solid #bdbdbd; border-radius: 5px; padding: 10px 10px 5px 10px;" title="Apresentação da Rede Convergir">
+
+                <iframe width="100%" height="560" src="https://www.youtube.com/embed/ZrMWeKhTewQ?rel=0&amp;autohide=0" frameborder="0" allowfullscreen=""></iframe>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div style="padding: 0px 15px; margin-top: 45px;"  class="col-sm-12">
+
+        <p style="font-size: 18px;">
+        {#
+        <i style="margin-right: 5px;" class="fa fa-file-powerpoint-o"></i> 
+        #}
+        Apresentação em powerpoint: <a href="/public/images/rede-convergir-apresentacao.pps">click aqui para fazer download <i style="margin-left: 4px;" class="fa fa-download"></i></a>
+        </p>
+    </div>
+
+    <div class="col-sm-12">
+
+        <h4>Porquê?</h4>
+
+        <p>É um juntar de esforços de pessoas que pretendem contribuir para dois objectivos:</p>
+        <ul>
+            <li>
+                dar a conhecer, às pessoas que já estão envolvidas, o movimento silencioso que tem vindo a acontecer em Portugal de inúmeras iniciativas e projectos de diversas identidades, no sentido de criar uma rede de cooperação.                
+            </li>
+            <li style="margin-top: 10px; ">
+                integrar novas pessoas que se sintam motivadas a contribuir para uma convergência global e que, para isso, precisem de conhecer iniciativas e projectos concretos a acontecer ao seu redor.                
+            </li>
+        </ul>
+
+
+    </div>
+
+    <div class="col-sm-12">
+        <h4>Como?</h4>
+
+        <p>O mapeamento de projectos é feito através do preenchimento e envio de um inquérito on-line, projectos esses que ficarão georreferenciados num mapa. As actividades e iniciativas aparecerão num calendário comum também através do preenchimento de um inquérito on-line.
+        </p>
+    </div>
+
+    <div class="col-sm-12">
+        <h4>Quais os projectos e iniciativas que estão na Rede?</h4>
+        <p>A rede CONVERGIR integra projectos cuja actividade procure contribuir para um maior equilíbrio, diversidade e interdependência dos indivíduos, promovendo uma maior harmonia entre os seres humanos (e suas gerações) e entre estes e o seu meio ambiente.</p>
+    </div>
+
+    <div class="col-sm-12">
+        <h4>Quais os Princípios da iniciativa?</h4>
+        <p>
+        <ul style="padding-right: 100px;">
+            <li style="font-size: 17px;">
+                <b>Cooperação e Reciprocidade &ndash;</b> o contributo de cada pessoa objectiva o bem comum e promove as relações baseadas na colaboração entre indivíduos e projectos. Para promover a sinergia entre os projectos e a própria Rede Convergir consideramos uma prática importante que os projectos insiram no seu website o link para a Rede Convergir e se possível o logotipo.</li>
+
+            <li style="margin-top: 10px; font-size: 17px;">
+                <b>Transparência &ndash;</b> desde o seu início a ideia foi partilhada, integrando o contributo de quem dela teve conhecimento e assim entendeu por bem fazer. Os seus resultados são de acesso comum.
+            </li>
+
+            <li style="margin-top: 10px; font-size: 17px;">
+                <b>Auto-regulação e organização &ndash;</b> a informação de entrada é gerida por um grupo de voluntários que é rotativo consoante as dinâmicas de motivações e desmotivações pessoais.
+            </li>
+
+            <li style="margin-top: 10px; font-size: 17px;">
+                <b>Abrangência e proximidade geográfica &ndash;</b> o projecto procura ter colaboradoras/es que cubram a generalidade do território de Portugal e estejam próximos dos projectos.
+            </li>
+
+        </ul>
+        </p>
+    </div>
+
+</div>
+
+
+</div>
+
+
+{{ footer() }}
+
+
+{{ super() }}
+
+
+    <script type="text/javascript">
+    </script>
+
+
+{% endblock %}
+

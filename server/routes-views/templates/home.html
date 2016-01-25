@@ -1,0 +1,78 @@
+
+{% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
+
+{% from (commonTemplatesPath + "/includes/navbar.html")             import navbar            %}
+{% from (commonTemplatesPath + "/includes/navbar-transparent.html") import navbarTransparent %}
+{% from (commonTemplatesPath + "/includes/footer.html")             import footer            %}
+
+{% block head %}
+
+{# call super to common css #}
+
+{{ super() }}
+
+<style>
+
+html {
+  background: url("/public/images/9f8335c934d027c1e31c4f25ba6b511a_1360x765.jpg") no-repeat center center fixed;
+/*  background: url("/public/images/2c0108fc8e9c39aef9d675322a17dda7_1360x765.jpg") no-repeat center center fixed;*/
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 25%;
+/*  left: 50%;
+  transform: translate(-50%, -50%);*/
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 3px rgba(100, 100, 100, .9);
+}
+</style>
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+{{ navbarTransparent(ctx) }}
+
+
+  <div class="title">
+    <h1 style="font-size: 5.5em;">Rede Convergir</h1>
+    <p style="margin-top: 0px; font-size: 2.5em;">mapeamento de iniciativas sustentáveis</p>
+
+    <div style="text-shadow: 1px 1px 1px rgba(100, 100, 100, .9);; margin-top: 40px; " class="text-center">
+
+        <a href="/iniciativas" style="font-size: 26px; font-weight: 700; padding: 10px 35px 11px 32px; letter-spacing: 1px;" class="btn btn-info  btn-lg btn-fill "> <i class="fa fa-map-marker" style="font-size: 26px;"></i> Iniciativas </a>
+        
+        <div style="display: inline-block; min-width: 30px; max-width: 31px;"></div>
+
+        <a href="/eventos" style="font-size: 26px; font-weight: 700; padding: 10px 40px 11px 37px;  letter-spacing: 1px; " class="btn btn-info  btn-lg btn-fill  "> <i class="fa fa-calendar" style="font-size: 22px; margin-right: 12px; line-height: 20px; "></i> Eventos</a>
+
+    </div>
+  </div>
+
+
+
+
+{{ footer(ctx) }}
+
+
+{{ super() }}
+
+
+    <script type="text/javascript">
+      $("nav").addClass("navbar-homepage");
+    </script>
+
+
+{% endblock %}
+

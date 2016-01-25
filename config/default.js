@@ -3,25 +3,31 @@ var Fs = require("fs");
 
 var internals = {};
 
-internals.rootDir  = Path.join(__dirname, "..")
-internals.viewsDir = Path.join(internals.rootDir, "lib/web/views");
+internals.rootDir  = Path.join(__dirname, "..");
 
 internals.defaultOptions = {
 
     host: "localhost",
     port: 6001,
+
     publicUri: "localhost",  // host
     publicPort: 6001,  // probably 80
     publicIp: "127.0.0.1",
 
     rootDir: internals.rootDir,
-    viewsDir: internals.viewsDir,
 
     email: {
         send: false,
         mandrill: {
             apiKey: ""
         },
+        //templatesDir: Path.join(internals.rootDir, "server/email-mandrill/templates"),
+
+        moderatorAddress: "moderadores@redeconvergir.net",
+        moderatorName: "Rede Convergir - moderadores",
+        infoAddress: "info@redeconvergir.net",
+        infoName: "Rede Convergir - info"
+        
     },
 
     db: {

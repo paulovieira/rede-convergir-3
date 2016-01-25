@@ -1,0 +1,118 @@
+
+
+.icheck-label {
+    padding-left: 25px;
+}
+
+.icon-navbar {
+    padding-top: 25px;
+    margin-left: 30px;
+    color:  #66615B; 
+    font-weight: 500; 
+    font-size: 20px !important;
+}
+
+.carousel img {
+    min-width: 100%;
+}
+
+
+
+
+.centered-pills {  
+    text-align: center
+}
+.centered-pills ul.nav-pills {
+    display: inline-block
+}
+/*
+.centered-pills li {
+    display: inline
+}
+.centered-pills a {
+    float: left
+}
+* html .centered-pills ul.nav-pills, *+html .centered-pills ul.nav-pills {
+    display: inline
+}
+*/
+
+
+.centered-pill-item {
+    padding: 5px 40px !important;
+}
+
+.centered-pill-item:hover {
+    background-color: #68B3C8 !important;
+    color: rgba(255, 255, 255, 0.8);
+    border-color: #68B3C8;
+}
+
+.footer-link {
+    color: #777777;
+}
+
+.footer-link:hover {
+    color: #E3E3E3 !important;
+}
+
+.label-inner {
+    font-weight: normal;
+    margin-bottom: 1px;    
+}
+
+.tooltip.in {
+    filter: alpha(opacity=93);
+    opacity: .93;
+}
+
+.tooltip-inner {
+    max-width: 400px;
+}
+/*
+.navbar {
+    background-image: url("/public/images/patterns/congruent_outline.png");
+    background-image: url("/public/images/patterns/gplaypattern.png");
+    background-image: url("/public/images/patterns/grey_wash_wall.png");
+    background-image: url("/public/images/banda.jpg");
+    background-repeat: repeat-x;
+    
+}
+*/
+
+/* the navbar-initiatives class is added by jquery when the page loads */
+
+nav.navbar-initiatives,
+nav.navbar-homepage {
+    background-color: rgba(0,0,0,0.65);
+    z-index: 99999;
+}
+
+nav.navbar-ct-transparent a, 
+nav.navbar-initiatives a  {
+    color: white !important;
+}
+
+nav.navbar-ct-transparent .icon-navbar, 
+nav.navbar-homepage .icon-navbar, 
+nav.navbar-initiatives .icon-navbar {
+    color: white;
+}
+
+nav.navbar-homepage ul.dropdown-menu > li > a,
+nav.navbar-ct-transparent  ul.dropdown-menu > li > a,
+nav.navbar-initiatives ul.dropdown-menu > li > a {
+    color: #66615b !important;
+}
+
+nav.navbar-homepage ul.dropdown-menu > li > a:hover,
+nav.navbar-ct-transparent ul.dropdown-menu > li > a:hover,
+nav.navbar-ct-transparent .dropdown-menu > li > a:focus,
+nav.navbar-initiatives ul.dropdown-menu > li > a:hover, 
+nav.navbar-initiatives .dropdown-menu > li > a:focus {
+    background-color: #6F6C66;
+    color: white !important;
+
+}
+
+

@@ -1,0 +1,240 @@
+{% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
+
+{% from (commonTemplatesPath + "/includes/navbar.html")             import navbar            %}
+{% from (commonTemplatesPath + "/includes/footer.html")             import footer            %}
+
+
+{% block head %}
+
+{# call super to common css #}
+
+{{ super() }}
+
+{% endblock %}
+
+
+{% block body %}
+
+
+
+{{ navbar(ctx) }}
+
+
+<div class="container">
+
+<div class="row" style="margin-bottom: 100px;">
+
+    <div style="padding: 0px 15px; margin-top: 15px;"  class="col-sm-12">
+
+    <h4>Permacultura</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://permacultura.org.pt" target="_blank">Portugal em Permacultura</a> </li>
+<li><a href="http://portaldapermacultura.jimdo.com/" target="_blank">Portal da Permacultura</a> </li>
+<li><a href="http://permacultureprinciples.com/pt" target="_blank">Princípios de Permacultura em Português</a> </li>
+<li><a href="http://www.permacultura.tv" target="_blank">TV Permacultura</a> </li>
+<li><a href="http://permacultureglobal.com" target="_blank">Worldwide Permaculture Network</a> </li>
+<li><a href="http://permaculture.org.au" target="_blank">Permaculture Research Institute of Australia</a> </li>
+<li><a href="http://www.permaculture.org.uk" target="_blank">Permaculture Association</a> </li>
+<li><a href="http://www.permapicultura.com" target="_blank">Permapicultura Oscar Perone</a> </li>
+<li><a href="http://www.permies.com/permaculture-forums" target="_blank">Permaculture forums</a> </li>
+<li><a href="http://permacultureinstitute.pbworks.com" target="_blank">Chaordic Permaculture Institute Pilot</a> </li>
+
+    </ul>
+
+    <h4>Transição</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://permaculturaportugal.ning.com" target="_blank">Rede social "Transição e Permacultura Portugal"</a></li>
+<li><a href="http://www.transitionnetwork.org" target="_blank">Transition Network "Inspire, encourage, connect, support and train communities as they self-organise around the transition model, creating initiatives that rebuild resilience and reduce CO2 emissions." 
+<li><a href="http://www.postcarbon.org" target="_blank"> Post Carbon Institute | Leading the transition to a resilient world</a></li>
+<li><a href="http://pt.wiserearth.org" target="_blank">WiserEarth: Connecting You to Communities of Action</a></li>
+
+    </ul>
+
+    <h4> Gestão da Terra e da Natureza</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://gaia.org.pt/node/417" target="_blank">Colher para Semear - Rede Portuguesa de Variedades Tradicionais</a></li>
+<li><a href="http://www.pfaf.org" target="_blank">Plants for  Future</a></li>
+<li><a href="http://www.agroforestry.net" target="_blank">Agroforestry Resources</a></li>
+<li><a href="http://www.complete-gardens.co.uk/online/online-pests-diseases-wildlife-category.php?cat=1" target="_blank">Garden pest identification 
+<li><a href="http://www.biochar-international.org" target="_blank">International Biochar Initiative | International Biochar Initiative</a></li>
+
+    </ul>
+
+    <h4>Espaço Construído </h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://earthship.com" target="_blank">Sustainable Green Buildings | Earthship Biotecture</a></li>
+<li><a href="http://www.centrodaterra.org" target="_blank">Associação Centro da Terra</a></li>
+<li><a href="http://www.verticalfarm.com" target="_blank">Agricultura Vertical segundo Despommier</a></li>
+<li><a href="http://canyaviva.com" target="_blank">Canya Viva - construção com canas</a></li>
+<li><a href="http://www.ecosanres.org" target="_blank">Ecosan</a></li>
+
+    </ul>
+
+
+
+    <h4> Ferramentas e Tecnologias</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://www.wikihow.com/Main-Page" target="_blank">WikiHow</a></li>
+<li><a href="http://www.appropedia.org" target="_blank">Appropedia (Appropriate tech enciclopedia)</a></li>
+<li><a href="http://www.instructables.com" target="_blank">Instructables</a></li>
+<li><a href="http://www.iees.ch/cms/index.php?option=com_frontpage&amp;Itemid=27" target="_blank">International Ecological Engineering Society</a></li>
+<li><a href="http://www.biomat.net" target="_blank">Biomaterials Network</a></li>
+<li><a href="http://peswiki.com/index.php/Main_Page" target="_blank">PESWiki.com -- Pure Energy Systems Wiki:   Finding and facilitating breakthrough clean Energy technologies.</a></li>
+<li><a href="http://www.alternative-energy-news.info" target="_blank">Alternative Energy News</a></li>
+<li><a href="http://en.howtopedia.org" target="_blank">HowToPedia Wiki</a></li>
+<li><a href="http://www.biomat.net" target="_blank">Biomaterials Network</a></li>
+<li><a href="http://www.justfortheloveofit.org" target="_blank">Justfortheloveofit.org | Promoting Skillsharing | Learn Skills, share tools, save money and make great new friends</a></li>
+    </ul>
+
+
+
+    <h4> Cultura e Educação</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="https://sites.google.com/site/nodoespiral" target="_blank">Academia de PermaCultura Nodo Espiral (espanha)</a></li>
+<li><a href="http://www.integralecology.org/default.html" target="_blank">Ecologia Integral</a></li>
+<li><a href="http://www.schumachercollege.org.uk" target="_blank">Schumacher College</a></li>
+<li><a href="http://www.agroforestry.co.uk" target="_blank">Agroforestry Research Trust</a></li>
+<li><a href="http://www.ecocentro.org" target="_blank">Instituto de Permacultura e Ecovilas do Cerrado</a></li>
+<li><a href="http://www.yestermorrow.org" target="_blank">Yestermorrow Design/Build School</a></li>
+<li><a href="http://www.aprovecho.org/lab/index.php" target="_blank">Aprovecho Research Center</a></li>
+<li><a href="http://www.tibarose.com/port/cursos.php" target="_blank">Tibá Permacultura - Cursos</a></li>
+<li><a href="http://www.codylundin.com" target="_blank">CODY LUNDIN: outdoor survival,  primitive living skills, and urban preparedness courses</a></li>
+
+    </ul>
+
+
+
+    <h4> Saúde e Bem-Estar Espiritual</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://awakenedlifeproject.org" target="_blank">Projecto Vida Desperta</a> </li>
+<li><a href="http://www.pt.dhamma.org" target="_parent">Meditação Vipassana</a> </li>
+<li><a href="http://www.advaita.org.uk" target="_blank">Advaita</a> </li>
+
+    </ul>
+
+
+
+    <h4> Economia e Finanças</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://www.microcredito.com.pt" target="_blank">Microcredito em portugal</a> </li>
+<li><a href="http://www.triodos.es" target="_blank">Triodos Bank - banco quase ético</a> </li>
+<li><a href="http://www.jak.se" target="_blank">JAK Medlemsbank -  banco mutualista sueco</a> </li>
+<li><a href="http://www.schumachercollege.org.uk" target="_blank">Schumacher College</a> </li>
+<li><a href="http://www.community.blueeconomy.de" target="_blank">The Blue Economy</a> </li>
+
+    </ul>
+
+
+
+    <h4> Posse da Terra e Comunidade</h4>
+    <ul style="margin-left: -15px;">
+
+<li><a href="http://portugal.ecovillage.org" target="_blank">Rede Portuguesa de Eco-aldeias e Comunidades Sustentáveis</a></li>
+<li><a href="http://ecoaldeiasemportugal.blogspot.com" target="_blank">EcoAldeias em Portugal “Explorando iniciativas comunitárias e de desenvolvimento sustentável em Portugal”</a></li>
+<li><a href="http://www.ecoaldeas.org" target="_blank">Red Ibérica de Ecoaldeas (RIA)</a></li>
+<li><a href="http://gen.ecovillage.org" target="_blank">Global Ecovillage Network (GEN) – “Connecting Communities for a Beter World”</a></li>
+<li><a href="http://www.agenda21local.info" target="_blank">A Agenda 21 Local - é um processo participativo, multi-sectorial, que visa atingir os objectivos da Agenda 21 ao nível local, através da preparação  e implementação de um Plano de Acção estratégico de longo prazo dirigido  às prioridades locais para o desenvolvimento sustentável.”</a></li>
+<li><a href="http://www.globalcitynetwork.org" target="_blank">Cidades pela retoma - Projecto 'GLOBAL CITY 2.0' pretende constituir-se como uma REDE INFORMAL DE ‘MOVIMENTOS CÍVICOS DE CIDADE’</a></li>
+<li><a href="http://www.iclei.org" target="_blank">ICLEI - é uma associação de mais de 1220 membros do governo local que estão comprometidos com o desenvolvimento sustentável.</a></li>
+
+    </ul>
+
+
+
+
+
+    </div>
+{#
+Transição
+
+· Rede social “Transição e Permacultura Portugal” 
+· Transition Network “Inspire, encourage, connect, support and train communities as they self-organise around the transition model, creating initiatives that rebuild resilience and reduce CO2 emissions.” 
+· Post Carbon Institute | Leading the transition to a resilient world 
+· WiserEarth: Connecting You to Communities of Action 
+Gestão da Terra e da Natureza
+
+· Colher para Semear - Rede Portuguesa de Variedades Tradicionais 
+· Plants for Future 
+· Agroforestry Resources 
+· Garden pest identification and natural pest control 
+· International Biochar Initiative | International Biochar Initiative 
+Espaço Construído
+
+· Sustainable Green Buildings | Earthship Biotecture 
+· Associação Centro da Terra 
+· Agricultura Vertical segundo Despommier 
+· Canya Viva - construção com canas 
+· Ecosan 
+Ferramentas e Tecnologias
+
+· WikiHow 
+· Appropedia (Appropriate tech enciclopedia) 
+· Instructables 
+· International Ecological Engineering Society 
+· Biomaterials Network 
+· PESWiki.com -- Pure Energy Systems Wiki: Finding and facilitating breakthrough clean Energy technologies. 
+· Alternative Energy News 
+· HowToPedia Wiki 
+· Biomaterials Network 
+· Justfortheloveofit.org | Promoting Skillsharing | Learn Skills, share tools, save money and make great new friends 
+Cultura e Educação
+
+· Academia de PermaCultura Nodo Espiral (espanha) 
+· Ecologia Integral 
+· Schumacher College - 
+· Agroforestry Research Trust 
+· Instituto de Permacultura e Ecovilas do Cerrado 
+· Yestermorrow Design/Build School 
+· Aprovecho Research Center 
+· Tibá Permacultura - Cursos 
+· CODY LUNDIN: outdoor survival, primitive living skills, and urban preparedness courses 
+Saúde e Bem-Estar Espiritual
+
+· Projecto Vida Desperta 
+· Meditação Vipassana 
+· Advaita 
+Economia e Finanças
+
+· Microcredito em portugal 
+· Triodos Bank - banco quase ético 
+· JAK Medlemsbank - banco mutualista sueco 
+· Schumacher College - 
+· The Blue Economy 
+Posse da Terra e Comunidade
+
+· Rede Portuguesa de Eco-aldeias e Comunidades Sustentáveis 
+· EcoAldeias em Portugal “Explorando iniciativas comunitárias e de desenvolvimento sustentável em Portugal” 
+· Red Ibérica de Ecoaldeas (RIA) 
+· Global Ecovillage Network (GEN) – “Connecting Communities for a Beter World” 
+· A Agenda 21 Local - é um processo participativo, multi-sectorial, que visa atingir os objectivos da Agenda 21 ao nível local, através da preparação e implementação de um Plano de Acção estratégico de longo prazo dirigido às prioridades locais para o desenvolvimento sustentável.” 
+· Cidades pela retoma - Projecto 'GLOBAL CITY 2.0' pretende constituir-se como uma REDE INFORMAL DE ‘MOVIMENTOS CÍVICOS DE CIDADE’ 
+· ICLEI - é uma associação de mais de 1220 membros do governo local que estão comprometidos com o desenvolvimento sustentável. 
+#}
+
+
+</div>
+
+
+</div>
+
+
+{{ footer() }}
+
+
+{{ super() }}
+
+
+    <script type="text/javascript">
+    </script>
+
+
+{% endblock %}
+

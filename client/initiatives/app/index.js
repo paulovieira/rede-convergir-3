@@ -8,6 +8,10 @@ RC.addRegions({
 //    modalRegion: "#mn-r-modal"
 });
 
+
+
+
+
 RC.markersMaxZindex = -999999999999;
 RC.mapIsMoving = false;
 RC.searchText = "";

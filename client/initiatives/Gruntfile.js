@@ -1,446 +1,211 @@
+/*
+1) pre-compile nunjucks templates (will create a nunjucks-precompiled.js file)
+2) concat (templates + all files included in the page)
+3) uglify
+4) compress
+5) clean
+
+*/
 var Path = require("path");
+//var Zlib = require('zlib');
+var Fs = require("fs-extra");
+var TimeGrunt = require('time-grunt');
+var LoadTasks = require('load-grunt-tasks');
+var _ = require("underscore");
+var Cheerio = require('cheerio')
 //var Fs = require("fs");
+
+var internals = {};
+internals.input = {
+    app: {
+        js: [Path.join(__dirname, "app/_build/temp/templates-dev.js")],
+        css: []        
+    },
+    lib: {
+        js: []
+    }
+};
 
 module.exports = function(grunt) {
 
-    grunt.loadNpmTasks('grunt-nunjucks');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    TimeGrunt(grunt);
+    LoadTasks(grunt);
 
+    internals.grunt = grunt;
+    internals.input.app.js = internals.input.app.js.concat(internals.findInputFiles("{# grunt-input-app-js #}", "{# /grunt-input-app-js #}", Path.join(__dirname, "templates/initiatives.html")));
 
-    // configuration data for all the tasks
-    var internals = {};
-    
-    internals.timestamp = grunt.template.today('yymmdd-HHMMss');
-    internals.staticsDir = Path.join("lib", "web", "client", "static");
-    internals.rcDir = Path.join("lib", "web", "client", "rc-app");
+    internals.input.lib.js = internals.findInputFiles("{# grunt-input-lib-js #}", "{# /grunt-input-lib-js #}", Path.join(__dirname, "templates/initiatives.html"));
 
-    internals.statics = {};
+    console.log("input files obtained from the html: \n", JSON.stringify(internals.input, null, 4))
 
-/*
-    // base target: this is only jquery and bootstrap and is included in every page
-    internals.statics.base = {};
-    internals.statics.base.input = [
-        'lib/web/client/static/jquery/jquery-1.11.2.js', 
-        'lib/web/client/static/bootstrap/3.3.5/js/bootstrap.js' 
-    ];
-
-    internals.statics.base.output = Path.join(
-        internals.staticsDir, 
-        "_js",
-        "base-" + internals.timestamp
-    );
-
-
-
-    // cartografia target (libs)
-    internals.statics.cartografiaLibs = {};
-    internals.statics.cartografiaLibs.input = [
-        "lib/web/client/static/jquery/jquery.documentsize-1.2.1.js",
-        "lib/web/client/static/jquery/jquery.mousewheel-3.1.12.js",
-        "lib/web/client/static/leaflet/leaflet-0.7.5/leaflet-0.7.5.js",
-        "lib/web/client/static/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js",
-        "lib/web/client/static/leaflet/leaflet-control-geocoder-1.3.1/Control.Geocoder-1.3.1.js",
-        "lib/web/client/static/underscore/underscore-1.6.0.js",
-        "lib/web/client/static/bootstrap/bootstrap-treeview.js",
-        "lib/web/client/static/nunjucks/nunjucks-slim-1.3.3.js",
-        "lib/web/client/static/backbone/json2.js",
-        "lib/web/client/static/backbone/backbone-1.1.2.js",
-        "lib/web/client/static/backbone/backbone.select-1.3.2.js",
-        "lib/web/client/static/backbone/backbone.radio-1.0.1.js",
-        "lib/web/client/static/backbone/backbone.marionette-2.4.1.js",
-        "lib/web/client/static/backbone/renderer-nunjucks.js",
-    ];
-
-    internals.statics.cartografiaLibs.output = Path.join(
-        internals.staticsDir, 
-        "_js",
-        "rc-libs-" + internals.timestamp
-    );
-
-
-    // cartografia target (app)
-    internals.statics.cartografiaApp = {};
-    internals.statics.cartografiaApp.input = [
-        "lib/web/client/rc-app/menu-definition.js",
-
-        "lib/web/client/rc-app/index.js",
-        "lib/web/client/rc-app/leaflet-backbone-view.js",
-        "lib/web/client/rc-app/entities.js",
-        "lib/web/client/rc-app/behaviors.js",
-        "lib/web/client/rc-app/menu/menu.js",
-        "lib/web/client/rc-app/map/map.js",
-        "lib/web/client/rc-app/init.js"
-    ];
-
-    internals.statics.cartografiaApp.output = Path.join(
-        internals.staticsDir, 
-        "_js",
-        "rc-app-" + internals.timestamp
-    );
-*/
-
-
-    // nunjuck templates
-    internals.templates = {};
-
-
-    // templates target - rc
-    internals.templates.rc = {};
-    internals.templates.rc.input = [
-        internals.rcDir + '/**/*.html'
-    ];
-    internals.templates.rc.output = Path.join(
-        internals.staticsDir, 
-        "_js",
-        "rc-templates-" +  internals.timestamp
-    );
-
-    // templates target - dashboard
-    internals.templates.dashboard = {};
-    internals.templates.dashboard.input = [
-        internals.dashboardDir + '/**/*.html'
-    ];
-    internals.templates.dashboard.output = Path.join(
-        internals.staticsDir, 
-        "_js",
-        "dashboard-templates-" +  internals.timestamp
-    );
-
-    // the tasks configuration starts here
-
-    // TASK: concatenate js and css
-
-    var concatConfig = {
-
+    grunt.config.set("clean", {
         options: {
-            separator: grunt.util.linefeed + ';' + grunt.util.linefeed + '// concat new file ' + grunt.util.linefeed,
+            // task-specific options go here.
         },
-/*        
-        base: {
-            src: internals.statics.base.input,
-            dest: internals.statics.base.output + ".js",
-            nonull: true,
-        },
-
-        "rc-libs": {
-            src: internals.statics.cartografiaLibs.input,
-            dest: internals.statics.cartografiaLibs.output + ".js",
-            nonull: true,
-        },
-
-        "rc-app": {
-            src: internals.statics.cartografiaApp.input,
-            dest: internals.statics.cartografiaApp.output + ".js",
-            nonull: true,
-        },
-*/
-    };
-
-    grunt.config("concat", concatConfig);
-
-
-    // TASK: pre-compile nunjucks templates
-
-    var nunjucksConfig = {
-
-        "rc-templates": {
-            baseDir: internals.rcDir,
-            src: internals.templates.rc.input,
-            dest: internals.templates.rc.output + ".js",
-            options: {
-                autoescape: true
-            }
-        },
-
-        "dashboard-templates": {
-            baseDir: internals.dashboardDir,
-            src: internals.templates.dashboard.input,
-            dest: internals.templates.dashboard.output + ".js",
-            options: {
-                autoescape: true
-            }
-        },
-    };
-
-    grunt.config("nunjucks", nunjucksConfig);
-
-
-    // TASK: uglify (to be run after concat and nunjucks)
-
-    var uglifyConfig = {
-
-        // if there is any problem with the minified code, try mangle: false
-        options: {
-            mangle: false
-        },
-/*
-        base: {
-            src: internals.statics.base.output + ".js",
-            dest: internals.statics.base.output + ".min.js"
-        },
-
-        "rc-libs": {
-            src: internals.statics.cartografiaLibs.output + ".js",
-            dest: internals.statics.cartografiaLibs.output + ".min.js"
-        },
-
-        "rc-app": {
-            src: internals.statics.cartografiaApp.output + ".js",
-            dest: internals.statics.cartografiaApp.output + ".min.js"
-        },
-*/
-        "rc-templates": {
-            src: internals.templates.rc.output + ".js",
-            dest: internals.templates.rc.output + ".min.js"
-        },
-
-        "dashboard-templates": {
-            src: internals.templates.dashboard.output + ".js",
-            dest: internals.templates.dashboard.output + ".min.js"
-        },
-    };
-
-    grunt.config("uglify", uglifyConfig);
-
-
-    // TASK: create a gzipped version of the concatenated files (this task should be run
-    // right after the uglify; nginx will use these files if they are present;)
-
-    var compressConfig = {
-
-        options: {
-            mode: 'gzip',
-            pretty: true
-        },
-/*
-        base: {
-            src: internals.statics.base.output + ".min.js",
-            dest: internals.statics.base.output + ".min.js.gz"
-        },
-
-
-        "rc-libs": {
-            src: internals.statics.cartografiaLibs.output + ".min.js",
-            dest: internals.statics.cartografiaLibs.output + ".min.js.gz"
-        },
-
-        "rc-app": {
-            src: internals.statics.cartografiaApp.output + ".min.js",
-            dest: internals.statics.cartografiaApp.output + ".min.js.gz"
-        },
-*/
-        "rc-templates": {
-            src: internals.templates.rc.output + ".min.js",
-            dest: internals.templates.rc.output + ".min.js.gz"
-        },
-
-        "dashboard-templates": {
-            src: internals.templates.dashboard.output + ".min.js",
-            dest: internals.templates.dashboard.output + ".min.js.gz"
-        },
-    };
-
-    grunt.config("compress", compressConfig);
-
-    // TASK: clean old files 
-
-    var cleanConfig = {
-
-        options: {
-//            "no-write": true
-        },
-/*
-        "base": {
-            src: Path.join(internals.staticsDir, "_js", "base*")
-        },
-
-        "base-uncompressed": {
-            src: internals.statics.base.output + ".js"
-        },
-
-
-        "rc-libs": {
-            src: Path.join(internals.staticsDir, "_js", "rc-libs-*")
-        },
-
-        "rc-libs-uncompressed": {
-            src: internals.statics.cartografiaLibs.output + ".js"
-        },
-
-        "rc-app": {
-            src: Path.join(internals.staticsDir, "_js", "rc-app-*")
-        },
-
-        "rc-app-uncompressed": {
-            src: internals.statics.cartografiaApp.output + ".js"
-        },
-*/
-        "rc-templates": {
-            src: Path.join(internals.staticsDir, "_js", "rc-templates-*")
-        },
-
-        "rc-templates-uncompressed": {
-            src: internals.templates.rc.output + ".js"
-        },
-
-
-        "dashboard-templates": {
-            src: Path.join(internals.staticsDir, "_js", "dashboard-templates-*")
-        },
-
-        "dashboard-templates-uncompressed": {
-            src: internals.templates.dashboard.output + ".js"
+        app: {
+            src: Path.join(__dirname, "app/_build/temp/*"),
         }
-
-    };
-
-    grunt.config("clean", cleanConfig);
-
-
-
-
-    // TASK: watch files for changes
-
-    var watchConfig = {
-/*
-        "base": {
-            files: internals.statics.base.input,
-            tasks: [
-                "clean:base", 
-                "concat:base",
-                "uglify:base",
-                "clean:base-uncompressed",
-                "compress:base",
-                "update-bundles-info"   
-            ]
-        },
-
-        "rc-libs": {
-            files: internals.statics.cartografiaLibs.input,
-            tasks: [
-                "clean:rc-libs", 
-                "concat:rc-libs",
-                "uglify:rc-libs",
-                "clean:rc-libs-uncompressed", 
-                "compress:rc-libs",
-                "update-bundles-info"
-            ]
-        },
-
-        "rc-app": {
-            files: internals.statics.cartografiaApp.input,
-            tasks: [
-                "clean:rc-app",
-                "concat:rc-app",
-                "uglify:rc-app",
-                "clean:rc-app-uncompressed", 
-                "compress:rc-app",
-                "update-bundles-info"
-            ]
-        },
-*/
-        "rc-templates": {
-            files: internals.templates.rc.input,
-            tasks: [
-                "clean:rc-templates",
-                "nunjucks:rc-templates",
-                "uglify:rc-templates",
-                "clean:rc-templates-uncompressed", 
-                "compress:rc-templates",
-                "update-bundles-info"
-            ]
-        },
-
-        "dashboard-templates": {
-            files: internals.templates.dashboard.input,
-            tasks: [
-                "clean:dashboard-templates",
-                "nunjucks:dashboard-templates",
-                "uglify:dashboard-templates",
-                "clean:dashboard-templates-uncompressed", 
-                "compress:dashboard-templates",
-                "update-bundles-info"
-            ]
-        },
-    };
-
-
-    grunt.config("watch", watchConfig);
-
-
-    // TASK: update bundles.json with the filenames of the current bundles
-
-    grunt.registerTask("update-bundles-info", function(){
-
-        var obj = {}, filename = "./bundles.json";
-        var paths;
-
-/*
-        // bundles - base (jquery + bootstrap)
-        paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "base*.min.js"));
-        obj["base"] = Path.basename(paths[0]);
-
-        // bundles - cartografia libs
-        paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "rc-libs*.min.js"));
-        obj["rc-libs"] = Path.basename(paths[0]);
-
-
-        // bundles - cartografia app
-        paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "rc-app*.min.js"));
-        obj["rc-app"] = Path.basename(paths[0]);
-*/
-        // bundles - rc templates
-        paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "rc-templates*.min.js"));
-        obj["rc-templates"] = Path.basename(paths[0]);
-
-        paths = grunt.file.expand(Path.join(internals.staticsDir, "_js", "dashboard-templates*.min.js"));
-        obj["dashboard-templates"] = Path.basename(paths[0]);
-
-        grunt.file.write(filename, JSON.stringify(obj, null, 4));
     });
 
 
-//    grunt.registerTask("concatenate', ['concat:base', "clean:old"]);
-    grunt.registerTask('default', ['watch']);
+    grunt.config.set("cachebuster", {
+        options: {
+            // task-specific options go here.
+            complete: function(obj){
 
-    grunt.registerTask('build', [
-/*
-        "clean:base",
-        "concat:base",
-        "uglify:base",
-        "compress:base",
-        "clean:base-uncompressed",
+                var compare = [];
 
-        "clean:rc-libs",
-        "concat:rc-libs",
-        "uglify:rc-libs",
-        "compress:rc-libs",
-        "clean:rc-libs-uncompressed",
+                // decompose the obj produced by the cachebuster task into two "disjoint"
+                // objects (relative to the temp files and to the build files)
+                var tempFiles = _.pick(obj, function(value, key){
 
-        "clean:rc-app",
-        "concat:rc-app",
-        "uglify:rc-app",
-        "compress:rc-app",
-        "clean:rc-app-uncompressed",
-*/        
-        "clean:rc-templates",
-        "nunjucks:rc-templates",
-        "uglify:rc-templates",
-        "compress:rc-templates",
-        "clean:rc-templates-uncompressed",
+                    return key.split("/").slice(0, -1).pop() === "temp";
+                });
 
-        "clean:dashboard-templates",
-        "nunjucks:dashboard-templates",
-        "uglify:dashboard-templates",
-        "compress:dashboard-templates",
-        "clean:dashboard-templates-uncompressed",
+                var buildFiles = _.pick(obj, function(value, key){
 
-        "update-bundles-info"
-    ]);
+                    return key.split("/").slice(0, -1).pop() === "_build";
+                });
+
+                // find the corresponding pairs for the temp files and build files
+                // (it might happen that a there is no build file already for a given temp file)
+                for(var tempFile in tempFiles){
+
+                    var pair = {};
+                    pair[tempFile] = tempFiles[tempFile];
+                    var tempFileBase = Path.parse(tempFile).name;
+
+                    for(var buildFile in buildFiles){
+
+                        var buildFileBase = Path.parse(buildFile).name.split(".").slice(1).join(".");
+                        if(buildFileBase===tempFileBase){
+                            pair[buildFile] = buildFiles[buildFile];
+                        }
+                    }
+
+                    compare.push(pair);
+                }
+
+                console.log("compare:\n", compare);
+
+                // verify if the md5 of the pairs match; if replace the build file with the new one;
+                compare.forEach(function(obj){
+
+                    var files = Object.keys(obj);
+                    if(!(files.length===1 || files.length===2)){
+                        grunt.fail.fatal("Error replacing files in the build dir (length=" + files.length + ")")
+                    }
+                    
+                    var buildFile = getBuildFile(obj);
+                    if(files.length==1 || (files.length==2 && obj[files[0]]!==obj[files[1]]) ){
+                        //console.log("buildFile (1)", buildFile);
+                        Fs.copySync(files[0], buildFile);
+
+                        if(files.length===2){
+                            Fs.removeSync(files[1]);
+                        }
+                    }
+
+                });
+
+                function getBuildFile(obj){
+
+                    var tempFileDetails = Path.parse(Object.keys(obj)[0]);
+                    //console.log("tempFileDetails\n", tempFileDetails)
+                    var now = grunt.template.today('yymmdd-HHMMss');
+                    var buildFile = Path.join(tempFileDetails.dir, "..", now + "." + tempFileDetails.name + tempFileDetails.ext);
+
+                    return buildFile;
+                }
+
+            }
+        },
+        app: {
+            //src: [Path.join(__dirname, "app/_build/**/*"), ]
+            src: [Path.join(__dirname, "app/_build/**/*"), "!" + Path.join(__dirname, "app/_build/temp/templates-dev.js")]
+        }
+    });
+
+    grunt.config.set("nunjucks", {
+        options: {
+            autoescape: true
+        },
+        app: {
+            baseDir: Path.join(__dirname, "app2"),
+            src: Path.join(__dirname, "app2/**/*.html"),
+            dest: Path.join(__dirname, "app/_build/temp/templates-dev.js"),
+        }
+    });
+
+
+    grunt.config.set("concat", {
+        options: {
+            separator: grunt.util.linefeed + ';' + grunt.util.linefeed + '// concat new file ' + grunt.util.linefeed,
+   
+        },
+        app: {
+            src: internals.input.app.js,
+            dest: Path.join(__dirname, "app/_build/temp/app.js"),
+            nonull: true,
+        }
+    });
+
+    grunt.config.set("uglify", {
+        options: {
+            mangle: false
+        },
+        app: {
+            src: Path.join(__dirname, "app/_build/temp/app.js"),
+            dest: Path.join(__dirname, "app/_build/temp/app.min.js"),
+        }
+    });
+
+    grunt.config.set("compress", {
+        options: {
+            mode: 'gzip',
+            pretty: true,
+
+        },
+        app: {
+            src: Path.join(__dirname, "app/_build/temp/app.min.js"),
+            dest: Path.join(__dirname, "app/_build/temp/app.min.js.gz"),
+        },
+    });
+
+
+
+    //grunt.registerTask("app", ["clean:app", "nunjucks:appx", "nunjucks:appy", "cachebuster:app", "compress:app"])
+    grunt.registerTask("app", ["clean:app", "nunjucks:app", "concat:app", "uglify:app", "compress:app", "cachebuster:app"])
+
 
 };
 
+internals.findInputFiles = function(delimiterStart, delimiterEnd, path){
+
+    var html = Fs.readFileSync(path, "utf8");
+    
+    var index1 = html.indexOf(delimiterStart);
+    var index2 = html.indexOf(delimiterEnd);
+
+    if(index1===-1 || index2===-1){
+        internals.grunt.fail.fatal("Could not find the delimiter in the html file: " + delimiterStart + ", " + delimiterEnd);
+    }
+
+    var lines = html.substring(index1 + delimiterStart.length, index2)
+                .split("\n")
+                .map(function(line){
+                    return line.trim();
+                })
+                .filter(function(line){
+                    return line.indexOf("<script")===0;
+                })
+                .map(function(line){
+
+                    // line should now be something like '<script src="/initiatives-app/menu/menu.js"></script>'
+                    var $ = Cheerio.load(line);
+                    var file = $("script").attr("src").split("/").slice(2).join("/");
+                    return Path.join(__dirname, "app", file);
+                })
+    
+    return lines;
+}

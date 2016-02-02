@@ -112,16 +112,17 @@
     <!-- cartografia libs -->
     <!-- NOTE: if we add new files here, we must add in the gruntfile as well -->
     <script src="/public/js/{{ bundles['rc-templates'] }}"></script>
+
+    {# grunt-input-lib-js #}
     <script src="/public/lib/jquery/jquery.documentsize-1.2.1.js"></script>
     <script src="/public/lib/jquery/jquery.mousewheel-3.1.12.js"></script>
     <script src="/public/lib/jquery/jquery.scrollTo-2.12.js"></script>
     <script src="/public/lib/jquery/icheck-1.0.2/icheck.js"></script>
 
-{#
-                <script src="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script>
-                <script src="/public/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js"></script>
-                <script src="/public/leaflet/leaflet-control-geocoder-1.3.1/Control.Geocoder-1.3.1.js"></script>
-#}    
+    {# <script src="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script> #}
+    {# <script src="/public/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js"></script> #}
+    {# <script src="/public/leaflet/leaflet-control-geocoder-1.3.1/Control.Geocoder-1.3.1.js"></script> #}
+
     <script src="/public/lib/leaflet/leaflet-1.0beta2/leaflet-src.js"></script>
     <script src="/public/lib/leaflet/leaflet-label-9c431d/leaflet.label-src.js"></script>
     
@@ -136,11 +137,12 @@
     <script src="/public/lib/backbone/backbone.base-router-1.2.0.js"></script>
     <script src="/public/lib/backbone/renderer-nunjucks.js"></script>
     <script src="/public/lib/slug-0.9.1.js"></script>
-
+    {# /grunt-input-lib-js #}
 
     <!-- cartografia app -->
     <!-- NOTE: if we add new files here, we must add in the gruntfile as well -->
 
+    {# grunt-input-app-js #}
     <script src="/initiatives-app/index.js"></script>
     <script src="/initiatives-app/leaflet-backbone-view.js"></script>
     <script src="/initiatives-app/entities.js"></script>
@@ -149,6 +151,7 @@
     <script src="/initiatives-app/menu/menu.js"></script>
     <script src="/initiatives-app/map/map.js"></script>
     <script src="/initiatives-app/init.js"></script>
+    {# /grunt-input-app-js #}
 
 
 {% endblock %}

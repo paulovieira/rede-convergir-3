@@ -1,4 +1,5 @@
 
+
 var RC = new Mn.Application();
 
 RC.addRegions({
@@ -12,7 +13,7 @@ RC.addRegions({
 
 
 
-RC.markersMaxZindex = -999999999999;
+RC.markersMaxZindex = -99999999999;
 RC.mapIsMoving = false;
 RC.searchText = "";
 
@@ -92,13 +93,15 @@ RC.iCheckRead = function(type, name){
     else{
         throw new Error("Invalid input type");
     }
-}
+};
+
 
 var cartografiaChannel = Backbone.Radio.channel('cartografia');
 
-
+var x = 2;
 (function(){
 
+    var xyz;
     RCData.baseLayers = [
         // {
         //     id: "osm",

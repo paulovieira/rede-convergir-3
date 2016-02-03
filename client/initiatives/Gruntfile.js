@@ -7,7 +7,7 @@
 
 */
 var Path = require("path");
-//var Zlib = require('zlib');
+var Crypto = require('crypto');
 var Fs = require("fs-extra");
 var TimeGrunt = require('time-grunt');
 var LoadTasks = require('load-grunt-tasks');
@@ -18,7 +18,7 @@ var Cheerio = require('cheerio')
 var internals = {};
 internals.input = {
     app: {
-        js: [Path.join(__dirname, "app/_build/temp/templates-dev.js")],
+        js: [],
         css: []        
     },
     lib: {
@@ -32,9 +32,25 @@ module.exports = function(grunt) {
     LoadTasks(grunt);
 
     internals.grunt = grunt;
-    internals.input.app.js = internals.input.app.js.concat(internals.findInputFiles("{# grunt-input-app-js #}", "{# /grunt-input-app-js #}", Path.join(__dirname, "templates/initiatives.html")));
 
-    internals.input.lib.js = internals.findInputFiles("{# grunt-input-lib-js #}", "{# /grunt-input-lib-js #}", Path.join(__dirname, "templates/initiatives.html"));
+    internals.input.app.js = internals.findInputFiles({
+        delimiterStart: "{# grunt-input-app-js #}", 
+        delimiterEnd: "{# /grunt-input-app-js #}", 
+        html: Path.join(__dirname, "templates/initiatives.html")
+    }).map(function(file){
+        return Path.join(__dirname, "app", file);
+    });
+
+    internals.input.app.js.unshift(Path.join(__dirname, "app/_build/temp/templates-dev.js"));
+    
+    internals.input.lib.js = internals.findInputFiles({
+        delimiterStart: "{# grunt-input-lib-js #}", 
+        delimiterEnd: "{# /grunt-input-lib-js #}", 
+        html: Path.join(__dirname, "templates/initiatives.html")
+    }).map(function(file){
+        return Path.join(__dirname, "../../public", file);
+    });
+
 
     console.log("input files obtained from the html: \n", JSON.stringify(internals.input, null, 4))
 
@@ -43,7 +59,10 @@ module.exports = function(grunt) {
             // task-specific options go here.
         },
         app: {
-            src: Path.join(__dirname, "app/_build/temp/*"),
+            src: Path.join(__dirname, "app/_build/temp/app.*"),
+        },
+        lib: {
+            src: Path.join(__dirname, "app/_build/temp/lib.*"),
         }
     });
 
@@ -52,6 +71,10 @@ module.exports = function(grunt) {
         options: {
             // task-specific options go here.
             complete: function(obj){
+
+                Fs.ensureFileSync(Path.join(__dirname, "app/_build/bundle.json"));
+                var bundle = Fs.readFileSync(Path.join(__dirname, "app/_build/bundle.json"), "utf8");
+                bundle = JSON.parse(bundle || "{}");
 
                 var compare = [];
 
@@ -101,6 +124,13 @@ module.exports = function(grunt) {
                         //console.log("buildFile (1)", buildFile);
                         Fs.copySync(files[0], buildFile);
 
+                        if(Path.parse(buildFile).name.indexOf("app")!==-1){
+                            bundle["app"] = buildFile    
+                        }
+                        if(Path.parse(buildFile).name.indexOf("app")!==-1){
+                            bundle["app"] = buildFile    
+                        }
+                        
                         if(files.length===2){
                             Fs.removeSync(files[1]);
                         }
@@ -120,10 +150,13 @@ module.exports = function(grunt) {
 
             }
         },
-        app: {
-            //src: [Path.join(__dirname, "app/_build/**/*"), ]
-            src: [Path.join(__dirname, "app/_build/**/*"), "!" + Path.join(__dirname, "app/_build/temp/templates-dev.js")]
-        }
+
+        // there's no need to define different targets in this task
+        src: [
+            Path.join(__dirname, "app/_build/**/*"), 
+            "!" + Path.join(__dirname, "app/_build/temp/templates-dev.js")
+        ]
+
     });
 
     grunt.config.set("nunjucks", {
@@ -147,6 +180,11 @@ module.exports = function(grunt) {
             src: internals.input.app.js,
             dest: Path.join(__dirname, "app/_build/temp/app.js"),
             nonull: true,
+        },
+        lib: {
+            src: internals.input.lib.js,
+            dest: Path.join(__dirname, "app/_build/temp/lib.js"),
+            nonull: true,
         }
     });
 
@@ -157,6 +195,10 @@ module.exports = function(grunt) {
         app: {
             src: Path.join(__dirname, "app/_build/temp/app.js"),
             dest: Path.join(__dirname, "app/_build/temp/app.min.js"),
+        },
+        lib: {
+            src: Path.join(__dirname, "app/_build/temp/lib.js"),
+            dest: Path.join(__dirname, "app/_build/temp/lib.min.js"),
         }
     });
 
@@ -170,19 +212,171 @@ module.exports = function(grunt) {
             src: Path.join(__dirname, "app/_build/temp/app.min.js"),
             dest: Path.join(__dirname, "app/_build/temp/app.min.js.gz"),
         },
+        lib: {
+            src: Path.join(__dirname, "app/_build/temp/lib.min.js"),
+            dest: Path.join(__dirname, "app/_build/temp/lib.min.js.gz"),
+        },
     });
 
 
+    grunt.config.set("compress", {
+        options: {
+            mode: 'gzip',
+            pretty: true,
 
-    //grunt.registerTask("app", ["clean:app", "nunjucks:appx", "nunjucks:appy", "cachebuster:app", "compress:app"])
-    grunt.registerTask("app", ["clean:app", "nunjucks:app", "concat:app", "uglify:app", "compress:app", "cachebuster:app"])
+        },
+        app: {
+            src: Path.join(__dirname, "app/_build/temp/app.min.js"),
+            dest: Path.join(__dirname, "app/_build/temp/app.min.js.gz"),
+        },
+        lib: {
+            src: Path.join(__dirname, "app/_build/temp/lib.min.js"),
+            dest: Path.join(__dirname, "app/_build/temp/lib.min.js.gz"),
+        },
+    });
 
+
+    grunt.config.set("temp-task", {
+        options: {
+        },
+        app: {
+            options: {
+                tempFiles: Path.join(__dirname, "app/_build/temp/*app*"),
+                buildFiles: Path.join(__dirname, "app/_build/*app*"),
+                bundleFile: Path.join(__dirname, "app/_build/bundle.json")
+            },
+        },
+        lib: {
+            src: [
+                Path.join(__dirname, "app/_build/**/*")
+            ],
+            dest: Path.join(__dirname, "app/_build/lib-out.js")
+        }
+    });
+
+
+    grunt.registerMultiTask("temp-task", "", function() {
+        // Merge task-specific and/or target-specific options with these defaults.
+        var options = this.options({
+        });
+
+
+        console.log("options: ", options)
+
+        var tempHashes = {}, buildHashes = {};
+
+        var tempFiles = grunt.file.expand({}, options.tempFiles),
+            buildFiles = grunt.file.expand({}, options.buildFiles);
+
+        tempFiles.forEach(function(path) {
+            computeHash(path, tempHashes);
+        });
+
+        buildFiles.forEach(function(path) {
+            computeHash(path, buildHashes);
+        });
+
+        console.log("tempHashes\n", tempHashes);
+        console.log("buildHashes\n", buildHashes);
+
+        Fs.ensureFileSync(options.bundleFile);
+        var bundle = Fs.readFileSync(options.bundleFile, "utf8");
+        bundle = JSON.parse(bundle || "{}");
+
+        var compare = [];
+
+        // find the corresponding pairs for the temp files and build files (it might happen
+        // that for a given temp file there is no corresponding build file already )
+        for(var tempFile in tempHashes){
+
+            var pair = {};
+            pair[tempFile] = tempHashes[tempFile];
+            var tempFileBase = Path.parse(tempFile).name;
+
+            for(var buildFile in buildHashes){
+
+                var buildFileBase = Path.parse(buildFile).name.split(".").slice(1).join(".");
+                if(buildFileBase===tempFileBase){
+                    pair[buildFile] = buildHashes[buildFile];
+                }
+            }
+
+            compare.push(pair);
+        }
+
+        console.log("compare:\n", compare);
+        
+        // verify if the md5 of the pairs match; if so, replace the build file with the new one;
+        compare.forEach(function(obj){
+
+            var files = Object.keys(obj);
+            if(!(files.length===1 || files.length===2)){
+                grunt.fail.fatal("Error replacing files in the build dir (length=" + files.length + ")")
+            }
+            
+
+            if(files.length==1 || (files.length==2 && obj[files[0]]!==obj[files[1]]) ){
+                //console.log("buildFile (1)", buildFile);
+                var buildFile = getBuildFile(obj);
+                console.log("\n\n\n\nbuildFile\n", buildFile)
+                Fs.copySync(files[0], buildFile);
+                bundle[grunt.task.current.target] = buildFile;
+                
+                if(files.length===2){
+                    Fs.removeSync(files[1]);
+                    delete bundle[files[1]];
+                }
+            }
+
+        });
+        /**/
+        function getBuildFile(obj){
+
+            var tempFileDetails = Path.parse(Object.keys(obj)[0]);
+            //console.log("tempFileDetails\n", tempFileDetails)
+            var now = grunt.template.today('yymmdd-HHMMss');
+            var buildFile = Path.join(tempFileDetails.dir, "..", now + "." + tempFileDetails.name + tempFileDetails.ext);
+
+            return buildFile;
+        }
+
+        function computeHash(path, obj){
+
+            if(!grunt.file.exists(path)) {
+                grunt.log.warn('File "' + path + '" not found.');
+                return;
+            }
+            if(grunt.file.isDir(path)){
+                return;
+            }
+
+            var source = grunt.file.read(path, {
+                encoding: null
+            });
+
+            var hash = Crypto
+                .createHash("md5")
+                .update(source)
+                .digest("hex");
+
+            obj[path] = hash;
+        }
+    });
+
+
+    grunt.registerTask("app", ["clean:app", "nunjucks:app", "concat:app", "uglify:app", "compress:app", "temp-task:app"]);
+    grunt.registerTask("lib", ["clean:lib", "concat:lib", "uglify:lib", "compress:lib", "cachebuster"]);
+
+    grunt.registerTask("default", ["app", "lib"]);
 
 };
 
-internals.findInputFiles = function(delimiterStart, delimiterEnd, path){
+internals.findInputFiles = function(options){
 
-    var html = Fs.readFileSync(path, "utf8");
+    var delimiterStart = options.delimiterStart;
+    var delimiterEnd = options.delimiterEnd;
+
+    var html = Fs.readFileSync(options.html, "utf8");
     
     var index1 = html.indexOf(delimiterStart);
     var index2 = html.indexOf(delimiterEnd);
@@ -203,9 +397,8 @@ internals.findInputFiles = function(delimiterStart, delimiterEnd, path){
 
                     // line should now be something like '<script src="/initiatives-app/menu/menu.js"></script>'
                     var $ = Cheerio.load(line);
-                    var file = $("script").attr("src").split("/").slice(2).join("/");
-                    return Path.join(__dirname, "app", file);
-                })
+                    return $("script").attr("src").split("/").slice(2).join("/");
+                });
     
     return lines;
-}
+};

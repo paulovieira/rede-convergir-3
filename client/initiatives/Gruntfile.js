@@ -241,10 +241,12 @@ module.exports = function(grunt) {
         },
         app: {
             options: {
-                tempFiles: Path.join(__dirname, "app/_build/temp/*app*"),
-                buildFiles: Path.join(__dirname, "app/_build/*app*"),
+                //tempFiles: Path.join(__dirname, "app/_build/temp/*app*"),
+                buildDir: Path.join(__dirname, "app/_build"),
                 bundleFile: Path.join(__dirname, "app/_build/bundle.json")
             },
+            src: Path.join(__dirname, "app/_build/temp/*app*"),
+            //dest: [Path.join(__dirname, "app/_build/*app*")]
         },
         lib: {
             src: [
@@ -262,15 +264,24 @@ module.exports = function(grunt) {
 
 
         console.log("options: ", options)
+        console.log("this.files: ", this.files)
+        console.log("this.files: ", JSON.stringify(this.files))
 
         var tempHashes = {}, buildHashes = {};
 
-        var tempFiles = grunt.file.expand({}, options.tempFiles),
-            buildFiles = grunt.file.expand({}, options.buildFiles);
+        this.files.forEach(function(file){
+            file.src.forEach(function(path){
+                computeHash(path, tempHashes);
+            })
+        })
 
-        tempFiles.forEach(function(path) {
-            computeHash(path, tempHashes);
-        });
+        if(!grunt.file.isDir(options.buildDir)){
+            grunt.fail.fatal("buildDir must be a directory");
+        }
+
+        var pattern = Path.join(options.buildDir, "*");
+        var buildFiles = grunt.file.expand({filter: "isFile"}, pattern);
+        console.log(buildFiles)
 
         buildFiles.forEach(function(path) {
             computeHash(path, buildHashes);
@@ -278,6 +289,8 @@ module.exports = function(grunt) {
 
         console.log("tempHashes\n", tempHashes);
         console.log("buildHashes\n", buildHashes);
+
+
 
         Fs.ensureFileSync(options.bundleFile);
         var bundle = Fs.readFileSync(options.bundleFile, "utf8");

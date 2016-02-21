@@ -9,7 +9,7 @@ RC.addRegions({
 //    modalRegion: "#mn-r-modal"
 });
 
-var y = 10;
+var y = 12;
 
 RC.markersMaxZindex = -99999999999;
 RC.mapIsMoving = false;

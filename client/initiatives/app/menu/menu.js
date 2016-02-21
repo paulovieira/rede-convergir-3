@@ -9,7 +9,7 @@ var OptionsModalIV = Mn.ItemView.extend({
     events: {
         "click @ui.btnApplyFilters": "showUpdatedList"
     },
-
+    dummy: "abcd",
     onAttach: function(){
 
         // initialize the iCheck plugin 

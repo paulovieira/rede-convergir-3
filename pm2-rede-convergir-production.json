@@ -8,6 +8,6 @@
   },
   "max_memory_restart" : "200M",
   "treekill": true,
-  "restart_delay": 5000,
+  "restart_delay": 10000,
   "out_file": "/dev/null"
 }

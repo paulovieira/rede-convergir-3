@@ -10,9 +10,37 @@ process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 var Config = require("config");
 var Hoek = require("hoek");
 var Glue = require("glue");
-
+var Shell = require("shelljs");
 
 var internals = {};
+
+internals.executeGrunt = function(){
+
+    var commands = [
+        "grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js ",
+    ];
+    var output;
+
+    process.stdout.write("Executing grunt tasks... ");
+    commands.forEach(function(command){
+
+        output = Shell.exec(command, {silent: true});
+        if(output.code!==0){
+            console.log("");
+            var message = "grunt task did not finished:\n" + command;
+            throw new Error(message);
+        }
+    });
+
+    process.stdout.write("done!\n");
+};
+
+// in production mode the grunt tasks should always be executed
+if(process.env.NODE_ENV==="production"){
+    internals.executeGrunt();
+}
+
+
 
 var manifest = {
 

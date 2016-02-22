@@ -16,6 +16,7 @@
     "glue": "2.2.x",
     "good": "^6.4.0",
     "good-console": "^5.1.0",
+    "grunt-static-timestamp": "^0.1.4",
     "hapi": "^9.3.1",
     "hapi-auth-cookie": "^3.1.0",
     "hapi-auth-session-memory": "paulovieira/hapi-auth-session-memory",
@@ -46,7 +47,6 @@
   "devDependencies": {
     "cheerio": "^0.20.0",
     "grunt": "^0.4.5",
-    "grunt-cachebuster": "^0.1.5",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-compress": "^0.13.0",
     "grunt-contrib-concat": "^0.5.1",

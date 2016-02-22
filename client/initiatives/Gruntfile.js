@@ -1,16 +1,28 @@
 /*
 
-1) clean
-2) pre-compile nunjucks templates (will create a nunjucks-precompiled.js file)
-3) concat (templates + all files included in the page)
-4) uglify
-5) compress
-6) add timestamp
+All the tasks should have 2 targets: "app" and "lib"
 
+There are 2 custom tasks at the end: "app" and "lib". These tasks simply call the needed tasks using the corresponding target.
 
-grunt should be called from the root directory of the project:
+The "app" target is composed of the following tasks:
 
-grunt --base ./ --gruntfile client/initiatives/Gruntfile.js  app
+1) clean _build/temp
+2) extract static files from the html ("<script src='...'>")
+3) pre-compile nunjucks templates; creates the _build/temp/nunjucks-templates.js file;
+4) concat assets extracted from step 2 (which are the application files + the nunjucks templates, since the templates are included in the html); creates the "app.js" file;
+5) uglify the concatenated file; creates the "app.min.js" file;
+6) compress uglified file; creates the "app.min.js.gz" file;
+7) copy from _build/temp to _build and add timestamp (only if changed);
+
+The "lib" target is similar, but there is no nunjucks pre-compilation.
+
+Grunt should be called from the root directory of the project:
+
+    grunt --base ./ --gruntfile client/initiatives/Gruntfile.js  app
+
+    grunt --base ./ --gruntfile client/initiatives/Gruntfile.js  lib
+
+    grunt --base ./ --gruntfile client/initiatives/Gruntfile.js  (default task will call both "app" and "lib")
 
 */
 
@@ -18,56 +30,142 @@ var Path = require("path");
 var Fs = require("fs");
 var TimeGrunt = require('time-grunt');
 var LoadTasks = require('load-grunt-tasks');
-var _ = require("underscore");
 var Cheerio = require('cheerio');
-
-var internals = {};
-
-internals.input = {
-    app: {
-        js: [],
-        css: []        
-    },
-    lib: {
-        js: []
-    }
-};
 
 module.exports = function(grunt) {
 
     TimeGrunt(grunt);
     LoadTasks(grunt);
 
-    internals.grunt = grunt;
+    // TODO: allow the html to have more that 1 block of delimiters
+    grunt.config.set("static_extract", {
+        app: {
+            options: {
+                delimiterStart: "{# grunt-extract-assets-app #}", 
+                delimiterEnd: "{# /grunt-extract-assets-app #}",
+                tagName: "script",
+                postProcess: function(relativePath){
 
-    internals.input.app.js = internals.findInputFiles({
-        delimiterStart: "{# grunt-input-app-js #}", 
-        delimiterEnd: "{# /grunt-input-app-js #}", 
-        html: Path.join(__dirname, "templates/initiatives.html")
-    }).map(function(file){
-        return Path.join(__dirname, "app", file);
+                    relativePath = relativePath.split("/").slice(2).join("/");
+                    var absPath = Path.join(__dirname, "app", relativePath);
+
+                    return absPath;
+                }
+            },
+            src: Path.join(__dirname, "templates/initiatives.html")
+        },
+
+        lib: {
+            options: {
+                delimiterStart: "{# grunt-extract-assets-lib #}", 
+                delimiterEnd: "{# /grunt-extract-assets-lib #}",
+                tagName: "script",
+                postProcess: function(relativePath){
+
+                    relativePath = relativePath.split("/").slice(2).join("/");
+                    var absPath = Path.join(__dirname, "../../public", relativePath);
+
+                    return absPath;
+                }
+            },
+            src: Path.join(__dirname, "templates/initiatives.html")
+        },
+
     });
 
-    internals.input.app.js.unshift(Path.join(__dirname, "app/_build/temp/templates-dev.js"));
-    
-    internals.input.lib.js = internals.findInputFiles({
-        delimiterStart: "{# grunt-input-lib-js #}", 
-        delimiterEnd: "{# /grunt-input-lib-js #}", 
-        html: Path.join(__dirname, "templates/initiatives.html")
-    }).map(function(file){
-        return Path.join(__dirname, "../../public", file);
+    grunt.registerMultiTask('static_extract', 'Extract static assets from an html or template file', function() {
+
+        //console.log("this: ", JSON.stringify(this, null, 4));
+        //console.log("this.files: ", JSON.stringify(this.files, null, 4));
+
+        // Merge task-specific and/or target-specific options with these defaults.
+        var options = this.options({
+            delimiterStart: "<!-- grunt-extract-assets -->", 
+            delimiterEnd: "<!-- /grunt-extract-assets -->",
+            tagName: "script"
+        });
+
+        var assets = [];
+
+        this.files.forEach(function(file) {
+
+            if(file.src.length===0){
+                grunt.log.warn('No source files found');
+                return;
+            }
+
+            file.src.forEach(function(path, i) {
+
+                if (!grunt.file.exists(path)) {
+                    grunt.log.warn('Source file "' + path + '" not found.');
+                    return;
+                }
+
+                var extracted = extractAssets(path)
+                            .map(options.postProcess);
+
+                assets = assets.concat(extracted);
+            });
+        });
+
+        var assetsProp = [this.name, this.target, "assets"].join(".");
+        grunt.config.set(assetsProp, assets);
+
+        if(assets.length>0){
+            grunt.log.writeln("Extracted the following assets:");
+            grunt.log.writeln(grunt.log.wordlist(assets, { separator: "\n"}));
+        }
+
+
+        function extractAssets(path){
+
+            var html = Fs.readFileSync(path, "utf8");
+            var indexStart = html.indexOf(options.delimiterStart);
+            var indexEnd   = html.indexOf(options.delimiterEnd);
+
+            if(indexStart===-1){
+                grunt.fail.fatal('Could not find the "' + options.delimiterStart + '" in the html file: ' + path);
+            }
+            if(indexEnd===-1){
+                grunt.fail.fatal('Could not find the "' + options.delimiterEnd + '" in the html file: ' + path);
+            }
+
+            var lines = html
+                        .substring(indexStart + options.delimiterStart.length, indexEnd)
+                        .split("\n")
+                        .filter(function(line){
+
+                            return line.trim().indexOf("<" + options.tagName)===0;
+                        })
+                        .map(function(line){
+
+                            // line should now be something like this:
+                            // '<script src="/initiatives-app/menu/menu.js"></script>'
+
+                            var $ = Cheerio.load(line);
+                            var relativePath = "";
+                            if(options.tagName==="script"){
+                                relativePath = $(options.tagName).attr("src");
+                            }
+                            else if(options.tagName==="link"){
+                                relativePath = $(options.tagName).attr("href");
+                            }
+                            else{
+                                grunt.fail.fatal('tagName "' + options.tagName + '"is invalid (should be either "script" or "link")');
+                            }
+
+                            relativePath = relativePath || "";
+
+                            // console.log("line: ", line);
+                            // console.log("relativePath: ", relativePath);
+
+                            return relativePath;
+                        })
+                        .filter(Boolean)                
+            
+            return lines;
+        }
     });
-    
-    grunt.log.subhead("input files obtained from the html\n");
-
-    grunt.log.writeln("application js:");
-    grunt.log.writeln(grunt.log.wordlist(internals.input.app.js, { separator: "\n"}));
-
-    grunt.log.writeln("\napplication css:");
-    grunt.log.writeln(grunt.log.wordlist(internals.input.app.css, { separator: "\n"}));
-
-    grunt.log.writeln("lib js:");
-    grunt.log.writeln(grunt.log.wordlist(internals.input.lib.js, { separator: "\n"}));
 
 
     grunt.config.set("clean", {
@@ -88,9 +186,9 @@ module.exports = function(grunt) {
             autoescape: true
         },
         app: {
-            baseDir: Path.join(__dirname, "app2"),
-            src: Path.join(__dirname, "app2/**/*.html"),
-            dest: Path.join(__dirname, "app/_build/temp/templates-dev.js"),
+            baseDir: Path.join(__dirname, "app"),
+            src: Path.join(__dirname, "app/**/*.html"),
+            dest: Path.join(__dirname, "app/_build/temp/nunjucks-templates.js"),
         }
     });
 
@@ -101,16 +199,19 @@ module.exports = function(grunt) {
    
         },
         app: {
-            src: internals.input.app.js,
+            //src: internals.input.app.js,
+            src: "<%= static_extract.app.assets %>",
             dest: Path.join(__dirname, "app/_build/temp/app.js"),
             nonull: true,
         },
         lib: {
-            src: internals.input.lib.js,
+            //src: internals.input.lib.js,
+            src: "<%= static_extract.lib.assets %>",
             dest: Path.join(__dirname, "app/_build/temp/lib.js"),
             nonull: true,
         }
     });
+
 
     grunt.config.set("uglify", {
         options: {
@@ -125,6 +226,7 @@ module.exports = function(grunt) {
             dest: Path.join(__dirname, "app/_build/temp/lib.min.js"),
         }
     });
+
 
     grunt.config.set("compress", {
         options: {
@@ -143,7 +245,7 @@ module.exports = function(grunt) {
     });
 
 
-    grunt.config.set("static-timestamp", {
+    grunt.config.set("static_timestamp", {
         options: {
         },
 
@@ -165,41 +267,43 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask("app", ["clean:app", "nunjucks:app", "concat:app", "uglify:app", "compress:app", "static-timestamp:app"]);
-    grunt.registerTask("lib", ["clean:lib", "concat:lib", "uglify:lib", "compress:lib", "static-timestamp:lib"]);
+
+    grunt.config.set("dummy_task", {
+        app: {
+            src: "<%= static_extract.app.assets %>"
+        },
+        lib: {
+            src: "<%= static_extract.lib.assets %>"
+        }
+    });
+
+    grunt.registerMultiTask('dummy_task', 'dummy task, used only for debugging', function() {
+
+        console.log("this: ", JSON.stringify(this, null, 4));
+    });
+
+    grunt.registerTask("app", [
+        "clean:app",
+        "static_extract:app",
+        "nunjucks:app",
+        /*"dummy_task:app",*/
+        "concat:app",
+        "uglify:app",
+        "compress:app",
+        "static_timestamp:app"
+    ]);
+
+    grunt.registerTask("lib", [
+        "clean:lib",
+        "static_extract:lib",
+        /*"dummy_task:lib",*/
+        "concat:lib",
+        "uglify:lib",
+        "compress:lib",
+        "static_timestamp:lib"
+    ]);
 
     grunt.registerTask("default", ["app", "lib"]);
 
 };
 
-internals.findInputFiles = function(options){
-
-    var delimiterStart = options.delimiterStart;
-    var delimiterEnd = options.delimiterEnd;
-
-    var html = Fs.readFileSync(options.html, "utf8");
-    
-    var index1 = html.indexOf(delimiterStart);
-    var index2 = html.indexOf(delimiterEnd);
-
-    if(index1===-1 || index2===-1){
-        internals.grunt.fail.fatal("Could not find the delimiter in the html file: " + delimiterStart + ", " + delimiterEnd);
-    }
-
-    var lines = html.substring(index1 + delimiterStart.length, index2)
-                .split("\n")
-                .map(function(line){
-                    return line.trim();
-                })
-                .filter(function(line){
-                    return line.indexOf("<script")===0;
-                })
-                .map(function(line){
-
-                    // line should now be something like '<script src="/initiatives-app/menu/menu.js"></script>'
-                    var $ = Cheerio.load(line);
-                    return $("script").attr("src").split("/").slice(2).join("/");
-                });
-    
-    return lines;
-};

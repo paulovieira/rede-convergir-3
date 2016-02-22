@@ -508,10 +508,7 @@ internals.addNunjucksFilters = function(env){
 
 internals.addNunjucksGlobals = function(env){
 
-    var bundles  = JSON.parse(Fs.readFileSync(Path.join(Config.get("rootDir"), "bundles.json"), "utf8"));
-
     env.addGlobal("NODE_ENV", process.env.NODE_ENV);
-    env.addGlobal("bundles", bundles);
     env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
     env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
 };

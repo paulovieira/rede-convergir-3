@@ -1,0 +1,78 @@
+https://github.com/lvoogdt/Leaflet.awesome-markers/blob/2.0/develop/dist/images/markers-soft.png
+
+.awesome-marker-icon-red {
+  background-position: 0 0;
+}
+
+.awesome-marker-icon-orange {
+  background-position: -36px 0;
+}
+
+.awesome-marker-icon-green {
+  background-position: -72px 0;
+}
+
+.awesome-marker-icon-blue {
+  background-position: -108px 0;
+}
+
+.awesome-marker-icon-purple {
+  background-position: -144px 0;
+}
+
+.awesome-marker-icon-darkred {
+  background-position: -180px 0;
+}
+
+.awesome-marker-icon-darkblue {
+  background-position: -216px 0;
+}
+
+.awesome-marker-icon-darkgreen {
+  background-position: -252px 0;
+}
+
+.awesome-marker-icon-darkpurple {
+  background-position: -288px 0;
+}
+
+.awesome-marker-icon-cadetblue {
+  background-position: -324px 0;
+}
+
+.awesome-marker-icon-lightred {
+  background-position: -360px 0;
+}
+
+.awesome-marker-icon-beige {
+  background-position: -396px 0;
+}
+
+.awesome-marker-icon-lightgreen {
+  background-position: -432px 0;
+}
+
+
+.awesome-marker-icon-lightblue {
+  background-position: -468px 0;
+}
+
+.awesome-marker-icon-pink {
+  background-position: -504px 0;
+}
+
+.awesome-marker-icon-white {
+  background-position: -574px 0;
+}
+
+.awesome-marker-icon-lightgray {
+  background-position: -612px 0;
+}
+
+.awesome-marker-icon-gray {
+  background-position: -648px 0;
+}
+
+.awesome-marker-icon-black {
+  background-position: -682px 0;
+}

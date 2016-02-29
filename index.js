@@ -17,7 +17,7 @@ var internals = {};
 internals.build = function(){
 
     var commands = [
-        //"webpack --config ./webpack.config.js",
+        //"webpack --config ./client/initiatives/webpack.config.js",
         "grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js ",
     ];
     var output;

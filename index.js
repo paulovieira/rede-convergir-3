@@ -14,9 +14,10 @@ var Shell = require("shelljs");
 
 var internals = {};
 
-internals.executeGrunt = function(){
+internals.build = function(){
 
     var commands = [
+        //"webpack --config ./webpack.config.js",
         "grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js ",
     ];
     var output;
@@ -27,7 +28,7 @@ internals.executeGrunt = function(){
         output = Shell.exec(command, {silent: true});
         if(output.code!==0){
             console.log("");
-            var message = "grunt task did not finished:\n" + command;
+            var message = "The following command did not finish:\n" + command;
             throw new Error(message);
         }
     });
@@ -37,7 +38,7 @@ internals.executeGrunt = function(){
 
 // in production mode the grunt tasks should always be executed
 if(process.env.NODE_ENV==="production"){
-    internals.executeGrunt();
+    internals.build();
 }
 
 

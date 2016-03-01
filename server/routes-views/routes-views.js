@@ -59,9 +59,6 @@ exports.register = function(server, options, next){
         allowAbsolutePaths: true,
         engines: {
             html: Nunjucks
-            // html: {
-            //     compile: Nunjucks.getCompile(env)
-            // }
         },
         compileOptions: {
             pluginName: pluginName

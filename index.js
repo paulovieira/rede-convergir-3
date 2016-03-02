@@ -17,12 +17,12 @@ var internals = {};
 internals.build = function(){
 
     var commands = [
-        //"webpack --config ./client/initiatives/webpack.config.js",
-        "grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js ",
+        "webpack --config ./client/initiatives/webpack.config.js",
+        "grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js"
     ];
     var output;
 
-    process.stdout.write("Executing grunt tasks... ");
+    process.stdout.write("Executing build tasks... ");
     commands.forEach(function(command){
 
         output = Shell.exec(command, {silent: true});

@@ -4,34 +4,46 @@ var webpack = require("webpack");
 process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 //process.env.NODE_ENV = "production";
 
+var rootDir = Path.join(__dirname, "..", "..");
+var appDir = Path.join(rootDir, "client/initiatives/app2");
+var libDir = Path.join(rootDir, "public/lib");
+
+
 module.exports = {
 
     entry: {
-        app: Path.join(__dirname, "./app2/main/main.js"),
+        app: Path.join(appDir, "main/main.js"),
 
-        // explicit vendor chunk (split your code into vendor and application);
-        // we must list here the modules that will be in ./_build/webpack_lib.js
+        // "explicit vendor chunk (split your code into vendor and application);"
+        // we must list here the modules that will be place in _build/temp/lib.js
+        // more info at:
         // https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
         lib: [
-            Path.join(__dirname, "./app2/_libs/jquery/jquery.js"),
-            //"./app2/_libs/backbone",
-            //"./app2/_libs/nunjucks-slim",
-            //"./app2/_libs/q"
+            Path.join(libDir, "jquery/jquery-1.11.2.js"),
+            // backbone
+            // nunjucks-slim
+            // q
         ]
 
     },
 
     output: {
-        filename: Path.join(__dirname, "./app2/_build/webpack_main.js")
+        filename: Path.join(appDir, "_build/temp/app.js")
     },
 
     plugins: [
 
         new webpack.optimize.CommonsChunkPlugin({
             name: "lib",
-            filename: Path.join(__dirname, "./app2/_build/webpack_lib.js")
+            filename: Path.join(appDir, "_build/temp/lib.js")
         })
     ],
+
+    resolve: {
+        alias: {
+            "jquery": Path.join(libDir, "jquery/jquery-1.11.2.js"),
+        }
+    },
 
     module: {
         loaders: [{

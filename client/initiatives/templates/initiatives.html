@@ -1,3 +1,13 @@
+{# NODE_ENV must be either "dev" or "production" (throw error otherwise) #}
+
+{% if NODE_ENV != "dev" and NODE_ENV != "production"%}
+
+{{ somethingIsWrongHere() }}
+
+{% endif %}
+
+
+
 {% extends (commonTemplatesPath + "/layouts/index_paper_kit.html")                           %}
 
 {% from (commonTemplatesPath + "/includes/navbar.html")                  import navbar                  %}
@@ -112,17 +122,25 @@
     <!-- libs -->
 
     {% if NODE_ENV == "dev" %}
+    <script src="/initiatives-app/_build/temp/templates.js"></script>
+    {% elif NODE_ENV == "production" %}
+    <script src="/initiatives-app/_build/{{ templatesBuild }}"></script>
+    {% endif %}
+
+
+    <!-- libs -->
+
+    {% if NODE_ENV == "dev" %}
+
+    <script src="/initiatives-app/_build/temp/lib.js"></script>
 
     {# grunt-extract-assets-lib #}
+
+    {#
     <script src="/public/lib/jquery/jquery.documentsize-1.2.1.js"></script>
     <script src="/public/lib/jquery/jquery.mousewheel-3.1.12.js"></script>
     <script src="/public/lib/jquery/jquery.scrollTo-2.12.js"></script>
     <script src="/public/lib/jquery/icheck-1.0.2/icheck.js"></script>
-
-    {# <script src="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script> #}
-    {# <script src="/public/leaflet/mapbox-2.2.2/mapbox.standalone.uncompressed.js"></script> #}
-    {# <script src="/public/leaflet/leaflet-control-geocoder-1.3.1/Control.Geocoder-1.3.1.js"></script> #}
-
     <script src="/public/lib/leaflet/leaflet-1.0beta2/leaflet-src.js"></script>
     <script src="/public/lib/leaflet/leaflet-label-9c431d/leaflet.label-src.js"></script>
     <script src="/public/lib/q/q-1.4.1.js"></script>
@@ -136,16 +154,13 @@
     <script src="/public/lib/backbone/backbone.base-router-1.2.0.js"></script>
     <script src="/public/lib/backbone/renderer-nunjucks.js"></script>
     <script src="/public/lib/slug-0.9.1.js"></script>
+    #}
+
     {# /grunt-extract-assets-lib #}
 
     {% elif NODE_ENV == "production" %}
 
     <script src="/initiatives-app/_build/{{ libBuild }}"></script>
-
-    {% else %}
-
-    {# force nunjucks to throw #}
-    {{ somethingIsWrongHere() }}
 
     {% endif %}
 
@@ -153,7 +168,11 @@
 
     {% if NODE_ENV == "dev" %}
 
+    <script src="/initiatives-app/_build/temp/app.js"></script>
+
     {# grunt-extract-assets-app #}
+
+    {#
     <script src="/initiatives-app/_build/temp/nunjucks-templates.js"></script>
     <script src="/initiatives-app/index.js"></script>
     <script src="/initiatives-app/leaflet-backbone-view.js"></script>
@@ -163,16 +182,13 @@
     <script src="/initiatives-app/menu/menu.js"></script>
     <script src="/initiatives-app/map/map.js"></script>
     <script src="/initiatives-app/init.js"></script>
+    #}
+
     {# /grunt-extract-assets-app #}
 
     {% elif NODE_ENV == "production" %}
 
     <script src="/initiatives-app/_build/{{ appBuild }}"></script>
-
-    {% else %}
-
-    {# force nunjucks to throw #}
-    {{ somethingIsWrongHere() }}
 
     {% endif %}
 

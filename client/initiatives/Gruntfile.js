@@ -32,6 +32,10 @@ var TimeGrunt = require('time-grunt');
 var LoadTasks = require('load-grunt-tasks');
 var Cheerio = require('cheerio');
 
+
+var rootDir = Path.join(__dirname, "..", "..");
+var appDir = Path.join(rootDir, "client/initiatives/app2");
+
 module.exports = function(grunt) {
 
     TimeGrunt(grunt);
@@ -173,10 +177,13 @@ module.exports = function(grunt) {
             // task-specific options go here.
         },
         app: {
-            src: Path.join(__dirname, "app/_build/temp/app.*"),
+            src: Path.join(appDir, "_build/temp/app.min.*"),
         },
         lib: {
-            src: Path.join(__dirname, "app/_build/temp/lib.*"),
+            src: Path.join(appDir, "_build/temp/lib.min.*"),
+        },
+        templates: {
+            src: Path.join(appDir, "_build/temp/templates.min.*"),
         }
     });
    
@@ -186,9 +193,9 @@ module.exports = function(grunt) {
             autoescape: true
         },
         app: {
-            baseDir: Path.join(__dirname, "app"),
-            src: Path.join(__dirname, "app/**/*.html"),
-            dest: Path.join(__dirname, "app/_build/temp/nunjucks-templates.js"),
+            baseDir: Path.join(appDir),
+            src: Path.join(appDir, "**/*.html"),
+            dest: Path.join(appDir, "_build/temp/templates.js"),
         }
     });
 
@@ -201,13 +208,13 @@ module.exports = function(grunt) {
         app: {
             //src: internals.input.app.js,
             src: "<%= static_extract.app.assets %>",
-            dest: Path.join(__dirname, "app/_build/temp/app.js"),
+            dest: Path.join(appDir, "_build/temp/app.js"),
             nonull: true,
         },
         lib: {
             //src: internals.input.lib.js,
             src: "<%= static_extract.lib.assets %>",
-            dest: Path.join(__dirname, "app/_build/temp/lib.js"),
+            dest: Path.join(appDir, "_build/temp/lib.js"),
             nonull: true,
         }
     });
@@ -218,12 +225,16 @@ module.exports = function(grunt) {
             mangle: false
         },
         app: {
-            src: Path.join(__dirname, "app/_build/temp/app.js"),
-            dest: Path.join(__dirname, "app/_build/temp/app.min.js"),
+            src: Path.join(appDir, "_build/temp/app.js"),
+            dest: Path.join(appDir, "_build/temp/app.min.js"),
         },
         lib: {
-            src: Path.join(__dirname, "app/_build/temp/lib.js"),
-            dest: Path.join(__dirname, "app/_build/temp/lib.min.js"),
+            src: Path.join(appDir, "_build/temp/lib.js"),
+            dest: Path.join(appDir, "_build/temp/lib.min.js"),
+        },
+        templates: {
+            src: Path.join(appDir, "_build/temp/templates.js"),
+            dest: Path.join(appDir, "_build/temp/templates.min.js"),
         }
     });
 
@@ -235,12 +246,16 @@ module.exports = function(grunt) {
 
         },
         app: {
-            src: Path.join(__dirname, "app/_build/temp/app.min.js"),
-            dest: Path.join(__dirname, "app/_build/temp/app.min.js.gz"),
+            src: Path.join(appDir, "_build/temp/app.min.js"),
+            dest: Path.join(appDir, "_build/temp/app.min.js.gz"),
         },
         lib: {
-            src: Path.join(__dirname, "app/_build/temp/lib.min.js"),
-            dest: Path.join(__dirname, "app/_build/temp/lib.min.js.gz"),
+            src: Path.join(appDir, "_build/temp/lib.min.js"),
+            dest: Path.join(appDir, "_build/temp/lib.min.js.gz"),
+        },
+        templates: {
+            src: Path.join(appDir, "_build/temp/templates.min.js"),
+            dest: Path.join(appDir, "_build/temp/templates.min.js.gz"),
         },
     });
 
@@ -251,22 +266,55 @@ module.exports = function(grunt) {
 
         app: {
             files: [{
-                src: Path.join(__dirname, "app/_build/temp/app*"),
-                dest: Path.join(__dirname, "app/_build"),
+                src: Path.join(appDir, "_build/temp/app*"),
+                dest: Path.join(appDir, "_build"),
                 filter: "isFile"
             }]
         },
-
         lib: {
             files: [{
-                src: Path.join(__dirname, "app/_build/temp/lib*"),
-                dest: Path.join(__dirname, "app/_build"),
+                src: Path.join(appDir, "_build/temp/lib*"),
+                dest: Path.join(appDir, "_build"),
+                filter: "isFile"
+            }]
+        },
+        templates: {
+            files: [{
+                src: Path.join(appDir, "_build/temp/templates*"),
+                dest: Path.join(appDir, "_build"),
                 filter: "isFile"
             }]
         },
 
     });
 
+
+    grunt.config.set("watch", {
+        options: {
+            //debounceDelay: 250,
+        },
+
+        // when the app bundle is changed (by webpack), run the app task
+        app: {
+            files: Path.join(appDir, "_build/temp/app.js"),
+            tasks: "app"
+        },
+
+        // when the lib bundle is changed (by webpack), run the lib task
+        lib: {
+            files: Path.join(appDir, "_build/temp/lib.js"),
+            tasks: "lib"
+        },
+
+        // here things are different - when any of the individual html files is changed
+        // (by us), run the nunjucks task (which takes care of precompiling and 
+        // bundling all the templates in  one file)
+        templates: {
+            files: Path.join(appDir, "**/*.html"),
+            tasks: "templates"
+        }
+
+    });
 
     grunt.config.set("dummy_task", {
         app: {
@@ -284,10 +332,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask("app", [
         "clean:app",
-        "static_extract:app",
-        "nunjucks:app",
+        // "static_extract:app",
+        //"nunjucks:app",
         /*"dummy_task:app",*/
-        "concat:app",
+        // "concat:app",
         "uglify:app",
         "compress:app",
         "static_timestamp:app"
@@ -295,15 +343,26 @@ module.exports = function(grunt) {
 
     grunt.registerTask("lib", [
         "clean:lib",
-        "static_extract:lib",
+        // "static_extract:lib",
         /*"dummy_task:lib",*/
-        "concat:lib",
+        // "concat:lib",
         "uglify:lib",
         "compress:lib",
         "static_timestamp:lib"
     ]);
 
-    grunt.registerTask("default", ["app", "lib"]);
+    grunt.registerTask("templates", [
+        "clean:templates",
+        "nunjucks:app",
+        // "static_extract:templates",
+        /*"dummy_task:templates",*/
+        // "concat:templates",
+        "uglify:templates",
+        "compress:templates",
+        "static_timestamp:templates"
+    ]);
+
+    grunt.registerTask("default", ["app", "lib", "templates"]);
 
 };
 

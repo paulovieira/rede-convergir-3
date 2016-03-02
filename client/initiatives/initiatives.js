@@ -13,6 +13,8 @@ var Glob = require("glob");
 
 var internals = {};
 
+// directory of the client-app (relative to the root dir)
+internals.clientAppRelDir = "client/initiatives/app2";
 
 
 /**
@@ -98,13 +100,12 @@ exports.register = function(server, options, next){
     });
 
     server.route({
-        //path: "/rc-app/{anyPath*}",
         path: "/initiatives-app/{anyPath*}",
         method: "GET",
         config: {
             handler: {
                 directory: { 
-                    path: Path.join(Config.get("rootDir"), "client/initiatives/app"),
+                    path: Path.join(Config.get("rootDir"), internals.clientAppRelDir),
                     index: false,
                     listing: false,
                     showHidden: false
@@ -185,16 +186,30 @@ internals.addNunjucksGlobals = function(env){
     env.addGlobal("NODE_ENV", process.env.NODE_ENV);
     env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
     env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
+    
 
-    var libBuild = Glob.sync(Path.join(__dirname, "app/_build/*.lib.min.js"));
-    var appBuild = Glob.sync(Path.join(__dirname, "app/_build/*.app.min.js"));
+    var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
+    var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
+    var templatesBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.templates.min.js"));
 
-    if(!libBuild || !appBuild){
-        throw Boom.badImplementation("libBuild or appBuild is missing");
+
+    //var libBuild = Glob.sync(Path.join(__dirname, "app2/_build/*.lib.min.js"));
+    //var appBuild = Glob.sync(Path.join(__dirname, "app2/_build/*.app.min.js"));
+
+    if(!libBuild.length){
+        throw Boom.badImplementation("libBuild is missing");
+    }
+    if(!appBuild.length){
+        throw Boom.badImplementation("appBuild is missing");
+    }
+    if(!templatesBuild.length){
+        throw Boom.badImplementation("templatesBuild is missing");
     }
 
-    env.addGlobal("libBuild", Path.parse(libBuild[0]).base);
-    env.addGlobal("appBuild", Path.parse(appBuild[0]).base);
+
+    env.addGlobal("libBuild",       Path.parse(libBuild[0]).base);
+    env.addGlobal("appBuild",       Path.parse(appBuild[0]).base);
+    env.addGlobal("templatesBuild", Path.parse(templatesBuild[0]).base);
 };
 
 exports.register.attributes = {

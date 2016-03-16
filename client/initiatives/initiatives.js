@@ -115,9 +115,7 @@ exports.register = function(server, options, next){
                 privacy: "public",
                 expiresIn: 3600000
             },
-            cors: {
-                methods: ["GET"]
-            },
+            cors: true,
             auth: false,
         }
     });

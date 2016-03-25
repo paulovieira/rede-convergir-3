@@ -81,6 +81,9 @@ exports.register = function(server, options, next){
     });
 
     // ok
+
+    // this is now being served from the "initiatives" plugin (client/initiatives/initiatives.js)
+/*
     server.route({
         path: "/dashboard",
         method: "GET",
@@ -97,8 +100,9 @@ exports.register = function(server, options, next){
             },
         }
     });
+*/
 
-    // ok
+    // this is now being served from the "initiatives" plugin (client/initiatives/initiatives.js)
 /*
     server.route({
         path: "/iniciativas",

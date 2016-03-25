@@ -3,8 +3,8 @@ var Boom = require("boom");
 
 var internals = {};
 
-internals.validUser = Config.get("user");
-internals.validPassword = Config.get("password");
+internals.validUser = Config.get("dashboard.user");
+internals.validPassword = Config.get("dashboard.password");
 
 module.exports = [{
 

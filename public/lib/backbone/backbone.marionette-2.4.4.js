@@ -1,3 +1,4 @@
+
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
 // v2.4.4
@@ -847,6 +848,7 @@
   
     // Export Public API
     Marionette.bindEntityEvents = function(target, entity, bindings) {
+      
       iterateEvents(target, entity, bindings, bindToFunction, bindFromStrings);
     };
   
@@ -1020,6 +1022,7 @@
     initialize: function() {},
   
     destroy: function(options) {
+//debugger;
       options = options || {};
   
       this.triggerMethod('before:destroy', options);
@@ -1684,10 +1687,14 @@
       this.options = _.extend({}, _.result(this, 'options'), options);
   
       this._behaviors = Marionette.Behaviors(this);
-  
+
       Backbone.View.call(this, this.options);
   
       Marionette.MonitorDOMRefresh(this);
+
+      
+      
+
     },
   
     // Get the template for this view
@@ -1750,6 +1757,7 @@
     // Overriding Backbone.View's delegateEvents to handle
     // the `triggers`, `modelEvents`, and `collectionEvents` configuration
     delegateEvents: function(events) {
+
       this._delegateDOMEvents(events);
       this.bindEntityEvents(this.model, this.getOption('modelEvents'));
       this.bindEntityEvents(this.collection, this.getOption('collectionEvents'));
@@ -2113,8 +2121,20 @@
       // Add in entity data and template helpers
       var data = this.mixinTemplateHelpers(this.serializeData());
   
+      // CHANGED 16.03.10: add custom renderer (pr #2911)
       // Render and add to el
-      var html = Marionette.Renderer.render(template, data, this);
+      //var html = Marionette.Renderer.render(template, data, this);
+
+      var html = '';
+      
+      // micro-optimization: _.isFunction is called only if we actually have
+      // a custom renderer
+      if (this.renderer && _.isFunction(this.renderer)) {
+        html = this.renderer(template, data);
+      } else {
+        html = Marionette.Renderer.render(template, data, this);
+      }
+
       this.attachElContent(html);
   
       return this;

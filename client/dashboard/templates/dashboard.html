@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rede Convergir - Área de Utilizador</title>
+
+    <style>
+
+        
+    </style>
+</head>
+
+<body>
+
+    {% if NODE_ENV == 'dev' %}
+
+    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/lib.js"></script>
+    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/app.js"></script>
+
+    {% else %}
+
+    <script src="/dashboard-app/_build/temp/lib.js"></script>
+    <script src="/dashboard-app/_build/temp/app.js"></script>
+
+    {% endif %}
+
+</body>
+
+</html>

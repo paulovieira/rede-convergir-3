@@ -1,5 +1,6 @@
-var OptionsModalIV = Mn.ItemView.extend({
 
+var OptionsModalIV = Mn.ItemView.extend({
+    x:9,
     template: "menu/templates/options-modal.html",
 
     ui: {

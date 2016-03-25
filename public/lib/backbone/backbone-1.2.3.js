@@ -1,3 +1,4 @@
+
 //     Backbone.js 1.2.3
 
 //     (c) 2010-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1194,6 +1195,7 @@
   // Creating a Backbone.View creates its initial element outside of the DOM,
   // if an existing element is not provided...
   var View = Backbone.View = function(options) {
+    
     this.cid = _.uniqueId('view');
     _.extend(this, _.pick(options, viewOptions));
     this._ensureElement();
@@ -1848,6 +1850,7 @@
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
   var extend = function(protoProps, staticProps) {
+    
     var parent = this;
     var child;
 
@@ -1857,7 +1860,10 @@
     if (protoProps && _.has(protoProps, 'constructor')) {
       child = protoProps.constructor;
     } else {
-      child = function(){ return parent.apply(this, arguments); };
+      child = function(){ 
+        
+        return parent.apply(this, arguments); 
+      };
     }
 
     // Add static properties to the constructor function, if supplied.

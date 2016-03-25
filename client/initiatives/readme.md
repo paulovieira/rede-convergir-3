@@ -1,4 +1,6 @@
-The client-side application is bundled with webpack. 
+The "initiatives" client-side application is bundled with webpack. We also need grunt to pre-compile the templates (with nunjucks): 
+
+IMPORTANTE: at the moment this app is still bundled with the old method (grunt only via static_extract -> concat -> uglify -> compress). The migration to webpack will be done in the "app2" directory.
 
 In dev mode run (in the root dir of the project):
 ```bash
@@ -7,11 +9,11 @@ webpack --config ./client/initiatives/webpack.config.js --watch
 
 In other terminal run grunt's watch task for the client-side templates
 ```bash
-grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js watch:templates
+grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js watch
 ```
 
 
-In production mode is similar:
+In production mode the commands are the same:
 
 ```bash
 webpack --config ./client/initiatives/webpack.config.js --watch

@@ -105,6 +105,8 @@ internals.defaultOptions = {
     apiPrefix: {
         v1: "/api/v1"
     },
+
+
 };
 
 module.exports = internals.defaultOptions;

@@ -150,6 +150,12 @@ var manifest = {
                 options: {}
             }]
         },
+
+        {   
+            "./client/dashboard/dashboard.js": [{
+                options: {}
+            }]
+        },
         // {
         //     "tv": {
         //         host: Config.get("publicIp"),

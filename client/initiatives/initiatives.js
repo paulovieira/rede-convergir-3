@@ -1,20 +1,20 @@
-var Fs = require("fs");
+//var Fs = require("fs");
 var Path = require("path");
 var Config = require("config");
 //var Hoek = require("hoek");
 //var Joi = require("joi");
-var JSON5 = require("json5");
-//var Nunjucks = require("hapi-nunjucks");
-var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
+//var JSON5 = require("json5");
+var Nunjucks = require("hapi-nunjucks");
+//var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
 var Pre = require("../../server/common/prerequisites");
 var Boom = require("boom");
-var _ = require("underscore");
+//var _ = require("underscore");
 var Glob = require("glob");
 
 var internals = {};
 
 // directory of the client-app (relative to the root dir)
-internals.clientAppRelDir = "client/initiatives/app2";
+internals.clientAppRelDir = "client/initiatives/app";
 
 
 /**
@@ -108,14 +108,17 @@ exports.register = function(server, options, next){
                     path: Path.join(Config.get("rootDir"), internals.clientAppRelDir),
                     index: false,
                     listing: false,
-                    showHidden: false
+                    showHidden: false,
+                    lookupCompressed: true
                 }
             },
             cache: {
                 privacy: "public",
                 expiresIn: 3600000
             },
-            cors: true,
+            cors: {
+                methods: ["GET"]
+            },
             auth: false,
         }
     });
@@ -188,11 +191,8 @@ internals.addNunjucksGlobals = function(env){
 
     var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
     var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
-    var templatesBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.templates.min.js"));
+    var appTemplatesBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app-templates.min.js"));
 
-
-    //var libBuild = Glob.sync(Path.join(__dirname, "app2/_build/*.lib.min.js"));
-    //var appBuild = Glob.sync(Path.join(__dirname, "app2/_build/*.app.min.js"));
 
     if(!libBuild.length){
         throw Boom.badImplementation("libBuild is missing");
@@ -200,14 +200,14 @@ internals.addNunjucksGlobals = function(env){
     if(!appBuild.length){
         throw Boom.badImplementation("appBuild is missing");
     }
-    if(!templatesBuild.length){
-        throw Boom.badImplementation("templatesBuild is missing");
+    if(!appTemplatesBuild.length){
+        throw Boom.badImplementation("appTemplatesBuild is missing");
     }
 
 
     env.addGlobal("libBuild",       Path.parse(libBuild[0]).base);
     env.addGlobal("appBuild",       Path.parse(appBuild[0]).base);
-    env.addGlobal("templatesBuild", Path.parse(templatesBuild[0]).base);
+    env.addGlobal("appTemplatesBuild", Path.parse(appTemplatesBuild[0]).base);
 };
 
 exports.register.attributes = {

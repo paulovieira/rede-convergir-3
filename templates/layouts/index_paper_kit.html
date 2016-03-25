@@ -28,7 +28,7 @@
     {% endblock %}
 
     {% if NODE_ENV=="production" %}
-    {% include "includes/google-analytics.js" %}
+    {% include (commonTemplatesPath + "/includes/google-analytics.js") %} 
     {% endif %}
 </head>
 

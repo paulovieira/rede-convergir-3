@@ -3,6 +3,7 @@
     "delay": 200,
 	"ignore": [
         "node_modules/*",
+        "client/dashboard/app/*",
         "data/*", 
         "database/sql/*", 
         "database/populate_initial_data/*"

@@ -12,6 +12,7 @@ Mn.Plugin = Mn.Object.extend({
         this._addChannel();
 
         // copy the routes option to this._routes
+/*
         this._routes = {};
         this.routes = this.routes || [];
         var i=0, l=this.routes.length, obj;
@@ -26,7 +27,7 @@ Mn.Plugin = Mn.Object.extend({
             this._routes[obj.path] = {};
             this._routes[obj.path].onNavigate = _.bind(obj.handler.onNavigate, this);
         }
-
+*/
         // copy the views option to this._views
         this._views = {};
         this.views = this.views || [];
@@ -44,6 +45,8 @@ Mn.Plugin = Mn.Object.extend({
         }
 
         //this.region = undefined;
+        this.isRunning = false;
+        Mn.Object.call(this, options);
     },
 
 
@@ -84,6 +87,8 @@ Mn.Plugin = Mn.Object.extend({
         //debugger;
         this.isRunning = false;
         this.defaultRegion = undefined;
+
+        // TODO: when the plugin is stopped, it's channel should be stopped too (?)
         //this.region = undefined;
     },
 
@@ -138,6 +143,9 @@ Mn.Plugin = Mn.Object.extend({
             // note: all these event handlers will all be erased when the view is destroyed
         }
 */
+        // when a view is instantiated via the request "showView", the plugin's channel is attached
+        // to the view; when the view is detroyed we remove that reference
+        // TODO: use the delete operator instead?
         v.once('destroy', function(){
             //debugger;
             this.channel = undefined;
@@ -150,7 +158,7 @@ Mn.Plugin = Mn.Object.extend({
     },
 
     navigate: function(navigateOptions){
-        debugger;
+        //debugger;
         if(!this.router){
             throw new Error('plugin "' + this.name + '" does not have a router');
         }
@@ -181,10 +189,11 @@ Mn.register = function(plugins){
 
         // create the plugin's router
         //debugger;
+/*
         if(_.keys(plugin._routes).length){
             plugin.router = new Mn.Router({ routes: plugin._routes});
         }
-
+*/
         plugin.triggerMethod('register');
 
 

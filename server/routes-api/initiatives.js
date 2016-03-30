@@ -319,7 +319,7 @@ internals.create = {
                 //console.log("createdData", createdData);
 
                 if(Config.get("email.send")===true && createdData.length>=1){
-                    
+                    console.log("send email")
                     var emailCtx = {
                         lang: "pt",
                         name: createdData[0].name,

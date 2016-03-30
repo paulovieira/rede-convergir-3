@@ -4,7 +4,7 @@ var ActivityMain = require("./activity-main");
 var LoadingView = require("../../common/loading-view/loading-view");
 
 var activityPlugin = new Mn.Plugin({
-    name: "activity",
+    name: "activities",
     dependencies: [],
     views: [
         {

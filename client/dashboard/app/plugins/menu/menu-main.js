@@ -1,13 +1,32 @@
 
 require("./menu-main.css");
 
+var Q = require("q");
 var $ = require("jquery");
 var _ = require("underscore");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
 var BaseRouter = require("backbone.base-router");
+var Entities = require("../../common/entities");
+
+var StateModelClass = Backbone.Model.extend({
+
+    pluginNames: ["activities", "initiatives", "events", "profile", undefined],
+
+    validate: function(attrs, options){
+
+        var value = attrs["menuItem"];
+        if(_.contains(this.pluginNames, value)){
+            return false;
+        }
+
+        throw new Error("invalid plugin name: " + value);
+    }
+});
 
 var MenuMainState = Mn.State.extend({
+
+    modelClass: StateModelClass,
 
     initialState: {
         menuItem: undefined
@@ -19,7 +38,7 @@ var MenuMainState = Mn.State.extend({
     channelEvents: {
         "change:menuItem": function(menuItem){
             //debugger;
-            this.set("menuItem", menuItem);
+            this.set({"menuItem": menuItem}, {validate: true});
         }
     }
     
@@ -65,20 +84,82 @@ var MenuMain = Mn.LayoutView.extend({
     //stateClass: MenuMainState,
     stateEvents: {
         'change:menuItem': function(state, currentMenuItem, options){
-            debugger;
+            //debugger;
             if(!currentMenuItem){ return; }
-
+/*
             var previousMenuItem = state.previousAttributes().menuItem;
             if(previousMenuItem){
 
+                // NOTE: no need to stop the plugin because that is done automatically when
+                // the default is closed
                 // see "Attribute Contains Selector":
                 //   https://api.jquery.com/attribute-contains-selector/
                 this.$("ul > li[id*=" + previousMenuItem + "]").removeClass("active");
             }
 
             this.$("ul > li[id*=" + currentMenuItem + "]").addClass("active");
-        }
+*/
+
+            // TODO: in this case the plugin has not been started yet; when we show the 
+            // loading view, it will be started; so what is the point of having a "start" method
+            // we could always use the "showView" request, passing a special "view: 'default'" option
+            // which would pick the first view in the plugin
+            // or maybe it only makes sense to start the plugin when the default view is used (so in this case
+            // the plugin should not be started when the loading view is used )
+            //debugger;
+            this.ui.menuItem.removeClass("active");
+            this.triggerMethod(currentMenuItem + ":plugin:start");
+
+        },
+
     },
+
+    onInitiativesPluginStart: function(){
+        //debugger;
+        this.ui.menuItem.filter("[id*='initiatives']").addClass('active');
+
+        Radio.channel("initiatives").request("showView", {
+            view: "loading-view",
+            region: this.getRegion("default")
+        });
+
+        var self = this;
+        Q.delay(100)
+            .then(Entities.initiativesC.fetch())
+            .then(function(){
+
+                Radio.channel("initiatives").request("start", {
+                    region: self.getRegion("default"),
+                    viewOptions: {
+                        collection: Entities.initiativesC
+                    }
+                });
+                
+            });
+    },
+
+    onActivitiesPluginStart: function(){
+        //debugger;
+        this.ui.menuItem.filter("[id*='activities']").addClass('active');
+
+        Radio.channel("activities").request("showView", {
+            view: "loading-view",
+            region: this.getRegion("default")
+        });
+
+        var self = this;
+        Q.delay(100)
+            .then(function(){
+
+                Radio.channel("activities").request("start", {
+                    region: self.getRegion("default")
+                });
+                
+            });
+
+    },
+
+
 
     onAttach: function(){
         //debugger;
@@ -128,7 +209,7 @@ var MenuMain = Mn.LayoutView.extend({
 
         // TODO: we should add this region automatically in the plugin code
         // (no need to define it here)
-        default: ".mn-r-default"
+        default: "div.mn-r-default"
     },
 
 

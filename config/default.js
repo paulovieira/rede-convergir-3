@@ -1,11 +1,11 @@
 var Path = require("path");
-var Fs = require("fs");
+//var Fs = require("fs");
 
 var internals = {};
 
 internals.rootDir  = Path.join(__dirname, "..");
 
-internals.defaultOptions = {
+module.exports = {
 
     host: "localhost",
     port: 6001,
@@ -18,16 +18,15 @@ internals.defaultOptions = {
 
     email: {
         send: false,
+        moderatorAddress: "moderadores@redeconvergir.net",
+        moderatorName: "Rede Convergir - moderadores",
+        infoAddress: "info@redeconvergir.net",
+        infoName: "Rede Convergir - info",
+
         mandrill: {
             apiKey: ""
         },
         //templatesDir: Path.join(internals.rootDir, "server/email-mandrill/templates"),
-
-        moderatorAddress: "moderadores@redeconvergir.net",
-        moderatorName: "Rede Convergir - moderadores",
-        infoAddress: "info@redeconvergir.net",
-        infoName: "Rede Convergir - info"
-        
     },
 
     db: {
@@ -106,7 +105,9 @@ internals.defaultOptions = {
         v1: "/api/v1"
     },
 
-
+    dashboard: {
+        user: "",
+        password: ""
+    }
 };
 
-module.exports = internals.defaultOptions;

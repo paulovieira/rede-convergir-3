@@ -140,6 +140,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     // Bind `componentEvents` to `component` and cascade destroy to self when component fires
     // 'destroy'.  To prevent self-destroy behavior, pass `preventDestroy: true` as an option.
     bindComponent: function bindComponent(component) {
+      
       var _ref2 = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
       var preventDestroy = _ref2.preventDestroy;
@@ -152,12 +153,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     // Unbind `componentEvents` from `component` and stop listening to component 'destroy' event.
     unbindComponent: function unbindComponent(component) {
+      
       this.unbindEntityEvents(component, this.componentEvents);
       this.stopListening(component, 'destroy', this.destroy);
     },
 
     // Proxy to StateFunctions#syncEntityEvents.
     syncEntityEvents: function syncEntityEvents(entity, entityEvents, event) {
+      
       State.syncEntityEvents(this, entity, entityEvents, event);
       return this;
     },
@@ -292,6 +295,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: '_now',
       value: function _now() {
+
         Mn.bindEntityEvents(this.target, this.entity, this.bindings);
         sync(this.target, this.entity, this.bindings);
       }
@@ -301,6 +305,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   })();
 
   function syncEntityEvents(target, entity, bindings, event) {
+    
     var syncing = new Syncing(target, entity, bindings);
     if (event) {
       syncing._when(event);

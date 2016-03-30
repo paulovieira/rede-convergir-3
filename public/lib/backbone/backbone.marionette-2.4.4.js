@@ -1022,7 +1022,7 @@
     initialize: function() {},
   
     destroy: function(options) {
-//debugger;
+
       options = options || {};
   
       this.triggerMethod('before:destroy', options);
@@ -1257,6 +1257,7 @@
     // element that it manages. Return a jQuery selector object scoped
     // to a provided parent el or the document if none exists.
     getEl: function(el) {
+      
       return Backbone.$(el, Marionette._getValue(this.options.parentEl, this));
     },
   

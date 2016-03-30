@@ -7,7 +7,7 @@
 if (typeof jQuery === 'undefined') {
   throw new Error('Bootstrap\'s JavaScript requires jQuery')
 }
-
+//debugger;
 +function ($) {
   'use strict';
   var version = $.fn.jquery.split(' ')[0].split('.')

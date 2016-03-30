@@ -5,12 +5,16 @@ require("fs.background.css");
 require("fs.checkbox.css");
 require("fs.dropdown.css");
 require("fs.light-theme.css");
+require("font-awesome.css");
 
 var $ = require("jquery");
 require("fs.background");
 require("fs.checkbox");
 require("fs.dropdown");
 
+// bootstrap javascript has to be imported using the imports loader
+// https://github.com/webpack/imports-loader
+require("imports?jQuery=jquery!bootstrap"); 
 
 /*
 $("select").dropdown();
@@ -31,8 +35,10 @@ var _ = require("underscore");
 
 // backbone.marionette will require: backbone, underscore
 // backbone will require: underscore, jquery
+var Backbone = require("backbone");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
+var BaseRouter = require("backbone.base-router");
 
 // marionette.state will require: underscore, backbone, backbone.marionette
 var State = require("marionette.state");
@@ -58,8 +64,7 @@ Mn.View.prototype.renderer = function(template, data) {
         output = template.render(data);
 
         return output;
-    } 
-    catch (err) {
+    } catch (err) {
         throw new Mn.Error({
             name: 'NunjucksError',
             message: err.message
@@ -68,13 +73,27 @@ Mn.View.prototype.renderer = function(template, data) {
 };
 
 
+Mn.Router = BaseRouter.extend({
+    onNavigate: function(routeData) {
+        //debugger;
+        var routeObj = routeData.linked;
+        var keys = ['query', 'params', 'uriFragment', 'originalRoute'];
+        routeObj.onNavigate(_.pick(routeData, keys));
+    }
+});
+
+var modalRegion = new Mn.Region({ el: $("div.mn-r-modal-contents") });
+Radio.channel("commonRegions").reply("modal", function(){
+    return modalRegion;
+});
+
+
 require("./plugin");
 
 if (NODE_ENV === "dev") {
-     window.$ = $;
+    window.$ = $;
     // window._ = _;
     // window.Mn = Mn;
-    // window.Radio = Radio;
-    // Radio.DEBUG = true;
+    window.Radio = Radio;
+    Radio.DEBUG = true;
 }
-

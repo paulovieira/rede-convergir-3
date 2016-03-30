@@ -1,0 +1,30 @@
+var Mn = require("backbone.marionette");
+
+var InitiativesMain = require("./initiatives-main");
+var LoadingView = require("../../common/loading-view/loading-view");
+var InitiativeEditModal = require("./initiative-edit-modal");
+
+var initiativesPlugin = new Mn.Plugin({
+    name: "initiatives",
+    dependencies: [],
+    views: [
+        {
+            viewName: "initiatives-main",
+            viewClass: InitiativesMain
+        },
+        {
+            viewName: "loading-view",
+            viewClass: LoadingView
+        },
+        {
+            viewName: "initiative-edit-modal",
+            viewClass: InitiativeEditModal
+        },
+    ]
+});
+
+module.exports = initiativesPlugin;
+
+if(NODE_ENV==="dev"){
+    window.initiativesPlugin = initiativesPlugin;
+}

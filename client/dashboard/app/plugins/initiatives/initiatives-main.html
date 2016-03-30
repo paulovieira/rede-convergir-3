@@ -1,0 +1,38 @@
+<div class="mn-r-initiatives-list">
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 10%"></th>
+            <th style="width: 50%">Nome da iniciativa</th>
+            <th style="width: 20%">Contact</th>
+            <th style="width: 15%"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for item in items %}
+        <tr>
+            <td>
+                {% if item.logo.filename %}
+                <img style="xmin-width:80px; max-height:60px; padding: 3px;" src="/public/images/logos/{{ item.logo.filename }}" class="xpull-right img-responsive img-rounded" alt="{{ item.name  }} - logotipo">
+                {% endif %}
+            </td>
+
+            <td>
+                {{ item.name  }}
+            </td>
+
+            <td>
+                {{ item.contactName }}
+            </td>
+
+            <td>
+                <button type="button" class="btn btn-primary btn-block js-btn-edit">Editar &nbsp; <i style="font-size: 120%;" class="fa fa-pencil-square-o"></i></button>
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>

@@ -11,6 +11,7 @@ var Entities = require("../../common/entities");
 
 var MenuPlugin = Mn.Plugin.extend({
     name: "menu",
+    dev: NODE_ENV==="dev",
     initialize: function(options){
         //debugger;
 
@@ -166,5 +167,9 @@ var menuPlugin = new MenuPlugin({
     ],
 */
 });
+
+if(NODE_ENV==="dev"){
+    window.menuPlugin = menuPlugin;
+}
 
 module.exports = menuPlugin;

@@ -25,7 +25,7 @@ var InitiativesMain = Mn.LayoutView.extend({
             //debugger;
 
             this.channel.request("showView", {
-                view: "initiative-edit",
+                view: "initiative-edit-modal",
                 region: Radio.channel("commonRegions").request("modal")
             });
         }

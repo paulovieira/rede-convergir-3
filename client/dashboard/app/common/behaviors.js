@@ -1,5 +1,6 @@
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
+var Utils = require("./utils");
 
 var Modal = Mn.Behavior.extend({
 

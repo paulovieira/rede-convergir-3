@@ -1,6 +1,7 @@
 //require("./initiatives-edit.css");
 
 var Mn = require("backbone.marionette");
+var Utils = require("../../common/utils")
 var Behaviors = require("../../common/behaviors");
 //var Radio = require("backbone.radio");
 
@@ -8,6 +9,7 @@ var Behaviors = require("../../common/behaviors");
 var InitiativeEditModal = Mn.LayoutView.extend({
 
     initialize: function(options) {
+        Utils.logStack();
     },
 
     behaviors: {

@@ -7,7 +7,15 @@ Mn.Plugin = Mn.Object.extend({
     constructor: function(options){
 
         //debugger;
-        var keys = ['name', 'dependencies', 'views', 'routes', 'region', 'onBeforeRegister', 'onRegister'];
+        var keys = ['name', 
+            'dependencies', 
+            'views', 
+            'routes', 
+            'region', 
+            'onBeforeRegister', 
+            'onRegister', 
+            'dev'];
+
         this.mergeOptions(options, keys);
         this._addChannel();
 
@@ -31,7 +39,7 @@ Mn.Plugin = Mn.Object.extend({
         // copy the views option to this._views
         this._views = {};
         this.views = this.views || [];
-        i=0; l=this.views.length;
+        var i=0, l=this.views.length, obj;
 
         if(l===0){
             throw new Error('the plugin "' + this.name + '" does not have any views');
@@ -54,6 +62,10 @@ Mn.Plugin = Mn.Object.extend({
         //debugger;
         this.channel = Radio.channel(this.name);
 
+        if(this.dev){
+            Radio.tuneIn(this.name);    
+        }
+
         this.channel.reply("start", this.start, this);
         this.channel.reply("stop", this.stop, this);
         this.channel.reply("showView", this.showView, this);
@@ -75,7 +87,7 @@ Mn.Plugin = Mn.Object.extend({
 
         //this.region = options.region;
         //debugger;
-        this.defaultRegion = defaultView.getRegion("default");
+        //this.defaultRegion = defaultView.getRegion("default");
 
         defaultView.once('destroy', this.stop, this);
 
@@ -86,7 +98,7 @@ Mn.Plugin = Mn.Object.extend({
     stop: function(){
         //debugger;
         this.isRunning = false;
-        this.defaultRegion = undefined;
+        //this.defaultRegion = undefined;
 
         // TODO: when the plugin is stopped, it's channel should be stopped too (?)
         //this.region = undefined;

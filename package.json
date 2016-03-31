@@ -37,6 +37,7 @@
     "seneca": "^0.8.0",
     "shelljs": "^0.5.3",
     "slug": "^0.9.1",
+    "stacktrace-js": "^1.0.4",
     "strong-data-uri": "^1.0.3",
     "tv": "5.x.x",
     "underscore": "^1.8.3",

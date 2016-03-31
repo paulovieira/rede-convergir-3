@@ -40,6 +40,7 @@ var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
 var BaseRouter = require("backbone.base-router");
 
+
 // marionette.state will require: underscore, backbone, backbone.marionette
 var State = require("marionette.state");
 Mn.State = State;
@@ -89,6 +90,10 @@ Radio.channel("commonRegions").reply("modal", function(){
 
 
 require("./plugin");
+
+
+
+
 
 if (NODE_ENV === "dev") {
     window.$ = $;

@@ -75,6 +75,8 @@ var config = {
             "backbone.radio": Path.resolve(libDir, "backbone/backbone.radio-1.0.2.js"),
             "backbone.base-router": Path.resolve(libDir, "backbone/backbone.base-router-1.3.0.js"),
             "q": Path.resolve(libDir, "q/q-1.4.1.js"),
+            "stacktrace": Path.resolve(rootDir, "node_modules/stacktrace-js"),
+            
             
             "fs.background": Path.resolve(libDir, "jquery/formstone-1.0.0/js/background.js"),
             "fs.checkbox": Path.resolve(libDir, "jquery/formstone-1.0.0/js/checkbox.js"),
@@ -134,6 +136,10 @@ var config = {
 
 
 if (process.env.NODE_ENV === "dev") {
+
+    // the stacktrace library is heavy in the dependencies; use it only
+    // in development
+    config.entry.lib.push(Path.resolve(rootDir, "node_modules/stacktrace-js"))
 
     // Webpack Dev Server also uses publicPath to determine the path where the 
     // output files are expected to be served from

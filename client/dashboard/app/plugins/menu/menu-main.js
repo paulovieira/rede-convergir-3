@@ -6,27 +6,17 @@ var $ = require("jquery");
 var _ = require("underscore");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
-var BaseRouter = require("backbone.base-router");
+//var BaseRouter = require("backbone.base-router");
+var Utils = require("../../common/utils");
 var Entities = require("../../common/entities");
 
-var StateModelClass = Backbone.Model.extend({
-
-    pluginNames: ["activities", "initiatives", "events", "profile", undefined],
-
-    validate: function(attrs, options){
-
-        var value = attrs["menuItem"];
-        if(_.contains(this.pluginNames, value)){
-            return false;
-        }
-
-        throw new Error("invalid plugin name: " + value);
-    }
-});
 
 var MenuMainState = Mn.State.extend({
 
-    modelClass: StateModelClass,
+    modelClass: Entities.getStateModelClass({
+        // allowed values for the key "menuItem"
+        menuItem: ["activities", "initiatives", "events", "profile", undefined],
+    }),
 
     initialState: {
         menuItem: undefined
@@ -36,9 +26,10 @@ var MenuMainState = Mn.State.extend({
     // },
 
     channelEvents: {
-        "change:menuItem": function(menuItem){
+        "change:menuItem": function xyz(menuItem){
             //debugger;
-            this.set({"menuItem": menuItem}, {validate: true});
+            
+            this.set({ "menuItem": menuItem }, {validate: true});
         }
     }
     
@@ -51,6 +42,8 @@ var MenuMain = Mn.LayoutView.extend({
     },
 
     onBeforeRender: function(){
+        // we place the state setup code here because we need a reference to this.channel
+
         this.state = new MenuMainState({ component: this});
 
         // make the view listen to the events triggered by the state
@@ -74,16 +67,10 @@ var MenuMain = Mn.LayoutView.extend({
     },
 
     events: {
-        // "click @ui.menuItem": function(e){
-
-        //     var id = $(e.currentTarget).prop("id").substring("js-menu-item-".length);
-        //     this.trigger("click:menuItem", id);
-        // }
     },
 
-    //stateClass: MenuMainState,
     stateEvents: {
-        'change:menuItem': function(state, currentMenuItem, options){
+        'change:menuItem': function (state, currentMenuItem, options){
             //debugger;
             if(!currentMenuItem){ return; }
 /*
@@ -107,9 +94,9 @@ var MenuMain = Mn.LayoutView.extend({
             // or maybe it only makes sense to start the plugin when the default view is used (so in this case
             // the plugin should not be started when the loading view is used )
             //debugger;
+
             this.ui.menuItem.removeClass("active");
             this.triggerMethod(currentMenuItem + ":plugin:start");
-
         },
 
     },
@@ -122,6 +109,8 @@ var MenuMain = Mn.LayoutView.extend({
             view: "loading-view",
             region: this.getRegion("default")
         });
+
+        Utils.logStack();
 
         var self = this;
         Q.delay(100)
@@ -158,8 +147,6 @@ var MenuMain = Mn.LayoutView.extend({
             });
 
     },
-
-
 
     onAttach: function(){
         //debugger;
@@ -214,48 +201,7 @@ var MenuMain = Mn.LayoutView.extend({
 
 
 });
-/*
-var RouteHandler = Mn.Object.extend({
-    constructor: function(options){
-        this.options = _.extend(this, options);
-    },
-    initialize: function(){
-        debugger;
-    },
-    onNavigate: function(){
-        debugger;
-    }
-});
 
-var activityHandler = new RouteHandler({
-
-    onNavigate: function(){
-        console.log("xyz @ actvity, ", this.originalRoute)
-        this.set("menuItem", menuItem);
-    }
-})
-
-var MenuRouter = BaseRouter.extend({
-    onNavigate: function(routeData) {
-        debugger;
-        var routeObj = routeData.linked;
-        routeObj.query = routeData.query;
-        routeObj.params = routeData.params;
-        routeObj.originalRoute = routeData.originalRoute;
-        routeObj.onNavigate();
-    },
-    routes: {
-        "activity": activityHandler,
-        "initiatives": new RouteHandler({
-            xyz: function(){
-                console.log("xyz @ initiatives, ", this.originalRoute)
-            }
-        })
-    }
-});
-
-var menuRouter = new MenuRouter();
-*/
 if(NODE_ENV==="dev"){
     window.MenuMain = MenuMain;
 }

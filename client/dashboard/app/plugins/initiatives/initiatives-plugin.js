@@ -6,6 +6,7 @@ var InitiativeEditModal = require("./initiative-edit-modal");
 
 var initiativesPlugin = new Mn.Plugin({
     name: "initiatives",
+    dev: NODE_ENV==="dev",
     dependencies: [],
     views: [
         {

@@ -14,8 +14,8 @@
 {# call super to common css #}
 {{ super() }}
 
-<link href="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.css" rel="stylesheet" />
-<link href="/public/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css" rel="stylesheet" />
+<link href="/public/lib/leaflet/leaflet-0.7.5/leaflet-0.7.5.css" rel="stylesheet" />
+<link href="/public/lib/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css" rel="stylesheet" />
 
 <link href="/public/css/initiative.css" rel="stylesheet" />
 
@@ -92,8 +92,8 @@
 
                     <div > 
                         <span class="field-title" title="Estado da iniciativa">Estado da iniciativa:</span> 
-                        <span title="{{ ctx.definitionsById.initiative_status[ctx.data.initiativeStatusId]['description']['pt'] }}">
-                        {{ ctx.definitionsById.initiative_status[ctx.data.initiativeStatusId]['title']['pt'] }}
+                        <span title="{{ ctx.definitionsById.initiativeStatus[ctx.data.initiativeStatusId]['description']['pt'] }}">
+                        {{ ctx.definitionsById.initiativeStatus[ctx.data.initiativeStatusId]['title']['pt'] }}
                         </span>
                         <a href="#" data-toggle="modal" data-target="#status-more-info" title="Clique para ver mais detalhes sobre os diferentes estados">
                             <i style="font-size: 80%;" class="fa fa-info-circle"></i>
@@ -283,8 +283,8 @@
 
 {{ super() }}
 
-<script src="/public/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script>
-<script src="/public/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
+<script src="/public/lib/leaflet/leaflet-0.7.5/leaflet-0.7.5.js"></script>
+<script src="/public/lib/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
 <script>
 
 RC.videoHeight = parseInt((9/16)*$("iframe").width());
@@ -305,11 +305,11 @@ RC.marker = L.AwesomeMarkers.icon({
     extraClasses: "marker-icon"
 });
 
-RC.popupMessage = "<div class='text-center' style='padding: 0px 10px;'>";
+RC.popupMessage =  "<div class='text-center' style='padding: 0px 10px;'>";
 RC.popupMessage += "    <div style='margin-bottom: 5px;'><b style='font-size: 115%;'>{{ ctx.data.name }}</b></div>"
 RC.popupMessage += "    <div>Latitude: {{ ctx.data.coordinates[0] | toFixed(4) }}</div>";
 RC.popupMessage += "    <div>Longitude: {{ ctx.data.coordinates[1] | toFixed(4) }}</div>";
-RC.popupMessage +=  "</div>";
+RC.popupMessage += "</div>";
 
 L.marker(RC.coordinates, {icon: RC.marker} )
     .addTo(RC.map)

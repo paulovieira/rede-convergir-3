@@ -190,6 +190,13 @@ exports.readDefinitions2 = {
                                     });
                 }
 
+                // correct the keys
+				definitions["eventType"] = definitions["event_type"];
+				delete definitions["event_type"];
+
+				definitions["initiativeStatus"] = definitions["initiative_status"];
+				delete definitions["initiative_status"];
+
 		        return reply(definitions);
 		    })
 		    .catch(function(err){

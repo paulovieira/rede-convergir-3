@@ -38,10 +38,17 @@ var _ = require("underscore");
 var Backbone = require("backbone");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
+
+// backbone.base-router will require: underscore, backbone;
+// after the module is required, the backbone object will have a new property (Backbone.BaseRouter)
 var BaseRouter = require("backbone.base-router");
 
+// backbone.syphon will require: underscore, backbone, jquery
+// after the module is required, the backbone object will have a new property (Backbone.Syphon)
+var Syphon = require("backbone.syphon");
 
 // marionette.state will require: underscore, backbone, backbone.marionette
+// in this case we have to explicitely attach the state object to the marionette object
 var State = require("marionette.state");
 Mn.State = State;
 
@@ -84,10 +91,23 @@ Mn.Router = BaseRouter.extend({
 });
 
 var modalRegion = new Mn.Region({ el: $("div.mn-r-modal-contents") });
-Radio.channel("commonRegions").reply("modal", function(){
+Radio.channel("public").reply("modalRegion", function(){
     return modalRegion;
 });
 
+// configure fecha dates (can we have for different languages?)
+var Fecha = require("fecha");
+Fecha.i18n = {
+    dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    amPm: ['am', 'pm'],
+    // D is the day of the month, function returns something like...  3rd or 11th
+    DoFn: function (D) {
+        return D + [ 'th', 'st', 'nd', 'rd' ][ D % 10 > 3 ? 0 : (D - D % 10 !== 10) * D % 10 ];
+    }
+}
 
 require("./plugin");
 
@@ -97,8 +117,9 @@ require("./plugin");
 
 if (NODE_ENV === "dev") {
     window.$ = $;
-    // window._ = _;
-    // window.Mn = Mn;
+    window._ = _;
+    window.Mn = Mn;
+    window.Backbone = Backbone;
     window.Radio = Radio;
     Radio.DEBUG = true;
 }

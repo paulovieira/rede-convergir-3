@@ -147,7 +147,9 @@ exports.register = function(server, options, next){
                 }
 
                 var definitionsById = {};
-                definitionsById.initiative_status = _.indexBy(request.pre.definitions.initiative_status, "id");
+
+                console.log("request.pre.definitions: ", request.pre.definitions)
+                definitionsById.initiativeStatus = _.indexBy(request.pre.definitions.initiativeStatus, "id");
                 definitionsById.type = _.indexBy(request.pre.definitions.type, "id");
                 definitionsById.scope = _.indexBy(request.pre.definitions.scope, "id");
                 definitionsById.visitors = _.indexBy(request.pre.definitions.visitors, "id");

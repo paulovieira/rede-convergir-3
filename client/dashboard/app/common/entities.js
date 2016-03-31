@@ -20,8 +20,7 @@ var initiativesC = new InitiativesC();
 
 
 
-
-
+module.exports.definitions = window.definitions;
 module.exports.InitiativesM = InitiativesM;
 module.exports.InitiativesC = InitiativesC;
 module.exports.initiativesC = initiativesC;

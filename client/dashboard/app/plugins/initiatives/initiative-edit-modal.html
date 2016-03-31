@@ -1,11 +1,408 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">Modal title</h4>
+    {# <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> #}
+    <h3 class="modal-title">Iniciativa: {{ name }}</h3>
 </div>
 <div class="modal-body">
-    <p>One fine body&hellip;</p>
+
+
+	<h5>Informações básicas</h5>
+
+	<div class="row">
+	    <div class="col-sm-6">
+	        <label>Nome da iniciativa</label>
+	        <input type="text" class="form-control" name="name" value="{{ name }}">
+
+	        <label>Website</label>
+	        <input type="text" class="form-control" name="url" value="{{ url }}">
+
+
+	        <label>Endereço web da iniciativa (na Rede Convergir)</label>
+	        <input type="text" class="form-control" name="slug" value="{{ slug }}">
+	        <span style="margin-top: 1px;" class="help-block">(exemplo: http://redeconvergir.net/<b>nome-da-iniciativa</b>)</span>
+
+
+	        <label>Vídeo (url do youtube, vimeo, etc)</label>
+	        <input type="text" class="form-control" name="videoUrl" value="{{ videoUrl }}">
+
+	        <label>Logotipo</label>
+	        <input type="text" class="form-control" name="" value="" placeholder="Em desenvolvimento" disabled>
+
+	        <label>Anexar documento sobre a iniciativa</label>
+	        <input type="text" class="form-control" name="" value="" placeholder="Em desenvolvimento" disabled>
+
+	    </div>
+
+
+	    <div class="col-sm-6">
+	        <label>Rua</label>
+	        <input type="text" class="form-control" name="street" value="{{ street }}">
+
+			<div class="row">
+			    <div class="col-sm-6">
+			        <label>Localidade</label>
+			        <input type="text" class="form-control" name="city" value="{{ city }}">
+			    </div>
+			    <div class="col-sm-6">
+			        <label>Código postal</label>
+			        <input type="text" class="form-control" name="postalCode" value="{{ postalCode }}">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="col-sm-6">
+			        <label>Nome da pessoa de contacto</label>
+			        <input type="text" class="form-control" name="contactName" value="{{ contactName }}">
+			    </div>
+			    <div class="col-sm-6">
+			        <label>Email</label>
+			        <input type="text" class="form-control" name="email" value="{{ email }}">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="col-sm-6">
+			        <label>Telefone</label>
+			        <input type="text" class="form-control" name="phone" value="{{ phone }}">
+			    </div>
+			    <div class="col-sm-6">
+			        <label>Outro contacto</label>
+			        <input type="text" class="form-control" name="contactOther" value="{{ contactOther }}">
+			    </div>
+			</div>
+
+	        <label>Data de início da iniciativa</label>
+			<div class="row">
+			    <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label>Mês</label>
+                        <select class="form-control" name="startDateMonth">
+                            <option value="0" {{ "selected" if startDateMonth == 0 }}>Janeiro</option>
+                            <option value="1" {{ "selected" if startDateMonth == 1 }}>Fevereiro</option>
+                            <option value="2" {{ "selected" if startDateMonth == 2 }}>Março</option>
+                            <option value="3" {{ "selected" if startDateMonth == 3 }}>Abril</option>
+                            <option value="4" {{ "selected" if startDateMonth == 4 }}>Maio</option>
+                            <option value="5" {{ "selected" if startDateMonth == 5 }}>Junho</option>
+                            <option value="6" {{ "selected" if startDateMonth == 6 }}>Julho</option>
+                            <option value="7" {{ "selected" if startDateMonth == 7 }}>Agosto</option>
+                            <option value="8" {{ "selected" if startDateMonth == 8 }}>Setembro</option>
+                            <option value="9" {{ "selected" if startDateMonth == 9 }}>Outubro</option>
+                            <option value="10" {{ "selected" if startDateMonth == 10 }}>Novembro</option>
+                            <option value="11" {{ "selected" if startDateMonth == 11 }}>Dezembro</option>
+                        </select>
+                    </div>
+			    </div>
+			    <div class="col-sm-6">
+			    	<label>Ano</label>
+			    	<input type="text" class="form-control" name="startDateYear" value="{{ startDateYear }}">
+			    </div>
+		    </div>
+	    </div>
+
+	</div>
+
+
+	<h5>Caracterização da iniciativa</h5>
+
+	<div class="row">
+	    <div class="col-sm-6">
+	        <label>Tipo de iniciativa</label>
+	        
+
+			{% for type in definitions.type %}
+			<fieldset id="initiatives-type-form">
+			    <label for="{{ type.id }}">
+			    	<span title="{{ type.description.pt }}" data-toggle="tooltip" data-placement="top">{{ type.title.pt }}</span>
+			    </label>
+			    <input type="radio" id="{{ type.id }}" name="typeId" value="{{ type.id }}" {{ "checked" if type.checked }}>
+			</fieldset>
+			{% endfor %}
+
+	        <label style="margin-top: 5px;">Outro (se aplicável)</label>
+	        <div class="row">
+	        	<div class="col-sm-10">
+	        		<input type="text" class="form-control" name="typeOther" value="{{ typeOther }}">
+        		</div>
+    		</div>
+
+	    </div>
+
+	    <div class="col-sm-6">
+
+	        <label>Domínios chave</label>
+
+			{% for domain in definitions.domain %}
+			<fieldset id="initiatives-domains-form">
+			    <label for="{{ domain.id }}">
+			    	<span title="{{ domain.description.pt }}" data-toggle="tooltip" data-placement="top">{{ domain.title.pt }}</span>
+			    </label>
+			    <input type="checkbox" id="{{ domain.id }}" name="domains[{{ domain.id }}]" {{ "checked" if domain.checked }}>
+			</fieldset>
+			{% endfor %}
+
+	        <label style="margin-top: 5px;">Outro (se aplicável)</label>
+	        <div class="row">
+	        	<div class="col-sm-10">
+	        		<input type="text" style="margin-right: 40px;" class="form-control" name="domainsOther" value="{{ domainsOther }}">
+	        	</div>
+	        </div>
+
+	    </div>
+	</div>
+
+	<hr>
+
+	<div class="row">
+
+	    
+	    <div class="col-sm-6">
+
+	        <label>Aceita visitas?</label>
+
+			{% for visitor in definitions.visitors %}
+			<fieldset id="initiatives-visitors-form">
+			    <label for="{{ visitor.id }}">
+			    	<span title="{{ visitor.description.pt }}" data-toggle="tooltip" data-placement="top">{{ visitor.title.pt }}</span>
+			    </label>
+			    <input type="radio" id="{{ visitor.id }}" name="visitorsId" value="{{ visitor.id }}" {{ "checked" if visitor.checked }}>
+			</fieldset>
+			{% endfor %}
+
+	    </div>
+
+	    <div class="col-sm-6">
+
+	        <label>Espaço de acção</label>
+
+			{% for scope in definitions.scope %}
+			<fieldset id="initiatives-scope-form">
+			    <label for="{{ scope.id }}">
+			    	<span title="{{ scope.description.pt }}" data-toggle="tooltip" data-placement="top">{{ scope.title.pt }}</span>
+			    </label>
+			    <input type="radio" id="{{ scope.id }}" name="scopeId" value="{{ scope.id }}" {{ "checked" if scope.checked }}>
+			</fieldset>
+			{% endfor %}
+		
+	    </div>
+	</div>
+
+	<hr>
+
+	<div class="row">
+	    
+	    <div class="col-sm-6">
+
+	        <label>Público alvo</label>
+
+			{% for target in definitions.target %}
+			<fieldset id="initiatives-target-form">
+			    <label for="{{ target.id }}">
+			    	<span title="{{ target.description.pt }}" data-toggle="tooltip" data-placement="top">{{ target.title.pt }}</span>
+			    </label>
+			    <input type="checkbox" id="{{ target.id }}" name="target[{{ target.id }}]" {{ "checked" if target.checked }}>
+			</fieldset>
+			{% endfor %}
+
+	        <label style="margin-top: 5px;">Outro (se aplicável)</label>
+	        <div class="row">
+	        	<div class="col-sm-10">
+	        		<input type="text" class="form-control" name="targetOther"  value="{{ targetOther }}">
+	        	</div>
+	        </div>
+
+	    </div>
+
+	    <div class="col-sm-6">
+
+	        <label>Estimativa do Universo de interacção directa (número de pessoas)</label>
+
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-0-10">0 &mdash; 10</label>
+			    <input type="radio" id="influence-0-10" name="influence" value="0-10" {{ "checked" if influence[0] == 0 }}>
+			</fieldset>
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-10-25">10 &mdash; 25</label>
+			    <input type="radio" id="influence-10-25" name="influence" value="10-25" {{ "checked" if influence[0] == 10 }}>
+			</fieldset>
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-25-100">25 &mdash; 100</label>
+			    <input type="radio" id="influence-25-100" name="influence" value="25-100" {{ "checked" if influence[0] == 25 }}>
+			</fieldset>
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-100-500">100 &mdash; 500</label>
+			    <input type="radio" id="influence-100-500" name="influence" value="100-500" {{ "checked" if influence[0] == 100 }}>
+			</fieldset>
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-500-5000">500 &mdash; 5000</label>
+			    <input type="radio" id="influence-500-5000" name="influence" value="500-5000" {{ "checked" if influence[0] == 500 }}>
+			</fieldset>
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-5000-10000">5000 &mdash; 10000</label>
+			    <input type="radio" id="influence-5000-10000" name="influence" value="5000-10000" {{ "checked" if influence[0] == 5000 }}>
+			</fieldset>
+			<fieldset id="initiatives-influence-form">
+			    <label for="influence-10000-999999999"> &gt; 10000</label>
+			    <input type="radio" id="influence-10000-999999999" name="influence" value="10000-999999999" {{ "checked" if influence[0] == 10000 }}>
+			</fieldset>
+	    </div>
+	</div>
+
+	<hr>
+
+	<div class="row">
+	    
+	    <div class="col-sm-6">
+
+	        <label>Estado da iniciativa</label>
+
+			{% for status in definitions.initiativeStatus %}
+			<fieldset id="initiatives-status-form">
+			    <label for="{{ status.id }}">
+			    	<span title="{{ status.description.pt }}" data-toggle="tooltip" data-placement="top">{{ status.title.pt }}</span>
+			    </label>
+			    <input type="radio" id="{{ status.id }}" name="initiativeStatusId" value="{{ status.id }}" {{ "checked" if status.checked }}>
+			</fieldset>
+			{% endfor %}
+
+	    </div>
+
+		<div class="col-sm-6">
+			<div class="row">
+
+			    <div class="col-sm-6">
+			        <label>Nº de pessoas envolvidas</label>
+					<input type="text" class="form-control" name="groupSize" value="{{ groupSize }}">
+			    </div>
+		    	<div class="col-sm-6">
+			        <label>Área (ha)</label>
+					<input type="text" class="form-control" name="physicalArea" value="{{ physicalArea }}">
+			    </div>
+
+		    	<div class="col-sm-12" style="margin-top: 20px;">
+			        <label>Caso exista, indique o nome da entidade promotora da iniciativa (ex.: empresa, associação)</label>
+					<input type="text" class="form-control" name="promoter" value="{{ promoter }}">
+			    </div>
+			</div>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row">
+	    <div class="col-sm-12">
+	        <label>Descrição</label>
+	        <textarea class="form-control" name="description" rows="6">{{ description }}</textarea>
+	    </div>
+	</div>
+
+
+	<h5>Localizar no mapa</h5>
+	<p>Em desenvolvimento</p>
+{#
+    	id : {{ id }} <br>
+    	name : {{ name }} <br>
+    	slug : {{ slug }} <br>
+    	description : {{ description }} <br>
+    	typeId : {{ typeId }} <br>
+    	typeOther : {{ typeOther }} <br>
+    	domains : {{ domains }} <br>
+    	domainsOther : {{ domainsOther }} <br>
+    url : {{ url }} <br>
+    contactName : {{ contactName }} <br>
+    email : {{ email }} <br>
+    phone : {{ phone }} <br>
+    contactOther : {{ contactOther }} <br>
+    logo : {{ logo }} <br>
+    street : {{ street }} <br>
+    city : {{ city }} <br>
+    postalCode : {{ postalCode }} <br>
+    countryCode : {{ countryCode }} <br>
+    coordinates : {{ coordinates }} <br>
+    promoter : {{ promoter }} <br>
+    startDate : {{ startDate | shortDate }} <br>
+    registryDate : {{ registryDate | shortDate }} <br>
+    updateDate : {{ updateDate  | shortDate}} <br>
+    visitorsId : {{ visitorsId }} <br>
+    groupSize : {{ groupSize }} <br>
+    scopeId : {{ scopeId }} <br>
+    target : {{ target }} <br>
+    targetOther : {{ targetOther }} <br>
+    influence : {{ influence }} <br>
+    physicalArea : {{ physicalArea }} <br>
+    videoUrl : {{ videoUrl }} <br>
+    docUrl : {{ docUrl }} <br>
+    initiativeStatusId : {{ initiativeStatusId }} <br>
+    moderationStatusId : {{ moderationStatusId }} <br>
+#}
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default js-close-modal" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary js-modal-save">Save changes</button>
 </div>
+
+
+{#
+
+IMPORTANT
+
+using forms with backbone syphon
+
+for radio button groups: the "name" attribute should be the same (it defines the group)
+
+<form>
+  <input type="radio" name="xyz" value="portugal">
+  <input type="radio" name="xyz" value="spain">
+  <input type="radio" name="xyz" value="france">
+  <input type="radio" name="xyz" value="italy">
+</form>
+
+syphon will extract the selected radio and place the corresponding value in the "xyz" property:
+
+var data = Backbone.Syphon.serialize(this);
+data is something like: 
+{ 
+	xyz: "france"
+}
+
+so it makes sense to use for the "name" attribute (in the html) the same as the model's attribute;
+
+
+for checkboxes: the "name" attribute does the role of the "value" attribute (and there's no need for the "value" attribute)
+
+<form>
+  <input type="checkbox" name="foo">
+  <input type="checkbox" name="bar">
+  <input type="checkbox" name="xyz">
+</form>
+
+syphon will create a property for each checkbox:
+
+var data = Backbone.Syphon.serialize(this);
+data is something like: 
+
+{ 
+	foo: true,
+	bar: false,
+	xyz: true
+}
+
+In this case it makes sense to nest these properties in a separate object. For that we should have the html like this:
+
+<form>
+  <input type="checkbox" name="abc[foo]">
+  <input type="checkbox" name="abc[bar]">
+  <input type="checkbox" name="abc[xyz]">
+</form>
+
+In this case data will be something like
+
+{ 
+	abc: {
+		foo: true,
+		bar: false,
+		xyz: true
+	}
+}
+
+
+#}

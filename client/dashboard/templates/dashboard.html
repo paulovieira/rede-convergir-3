@@ -14,17 +14,23 @@
 </head>
 
 <body>
+
     <div style="margin-top: 30px; " class="container">
         
     </div>
 
     {# container for modal #}
     <div class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content mn-r-modal-contents">
             </div>
         </div>
     </div>
+
+    {# inject data coming from the server directly into the page source (we could also setup an ajax endpoint for this) #}
+    <script>
+        window.definitions = {{ ctx.definitions | stringify}};
+    </script>
 
     {% if NODE_ENV == 'dev' %}
 

@@ -9,7 +9,7 @@ var Radio = require("backbone.radio");
 //var BaseRouter = require("backbone.base-router");
 var Utils = require("../../common/utils");
 var Entities = require("../../common/entities");
-
+var Behaviors = require("../../common/behaviors");
 
 var MenuMainState = Mn.State.extend({
 
@@ -41,21 +41,13 @@ var MenuMain = Mn.LayoutView.extend({
     initialize: function(options){
     },
 
-    onBeforeRender: function(){
-        // we place the state setup code here because we need a reference to this.channel
-
-        this.state = new MenuMainState({ component: this});
-
-        // make the view listen to the events triggered by the state
-        Mn.State.syncEntityEvents(this,       this.state,   this.stateEvents || {}, "before:attach");
-
-        // make the state listen to the events triggered by the view
-        Mn.State.syncEntityEvents(this.state, this,         this.state.viewEvents || {});    
-
-        // make the state listen to the events triggered by the view's channel
-        // (which is the plugin's channel)
-        Mn.State.syncEntityEvents(this.state, this.channel, this.state.channelEvents || {});
-    },
+    behaviors: [
+        // state syncronization setup
+        {
+            behaviorClass: Behaviors.SyncState,
+            stateClass: MenuMainState
+        }
+    ],
 
     // dummy class to narrow the scope the css classes to the view's element
     className: "js-menu-main",
@@ -96,6 +88,8 @@ var MenuMain = Mn.LayoutView.extend({
             //debugger;
 
             this.ui.menuItem.removeClass("active");
+
+            // call the method that will start the plugin
             this.triggerMethod(currentMenuItem + ":plugin:start");
         },
 
@@ -110,10 +104,10 @@ var MenuMain = Mn.LayoutView.extend({
             region: this.getRegion("default")
         });
 
-        Utils.logStack();
+        //Utils.logStack();
 
         var self = this;
-        Q.delay(100)
+        Q.delay(300)
             .then(Entities.initiativesC.fetch())
             .then(function(){
 
@@ -137,7 +131,7 @@ var MenuMain = Mn.LayoutView.extend({
         });
 
         var self = this;
-        Q.delay(100)
+        Q.delay(300)
             .then(function(){
 
                 Radio.channel("activities").request("start", {

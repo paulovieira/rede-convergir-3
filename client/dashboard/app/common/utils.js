@@ -1,31 +1,9 @@
 var Stacktrace, logStack;
 
-// TODO: make sure that in production the stacktrace module is not bundled
+// the stacktrace module is bundled only in dev mode (this works like the "#ifndef" preprocessor directives in C)
 if(NODE_ENV==="dev"){
 
     Stacktrace = require("stacktrace");
-
-    var callback = function(stackframes) {
-        //debugger;
-        var stringifiedStack = stackframes
-            .map(function(sf) { 
-                return "    " + sf.toString(); 
-            })
-            .filter(function(s){
-                return true;
-                return s.indexOf("/client/dashboard/app")!==-1 && 
-                    s.indexOf("/client/dashboard/app/common/utils")===-1;
-            })
-            .join('\n'); 
-
-        console.log("-------------------------------\ncallstack @ " + Date.now() + "\n" + stringifiedStack + "\n-------------------------------\n\n"); 
-    };
-
-    var errback = function(err) { 
-        //debugger;
-        console.log(err.message); 
-    };
-
 
     logStack = function(filtered){
 
@@ -40,13 +18,17 @@ if(NODE_ENV==="dev"){
                         return "    " + sf.toString(); 
                     })
                     .filter(function(s){
+                        // always remove this functino (logStack) from the trace
+                        return s.indexOf("/client/dashboard/app/common/utils")===-1;
+                    })
+                    .filter(function(s){
                         
+                        // we can explicitely disable the remaining filtering using the "filtered" argument
                         if(filtered===false){
-                            return true;    
+                            return true;
                         }
                         
-                        return s.indexOf("/client/dashboard/app")!==-1 && 
-                            s.indexOf("/client/dashboard/app/common/utils")===-1;
+                        return s.indexOf("/client/dashboard/app")!==-1;
                     })
                     .join('\n'); 
 
@@ -59,7 +41,7 @@ if(NODE_ENV==="dev"){
             });    
     };
 } else{
-    logStack = function(){ console.log("noop") };
+    logStack = function(){};
 }
 
 exports.logStack = logStack;

@@ -184,7 +184,7 @@ parser.parseString(rejected, function(err, data) {
             }
             else if(obj.influence.indexOf(">10.000") >= 0){
                 influence[0] = 10000;
-                influence[0] = 999999999;
+                influence[1] = 999999999;
             }
             else if(obj.influence.indexOf("a") >= 0){
                 influence = obj.influence.split("a");

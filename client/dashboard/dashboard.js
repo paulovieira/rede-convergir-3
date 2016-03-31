@@ -67,12 +67,16 @@ exports.register = function(server, options, next){
             handler: function(request, reply) {
 
                 console.log("request.auth: ", JSON.stringify(request.auth));
-                var context = {};
-                return reply.view(Path.join(__dirname, "templates/dashboard.html"), {ctx: context});
+                var context = {
+                    definitions: request.pre.definitions,
+                };
+
+                console.log("context: ", context); 
+                return reply.view(Path.join(__dirname, "templates/dashboard.html"), { ctx: context });
             },
             auth: internals.auth,
             pre: [
-                //[Pre.readInitiativesSlim, Pre.readDefinitions2]
+                [/*Pre.readInitiativesSlim,*/ Pre.readDefinitions2]
             ],
         }
     });

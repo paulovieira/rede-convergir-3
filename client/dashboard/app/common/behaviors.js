@@ -34,7 +34,8 @@ var SyncState = Mn.Behavior.extend({
         this.view.state = new this.options.stateClass({ component: this.view});
 
         // make the view listen to the events triggered by the view's state
-        Mn.State.syncEntityEvents(this.view,       this.view.state,   this.view.stateEvents || {}, this.options.syncEvent || "before:attach");
+        //Mn.State.syncEntityEvents(this.view,       this.view.state,   this.view.stateEvents || {}, this.options.syncEvent || "before:attach");
+        Mn.State.syncEntityEvents(this.view,       this.view.state,   this.view.stateEvents || {}, this.options.syncEvent);
 
         // make the view's state listen to the events triggered by the view
         Mn.State.syncEntityEvents(this.view.state, this.view,         this.view.state.viewEvents || {});

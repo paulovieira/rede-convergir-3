@@ -31,7 +31,7 @@ var config = {
             Path.resolve(libDir, "jquery/formstone-1.0.0/js/background.js"),
             Path.resolve(libDir, "jquery/formstone-1.0.0/js/checkbox.js"),
             Path.resolve(libDir, "jquery/formstone-1.0.0/js/dropdown.js"),
-            Path.resolve(libDir, "fecha-2.1.0.js"),
+            Path.resolve(rootDir, "node_modules/fecha"),
             
         ]
     },
@@ -79,7 +79,7 @@ var config = {
             "backbone.syphon": Path.resolve(libDir, "backbone/backbone.syphon-0.6.3.js"),
             "q": Path.resolve(libDir, "q/q-1.4.1.js"),
             "stacktrace": Path.resolve(rootDir, "node_modules/stacktrace-js"),
-            "fecha": Path.resolve(libDir, "fecha-2.1.0.js"),
+            "fecha": Path.resolve(rootDir, "node_modules/fecha"),
             
             
             "fs.background": Path.resolve(libDir, "jquery/formstone-1.0.0/js/background.js"),

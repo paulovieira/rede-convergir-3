@@ -1,5 +1,6 @@
 //require("./initiatives-edit.css");
 
+var _ = require("underscore");
 var Backbone = require("backbone");
 var Mn = require("backbone.marionette");
 //var $ = require("jquery");
@@ -27,60 +28,98 @@ var InitiativeEditModal = Mn.LayoutView.extend({
     // include in the template context the definitions object decorated with an extra "checked" property
     templateHelpers: function(){
 
-        // make a cheap clone of the definitions (to be used in a nunjucks loop in the template);
-        // each definition property is an array of objects
+        // make a cheap clone of the definitions (to be used in a nunjucks loops);
+        // note that each definition property is an array of objects
         var definitions = JSON.parse(JSON.stringify(Entities.definitions));
 
-        // if the model has the domain, add a corresponding "checked" attribute (to be used in the template)
+        // if the model has the domain, add a corresponding "checked" attribute 
+        // (makes the template logic much simpler)
         _.each(definitions.domain, function(obj){
  
-           if(_.contains(this.model.get("domains"), obj.id)){  obj.checked = true;  }
-        }, this);
-
-        // same for target
-        _.each(definitions.target, function(obj){
-
-            if(_.contains(this.model.get("target"), obj.id)){  obj.checked = true;  }
-        }, this);
-
-        // same for the typeId
-        _.each(definitions.type, function(obj){
-
-            if(this.model.get("typeId") === obj.id){  obj.checked = true;  }
+            obj.checked = _.contains(this.model.get("domains"), obj.id) ? true : false;
         }, this);
 
         // same for the initiativeStatusId
         _.each(definitions.initiativeStatus, function(obj){
 
-            if(this.model.get("initiativeStatusId") === obj.id){  obj.checked = true;  }
+            obj.checked = this.model.get("initiativeStatusId") === obj.id ? true : false;
+        }, this);
+
+        // same for the moderationStatusId
+        _.each(definitions.moderationStatus, function(obj){
+
+            obj.checked = this.model.get("moderationStatusId") === obj.id ? true : false;
         }, this);
 
         // same for the scopeId
         _.each(definitions.scope, function(obj){
 
-            if(this.model.get("scopeId") === obj.id){  obj.checked = true;  }
+            obj.checked = this.model.get("scopeId") === obj.id ? true : false;
+        }, this);
+
+        // same for target
+        _.each(definitions.target, function(obj){
+
+            obj.checked = _.contains(this.model.get("target"), obj.id) ? true : false;
+        }, this);
+
+        // same for the typeId
+        _.each(definitions.type, function(obj){
+
+            obj.checked = this.model.get("typeId") === obj.id ? true : false;
         }, this);
 
         // same for the visitorsId
         _.each(definitions.visitors, function(obj){
 
-            if(this.model.get("visitorsId") === obj.id){  obj.checked = true;  }
+            obj.checked = this.model.get("visitorsId") === obj.id ? true : false;
         }, this);
 
-        //debugger;
+
+        // repeat the process for the startDate field 
         var startDate = new Date(this.model.get("startDate"));
         var startDateMonth = startDate.getMonth();
         var startDateYear = startDate.getFullYear();
 
+        // in this case we have to generate an array of objects representing the months
+        // we reuse the internatiolization data that was previously configured in Fecha (see 
+        // the config file)
+        definitions.months = _.map(Fecha.i18n.monthNames, function(monthName, i){
+
+            return  { 
+                id: i,
+                title: monthName,
+                checked: startDateMonth === i ? true :  false
+            };
+        });
+
+        // same for influence (we manually build the array)
+        definitions.influence = [
+            {id: "0-10",            title: "0 &ndash; 10" },
+            {id: "10-25",           title: "10 &ndash; 25" },
+            {id: "25-100",          title: "25 &ndash; 100" },
+            {id: "100-500",         title: "100 &ndash; 500" },
+            {id: "500-5000",        title: "500 &ndash; 5000" },
+            {id: "5000-10000",      title: "5000 &ndash; 10000" },
+            {id: "10000-999999999", title: "10000 &ndash; 999999999" }
+        ];
+
+        _.each(definitions.influence, function(obj){
+
+            // important: use double equals to execute string to number coercion
+            obj.checked = this.model.get("influence")[0]  == obj.id.split("-")[0] ? true : false;
+        }, this);
+
+
         // the contents of this object will be included in the template context (the model)
         return {
             definitions: definitions,
-            startDateMonth: startDateMonth,
             startDateYear: startDateYear
-        }
+        };
     },
 
     className: "js-initiative-edit",
+
 
     ui: {
         "closeModalBtn": "button.js-close-modal",
@@ -91,6 +130,7 @@ var InitiativeEditModal = Mn.LayoutView.extend({
         "formInitiativeTarget":    "fieldset#initiatives-target-form    input[type=checkbox]",
         "formInitiativeInfluence": "fieldset#initiatives-influence-form input[type=radio]",
         "formInitiativeStatus":    "fieldset#initiatives-status-form    input[type=radio]",
+        "formInitiativeModerationStatus": "fieldset#initiatives-moderation-status-form input[type=radio]",
         
 
         "tooltips": 'span[data-toggle="tooltip"]',
@@ -122,6 +162,7 @@ var InitiativeEditModal = Mn.LayoutView.extend({
         this.ui.formInitiativeTarget.checkbox();
         this.ui.formInitiativeInfluence.checkbox();
         this.ui.formInitiativeStatus.checkbox();
+        this.ui.formInitiativeModerationStatus.checkbox();
         
         // active tooltips (bootstrap js plugin)
         this.ui.tooltips.tooltip({

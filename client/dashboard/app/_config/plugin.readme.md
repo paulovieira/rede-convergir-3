@@ -21,3 +21,44 @@ plugin's defaultRegion
 #### loading libraries
 
 bootstrap has to be imported using the imports loader
+
+
+#### routing and plugins
+
+possible api:
+
+
+path: "/initiatives"
+
+Q(
+    Radio.channel("menu").request("start", { 
+        region: publicRegion 
+    })
+)
+.then(function(menu){
+    return Radio.channel("initiatives").request("start", { 
+        region: menu.defaultView.getRegion(...) 
+    })
+})
+
+(the plugin should be started only if it hasn't already; if it is already start, the promise should resolve immediatelly)
+
+
+path: "/initiatives/:id"
+
+Q(
+    Radio.channel("menu").request("start", { 
+        region: publicRegion 
+    })
+)
+.then(function(menu){
+    return Radio.channel("initiatives").request("start", { 
+        region: menu.defaultView.getRegion(...) 
+    })
+})
+.then(function(initiatives){
+    return Radio.channel("xyz").request("start", { 
+        region: initiatives.defaultView.getRegion(...) 
+    })
+})
+

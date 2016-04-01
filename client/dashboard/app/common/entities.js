@@ -12,7 +12,7 @@ var InitiativesM = Backbone.Model.extend({
 // todo: include also the initiatives that have been excluded 
 var InitiativesC = Backbone.Collection.extend({
     model: InitiativesM,
-    url: "/api/v1/initiatives"
+    url: "/api/v1/initiatives?moderationStatusId=all"
 });
 
 var initiativesC = new InitiativesC();

@@ -33,7 +33,7 @@ internals.validation.target = internals.getDefinitionsArray("target");
 internals.validation.visitors = internals.getDefinitionsArray("visitors");
 internals.validation.scope = internals.getDefinitionsArray("scope");
 internals.validation.initiativeStatus = internals.getDefinitionsArray("initiative_status");
-internals.validation.moderationStatus = internals.getDefinitionsArray("moderation_status");
+internals.validation.moderationStatus = internals.getDefinitionsArray("moderation_status").concat("all");
 
 
 internals.correctUrl = function(url){

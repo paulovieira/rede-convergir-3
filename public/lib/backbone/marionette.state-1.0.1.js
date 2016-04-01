@@ -41,7 +41,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     // }
     constructor: function constructor() {
       var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
+//debugger;
       var initialState = _ref.initialState;
       var component = _ref.component;
       var preventDestroy = _ref.preventDestroy;

@@ -180,9 +180,19 @@ exports.readDefinitions2 = {
 		        searchConditions: {}
 		    })
 		    .then(function(data){
-		    
-    			var category, categories = ["domain", "event_type", "initiative_status", "scope", "target", "type", "visitors"];
-                var definitions = {};
+
+		    	var definitions = {};
+    			var categories = [
+    				"domain",
+    				"event_type",
+    				"initiative_status",
+    				"moderation_status",
+    				"scope",
+    				"target",
+    				"type",
+    				"visitors"
+    			];
+
                 for(var i=0; i<categories.length; i++){
                     definitions[categories[i]] = data.filter(function(obj){
 
@@ -190,12 +200,15 @@ exports.readDefinitions2 = {
                                     });
                 }
 
-                // correct the keys
+                // correct the category keys that have underscore
 				definitions["eventType"] = definitions["event_type"];
 				delete definitions["event_type"];
 
 				definitions["initiativeStatus"] = definitions["initiative_status"];
 				delete definitions["initiative_status"];
+
+				definitions["moderationStatus"] = definitions["moderation_status"];
+				delete definitions["moderation_status"];
 
 		        return reply(definitions);
 		    })

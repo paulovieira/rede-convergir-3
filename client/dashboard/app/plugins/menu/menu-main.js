@@ -18,7 +18,7 @@ var MenuMainState = Mn.State.extend({
         menuItem: ["activities", "initiatives", "events", "profile", undefined],
     }),
 
-    initialState: {
+    defaultState: {
         menuItem: undefined
     },
 
@@ -107,15 +107,16 @@ var MenuMain = Mn.LayoutView.extend({
         //Utils.logStack();
 
         var self = this;
-        Q.delay(300)
-            .then(Entities.initiativesC.fetch())
+        // Q.delay(300)
+        //     .then(Entities.initiativesC.fetch())
+        Q(Entities.initiativesC.fetch())
             .then(function(){
 
                 Radio.channel("initiatives").request("start", {
                     region: self.getRegion("default"),
-                    viewOptions: {
-                        collection: Entities.initiativesC
-                    }
+                    // viewOptions: {
+                    //     collection: Entities.initiativesC
+                    // }
                 });
                 
             });
@@ -155,7 +156,8 @@ var MenuMain = Mn.LayoutView.extend({
         // location.hash, it seems the route handler will be executed in a future loop
         // (we might have to use setTimeout to make sure it is working)
         if(!hash[0]){
-            window.location.hash = "#/activities";
+            //window.location.hash = "#/activities";
+            window.location.hash = "#/initiatives";
         }
 /*  
         else{

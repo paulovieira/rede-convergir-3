@@ -1,0 +1,7 @@
+.js-initiatives-list .table > tbody > tr > td {
+     vertical-align: middle;
+}
+
+.js-initiatives-list .table > tbody > tr > td > button {
+     font-weight: bold;
+}

@@ -5,7 +5,7 @@
 <div class="modal-body">
 
 
-	<h5>Informações básicas</h5>
+	<h5>1 - Informações básicas</h5>
 
 	<div class="row">
 	    <div class="col-sm-6">
@@ -34,6 +34,30 @@
 
 
 	    <div class="col-sm-6">
+
+
+            <label>Estado de aprovação</label>
+
+            {% for moderationStatus in definitions.moderationStatus %}
+            <fieldset id="initiatives-moderation-status-form">
+                <label for="{{ moderationStatus.id }}">
+                    <span title="{{ moderationStatus.description.pt }}" data-toggle="tooltip" data-placement="top">{{ moderationStatus.title.pt }}</span>
+                </label>
+                <input type="radio" id="{{ moderationStatus.id }}" name="moderationStatusId" value="{{ moderationStatus.id }}" {{ "checked" if moderationStatus.checked }}>
+            </fieldset>
+            {% endfor %}
+
+            <label style="margin-top: 5px;">Outro (se aplicável)</label>
+            <div class="row">
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="typeOther" value="{{ typeOther }}">
+                </div>
+            </div>
+
+
+
+
+
 	        <label>Rua</label>
 	        <input type="text" class="form-control" name="street" value="{{ street }}">
 
@@ -75,25 +99,15 @@
 			    <div class="col-sm-6">
 
                     <div class="form-group">
-                        <label>Mês</label>
                         <select class="form-control" name="startDateMonth">
-                            <option value="0" {{ "selected" if startDateMonth == 0 }}>Janeiro</option>
-                            <option value="1" {{ "selected" if startDateMonth == 1 }}>Fevereiro</option>
-                            <option value="2" {{ "selected" if startDateMonth == 2 }}>Março</option>
-                            <option value="3" {{ "selected" if startDateMonth == 3 }}>Abril</option>
-                            <option value="4" {{ "selected" if startDateMonth == 4 }}>Maio</option>
-                            <option value="5" {{ "selected" if startDateMonth == 5 }}>Junho</option>
-                            <option value="6" {{ "selected" if startDateMonth == 6 }}>Julho</option>
-                            <option value="7" {{ "selected" if startDateMonth == 7 }}>Agosto</option>
-                            <option value="8" {{ "selected" if startDateMonth == 8 }}>Setembro</option>
-                            <option value="9" {{ "selected" if startDateMonth == 9 }}>Outubro</option>
-                            <option value="10" {{ "selected" if startDateMonth == 10 }}>Novembro</option>
-                            <option value="11" {{ "selected" if startDateMonth == 11 }}>Dezembro</option>
-                        </select>
+                            {% for month in definitions.months %}
+                            <option value="{{ month.id }}" {{ "selected" if month.checked }}>{{ month.title }}</option>
+                            {% endfor %}
+                       </select>
                     </div>
+
 			    </div>
 			    <div class="col-sm-6">
-			    	<label>Ano</label>
 			    	<input type="text" class="form-control" name="startDateYear" value="{{ startDateYear }}">
 			    </div>
 		    </div>
@@ -101,10 +115,12 @@
 
 	</div>
 
-
-	<h5>Caracterização da iniciativa</h5>
+    <hr>
+    
+	<h5>2 - Caracterização da iniciativa</h5>
 
 	<div class="row">
+
 	    <div class="col-sm-6">
 	        <label>Tipo de iniciativa</label>
 	        
@@ -216,34 +232,16 @@
 
 	        <label>Estimativa do Universo de interacção directa (número de pessoas)</label>
 
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-0-10">0 &mdash; 10</label>
-			    <input type="radio" id="influence-0-10" name="influence" value="0-10" {{ "checked" if influence[0] == 0 }}>
-			</fieldset>
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-10-25">10 &mdash; 25</label>
-			    <input type="radio" id="influence-10-25" name="influence" value="10-25" {{ "checked" if influence[0] == 10 }}>
-			</fieldset>
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-25-100">25 &mdash; 100</label>
-			    <input type="radio" id="influence-25-100" name="influence" value="25-100" {{ "checked" if influence[0] == 25 }}>
-			</fieldset>
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-100-500">100 &mdash; 500</label>
-			    <input type="radio" id="influence-100-500" name="influence" value="100-500" {{ "checked" if influence[0] == 100 }}>
-			</fieldset>
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-500-5000">500 &mdash; 5000</label>
-			    <input type="radio" id="influence-500-5000" name="influence" value="500-5000" {{ "checked" if influence[0] == 500 }}>
-			</fieldset>
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-5000-10000">5000 &mdash; 10000</label>
-			    <input type="radio" id="influence-5000-10000" name="influence" value="5000-10000" {{ "checked" if influence[0] == 5000 }}>
-			</fieldset>
-			<fieldset id="initiatives-influence-form">
-			    <label for="influence-10000-999999999"> &gt; 10000</label>
-			    <input type="radio" id="influence-10000-999999999" name="influence" value="10000-999999999" {{ "checked" if influence[0] == 10000 }}>
-			</fieldset>
+            {% for influence in definitions.influence %}
+            <fieldset id="initiatives-influence-form">
+                <label for="{{ influence.id }}">
+                    {{ influence.title | safe }}
+                </label>
+                <input type="radio" id="{{ influence.id }}" name="influence" value="{{ influence.id }}" {{ "checked" if influence.checked }}>
+            </fieldset>
+            {% endfor %}
+
+
 	    </div>
 	</div>
 
@@ -295,8 +293,9 @@
 	    </div>
 	</div>
 
+    <hr>
 
-	<h5>Localizar no mapa</h5>
+	<h5>3 - Localizar no mapa</h5>
 	<p>Em desenvolvimento</p>
 {#
     	id : {{ id }} <br>

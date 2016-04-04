@@ -1,6 +1,6 @@
 require("./initiatives-list.css");
 
-//var $ = require("jquery");
+var $ = require("jquery");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
 var Entities = require("../../common/entities");

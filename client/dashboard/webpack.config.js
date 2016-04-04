@@ -162,6 +162,8 @@ if (process.env.NODE_ENV === "dev") {
 }
 else if (process.env.NODE_ENV === "production") {
 
+    config.output.publicPath = "/dashboard-app/_build/temp/";
+
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             compress: {

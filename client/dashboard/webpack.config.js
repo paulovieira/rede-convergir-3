@@ -45,14 +45,28 @@ var config = {
         // created; instead, the bundle will be created in-memory only and served
         // directly to the browser (available at /public/app.js in this case)
         path: Path.resolve(appDir, "_build/temp"),
-        filename: "app.js",
+
+        filename: process.env.NODE_ENV === "dev" ? "app.js" : "app.min.js",
+
+        // In dev mode: Webpack Dev Server uses publicPath to determine the path where
+        // the output files are expected to be served from
+        // "to make requests to the webpack-dev-server you need to provide a full URL in the 
+        // output.publicPath"
+
+        // in production mode: public path is used internally by webpack to reference
+        // resources that have not been bundled (such as fonts and images), but that
+        // have been copied to the directory where the bundle is
+        publicPath: process.env.NODE_ENV === "dev" ? 
+                        "http://localhost:8081/WEBPACK_DEV_SERVER" : 
+                        "/dashboard-app/_build/temp/"
     },
 
     plugins: [
 
         new webpack.optimize.CommonsChunkPlugin({
             name: "lib",
-            filename: "lib.js"
+            //filename: "lib.js"
+            filename: process.env.NODE_ENV === "dev" ? "lib.js" : "lib.min.js",
         }),
         new webpack.DefinePlugin({
             NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev')
@@ -174,13 +188,7 @@ if (process.env.NODE_ENV === "dev") {
 
     // the stacktrace library is heavy in the dependencies; use it only
     // in development
-    config.entry.lib.push(Path.resolve(rootDir, "node_modules/stacktrace-js"))
-
-    // Webpack Dev Server also uses publicPath to determine the path where the 
-    // output files are expected to be served from
-    // to make requests to the webpack-dev-server you need to provide a full URL in the 
-    // output.publicPath
-    config.output.publicPath = "http://localhost:8081/WEBPACK_DEV_SERVER";
+    config.entry.lib.push(Path.resolve(rootDir, "node_modules/stacktrace-js"));
 
     config.plugins.push(
         new webpack.SourceMapDevToolPlugin({
@@ -192,10 +200,6 @@ if (process.env.NODE_ENV === "dev") {
     );
 }
 else if (process.env.NODE_ENV === "production") {
-
-    // the public path used internally by webpack to load external resources
-    // (such as fonts)
-    config.output.publicPath = "/dashboard-app/_build/temp/";
 
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({

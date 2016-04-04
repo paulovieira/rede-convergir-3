@@ -79,15 +79,34 @@ exports.register = function(server, options, next){
         config: {
             handler: function(request, reply) {
 
-                
-                console.log(request.query);
+                //console.log(request.pre.initiatives);
+                var context = {
+                    urlParam1: "initiatives",
+                    initiatives: request.pre.initiatives,
+                    definitions: request.pre.definitions,
+                };
+
+                return reply.view(Path.join(__dirname, "templates/initiatives.html"), {ctx: context});
+            },
+
+            pre: [
+                [Pre.readInitiativesSlim, Pre.readDefinitions2]
+            ],
+        },
+    });
+
+    server.route({
+        path: "/export/iniciativas",
+        method: "GET",
+        config: {
+            handler: function(request, reply) {
 
                 //console.log(request.pre.initiatives);
                 var context = {
                     urlParam1: "initiatives",
                     initiatives: request.pre.initiatives,
                     definitions: request.pre.definitions,
-                    //query: request.query
+                    export: true
                 };
 
                 return reply.view(Path.join(__dirname, "templates/initiatives.html"), {ctx: context});

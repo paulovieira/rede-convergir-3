@@ -7,9 +7,9 @@ var Config = require("config");
 var Nunjucks = require("hapi-nunjucks");
 //var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
 var Pre = require("../../server/common/prerequisites");
-//var Boom = require("boom");
+var Boom = require("boom");
 //var _ = require("underscore");
-//var Glob = require("glob");
+var Glob = require("glob");
 
 
 var internals = {};
@@ -164,10 +164,9 @@ internals.addNunjucksGlobals = function(env){
     env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
     env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
     
-    /*
+    
     var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
     var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
-    var appTemplatesBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app-templates.min.js"));
 
 
     if(!libBuild.length){
@@ -176,15 +175,10 @@ internals.addNunjucksGlobals = function(env){
     if(!appBuild.length){
         throw Boom.badImplementation("appBuild is missing");
     }
-    if(!appTemplatesBuild.length){
-        throw Boom.badImplementation("appTemplatesBuild is missing");
-    }
-
 
     env.addGlobal("libBuild",       Path.parse(libBuild[0]).base);
     env.addGlobal("appBuild",       Path.parse(appBuild[0]).base);
-    env.addGlobal("appTemplatesBuild", Path.parse(appTemplatesBuild[0]).base);
-*/
+
 };
 
 exports.register.attributes = {

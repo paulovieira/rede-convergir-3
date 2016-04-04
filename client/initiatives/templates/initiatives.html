@@ -56,9 +56,11 @@
 
 {% block body %}
 
-
+{% if not ctx.export %}
 
 {{ navbar(ctx) }}
+
+{% endif %}
 
 <div id="main-container">
 

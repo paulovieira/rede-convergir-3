@@ -1,5 +1,4 @@
 var Fecha = require("fecha");
-//var Entities = require("./app/common/entities");
 
 module.exports = function(env){
 
@@ -15,5 +14,5 @@ module.exports = function(env){
     });
 
     env.addGlobal("lang", "pt");
-    //env.addGlobal("definitions", Entities.definitions);
+
 };

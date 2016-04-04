@@ -19,6 +19,22 @@
  * typography
  * --------------------------------------------------
  */
+
+ .dummy-iradio_flat {
+   display: inline-block;
+   width: 20px;
+   height: 20px;
+   padding: 0 !important;
+   margin: 0;
+   vertical-align: middle;
+   cursor: pointer;
+   background: url("img/check_flat/default.png") no-repeat;
+   border: none;
+
+   *display: inline;
+ }
+
+
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #434a54;

@@ -220,7 +220,7 @@ var MenuBodyLV = Mn.LayoutView.extend({
                     "baseLayers": baseLayersC.toJSON(),
                     "types": typesC.toJSON(),
                     "domains": domainsC.toJSON(),
-                    "currentHref": location.href
+                    "location": window.location
                 });
             },
             sizeClass: ""

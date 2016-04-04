@@ -14,7 +14,10 @@ require("fs.dropdown");
 
 // bootstrap javascript has to be imported using the imports loader
 // https://github.com/webpack/imports-loader
-require("imports?jQuery=jquery!bootstrap"); 
+require("bootstrap");
+require("bootstrap-notify");
+
+
 
 /*
 $("select").dropdown();

@@ -9,6 +9,8 @@ var Behaviors = require("../../common/behaviors");
 //var Radio = require("backbone.radio");
 var Fecha = require("fecha");
 var Entities = require("../../common/entities");
+var Q = require("q");
+var Utils = require("../../common/utils");
 
 var InitiativeEditModalStatus = Mn.State.extend({
 
@@ -165,6 +167,12 @@ var InitiativeEditModal = Mn.LayoutView.extend({
 
     events: {
         "click @ui.btnSave": function(e){
+
+            // disable the button and add the animation 
+            var $saveSpan = this.$("button.js-modal-save > span");
+            $saveSpan.append('<i style="margin-left: 6px;" class="fa fa-cog fa-spin"></i>');
+            $saveSpan.attr("disabled");
+
             //debugger;
             var data = Backbone.Syphon.serialize(this);
 
@@ -199,8 +207,25 @@ var InitiativeEditModal = Mn.LayoutView.extend({
                 throw new Error("there is no model with id " + this.options.templateContext.id + " in the initiatives collection");
             }
 
-            initiativeM.set(data);
-            initiativeM.save(data);
+            var self = this;
+            Q(initiativeM.save(data, {wait: true}))
+                .then(function(response){
+
+                    var msg = 'A iniciativa "' + data.name + '" foi actualizada';
+                    self.triggerMethod("hide:modal");
+                    Utils.notify("success", msg);
+                    
+                })
+                .catch(function(err){
+
+                    var msg = 'A iniciativa "' + data.name + '" não foi actualizada';
+                    msg += '<br><br> (ERRO: "' + Utils.getErrorMessage(err) + '")';
+                    self.triggerMethod("hide:modal");
+                    Utils.notify("danger", msg);
+
+                })
+                .done();
+            
 
             
         },

@@ -4,22 +4,39 @@ var Utils = require("./utils");
 
 var Modal = Mn.Behavior.extend({
 
+    initialize: function(){
+
+        this.modalRegion = Radio.channel("public").request("modalRegion");
+        this.$modal = this.modalRegion.$el.parent().parent();
+    },
+
     // at this point the modal's html is already in DOM (in the public region given by 
     // div.mn-r-modal-contents, created in the config); 
     // we now show it using bootstrap's js api; see:
     // http://getbootstrap.com/javascript/#modals-methods
     onAttach: function(){
-//debugger;
-        var modalRegion = Radio.channel("public").request("modalRegion");
-        $modal = modalRegion.$el.parent().parent();
-        $modal.modal("show");
 
-        // the dom manipulation to hide the modal is completely handled by bootstrap (via the "data-dismiss" attribute)
-        // but still have to attach a handler to actually empty the modalRegion (we just care about destroying the view)
-        $modal.one('hidden.bs.modal', function(){
+        this.$modal.modal("show");
 
-            modalRegion.empty();
+        // the dom manipulation to hide the modal is completely handled by bootstrap (via the "data-dismiss"
+        // attribute) but we still have to attach a handler to actually empty the modalRegion (we just care
+        // about destroying the view)
+        var self = this;
+        this.$modal.one('hidden.bs.modal', function(){
+
+            self.modalRegion.empty();
         });
+    },
+
+    onHideModal: function(){
+        
+        // this method is called after we get the response to the PUT request (save data);
+        // instead of using the bootstrap js api directly, we simulate a click in the "close"
+        // button and let bootstrap handle the closing for us
+
+        // note: data-dismiss="modal" is the special data attributes that bootstrap
+        // identifies as the element whose click will close the modal
+        this.view.$('[data-dismiss="modal"]').trigger("click");
     }
 
 });

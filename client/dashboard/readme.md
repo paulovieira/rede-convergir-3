@@ -1,13 +1,20 @@
 
 ### Dashboard client side app
 
-Make sure `webpack` and `webpack-dev-server` are installed globally.
-
-Make sure the the webpack loaders and plugins that will be used are installed locally.
+Make sure `webpack` and `webpack-dev-server` are installed **locally**, as well as the webpack loaders and plugins that will be used (no need to do manually install in our case because they are in package.json already)
 
 ```sh
-npm install exports-loader imports-loader file-loader nunjucks-loader style-loader url-loader bell-on-bundler-error-plugin --save-dev
+npm install \
+    webpack  \
+    webpack-dev-server  \
+    css-loader exports-loader \
+    imports-loader file-loader \
+    nunjucks-loader \
+    style-loader \
+    url-loader \
+    bell-on-bundler-error-plugin
 ```
+
 
 #### Dev mode
 

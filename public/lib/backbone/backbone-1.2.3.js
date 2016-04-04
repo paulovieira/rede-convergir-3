@@ -611,7 +611,7 @@
       } else {
         (attrs = {})[key] = val;
       }
-
+      //debugger;
       options = _.extend({validate: true, parse: true}, options);
       var wait = options.wait;
 
@@ -630,6 +630,7 @@
       var success = options.success;
       var attributes = this.attributes;
       options.success = function(resp) {
+        //debugger;
         // Ensure attributes are restored during synchronous saves.
         model.attributes = attributes;
         var serverAttrs = options.parse ? model.parse(resp, options) : resp;

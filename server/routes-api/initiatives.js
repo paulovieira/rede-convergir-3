@@ -371,6 +371,7 @@ console.log("update: \n", request.payload[0]);
                 cmd: "read",
                 searchConditions: [{ id: request.payload[0].id }] // xxx
             })
+            .delay(500)
             .then(function(data){
 
                 if (data.length === 0) {

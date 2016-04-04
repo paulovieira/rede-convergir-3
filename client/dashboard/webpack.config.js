@@ -21,6 +21,8 @@ var config = {
         lib: [
             Path.resolve(libDir, "jquery/jquery-1.11.2.js"),
             Path.resolve(libDir, "underscore/underscore-1.8.3"),
+            Path.resolve(libDir, "bootstrap/3.3.5/js/bootstrap.js"),
+            Path.resolve(libDir, "bootstrap/bootstrap-notify-b8d0eb.js"),
             Path.resolve(libDir, "backbone/backbone-1.2.3.js"),
             Path.resolve(libDir, "backbone/backbone.marionette-2.4.4.js"),
             Path.resolve(libDir, "backbone/marionette.state-1.0.1.js"),
@@ -63,6 +65,14 @@ var config = {
 
 
     resolve: {
+
+        // note: we can omit the relative or full path to the node_modules using the 
+        // modulesDirectories option below
+
+        // modulesDirectories: [
+        //     Path.resolve(rootDir, "node_modules")
+        // ],
+
         alias: {
             "jquery": Path.resolve(libDir, "jquery/jquery-1.11.2.js"),
             "underscore": Path.resolve(libDir, "underscore/underscore-1.8.3"),
@@ -70,6 +80,7 @@ var config = {
             // bootstrap has to imported using the "imports-loader", passing a reference
             // to jquery; see ./config/config.js
             "bootstrap": Path.resolve(libDir, "bootstrap/3.3.5/js/bootstrap.js"),
+            "bootstrap-notify": Path.resolve(libDir, "bootstrap/bootstrap-notify-b8d0eb.js"),
             
             "backbone": Path.resolve(libDir, "backbone/backbone-1.2.3.js"),
             "backbone.marionette": Path.resolve(libDir, "backbone/backbone.marionette-2.4.4.js"),
@@ -81,11 +92,12 @@ var config = {
             "stacktrace": Path.resolve(rootDir, "node_modules/stacktrace-js"),
             "fecha": Path.resolve(rootDir, "node_modules/fecha"),
             
-            
+            // formstone
             "fs.background": Path.resolve(libDir, "jquery/formstone-1.0.0/js/background.js"),
             "fs.checkbox": Path.resolve(libDir, "jquery/formstone-1.0.0/js/checkbox.js"),
             "fs.dropdown": Path.resolve(libDir, "jquery/formstone-1.0.0/js/dropdown.js"),
 
+            // alias for css files
             "fs.light-theme.css": Path.resolve(libDir, "jquery/formstone-1.0.0/css/themes/light.css"),
             "fs.background.css": Path.resolve(libDir, "jquery/formstone-1.0.0/css/background.css"),
             "fs.checkbox.css": Path.resolve(libDir, "jquery/formstone-1.0.0/css/checkbox.css"),
@@ -111,19 +123,38 @@ var config = {
         { 
             // inline base64 URLs for images that are <= 1k; direct URLs for the others 
             // (the files will be copied to the output dir: _build/temp)
-            test: /\.(png|jpg)$/, 
-            loader: 'url-loader?limit=1024' 
+            test: /\.(png|jpg)$/,
+            loader: 'url-loader',
+            query: {
+                limit: 1024
+            }
         },
         {
             // fonts loaded in stylesheets (via "src: url('...')" ); 
             test: /\.(woff|woff2|ttf|eot|svg)$/,
-            loader: 'url-loader?limit=1'
+            loader: 'url-loader',
+            query: {
+                limit: 1
+            }
         },
         {
             test: /\.(html|nunjucks)$/,
             loader: 'nunjucks-loader',
             query: {
                 config: Path.resolve(__dirname, 'nunjucks.config.js')
+            }
+        },
+        {
+
+            // bootstrap javascript has to be imported using the imports loader
+            // https://github.com/webpack/imports-loader
+
+            // note that are have configured a "bootstrap" alias, however the test in the
+            // loader is for the actual filename/directory that the alias refer to
+            test: /(bootstrap.js)$/,
+            loader: 'imports',
+            query: {
+                jQuery: "jquery"
             }
         }
 
@@ -162,6 +193,8 @@ if (process.env.NODE_ENV === "dev") {
 }
 else if (process.env.NODE_ENV === "production") {
 
+    // the public path used internally by webpack to load external resources
+    // (such as fonts)
     config.output.publicPath = "/dashboard-app/_build/temp/";
 
     config.plugins.push(

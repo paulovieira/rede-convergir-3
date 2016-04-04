@@ -80,6 +80,9 @@ Mn.View.prototype.renderer = function(template, data) {
     }
 };
 
+Mn.getClosestCid = function(el){
+    return $(el).closest('[data-mn-cid*="view"]').attr('data-mn-cid');
+};
 
 Mn.Router = BaseRouter.extend({
     onNavigate: function(routeData) {

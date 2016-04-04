@@ -5,9 +5,12 @@ var _ = require("underscore");
 var Q = require("q");
 var Backbone = require("backbone");
 var Mn = require("backbone.marionette");
-var Radio = require("backbone.radio");
+//var Radio = require("backbone.radio");
 var Entities = require("../../common/entities");
 var Behaviors = require("../../common/behaviors");
+
+var THIRTY_SECONDS = 30*1000;
+//var THIRTY_SECONDS = 5*1000;
 
 var InitiativesMainState = Mn.State.extend({
 
@@ -97,19 +100,41 @@ var InitiativesMain = Mn.LayoutView.extend({
                                             .keys()
                                             .value();
 
-            var initiatives = _.filter(Entities.initiativesC.toJSON(), function(obj){
-
-                return _.contains(selectedModerationStatus, obj.moderationStatusId)
-            });
 
             this.channel.request("showView", {
                 view: "loading-view",
                 region: this.getRegion("initiativesList")
             });
 
+            // fetch the collection data from the server, but only if the last fetch
+            // has been done more than 30 seconds ago
+            var p1 = Q()
+                    .then(function(){
+
+                        if(Date.now() - Entities.initiativesC.lastFetch > THIRTY_SECONDS){
+                            return Entities.initiativesC.fetch();    
+                        }
+
+                        return false;
+                    })
+                    .then(function(collectionHasFetched){
+
+                        if(collectionHasFetched){
+                            Entities.initiativesC.lastFetch = new Date().getTime();    
+                        }
+                    });
+
+            var p2 = Q.delay(300);
+
             var self = this;
-            Q.delay(300)
+
+            Q.all([p1, p2])
             .then(function(){
+
+                var initiatives = _.filter(Entities.initiativesC.toJSON(), function(obj){
+
+                    return _.contains(selectedModerationStatus, obj.moderationStatusId)
+                });
 
                 self.channel.request("showView", {
                      view: "initiatives-list",
@@ -120,8 +145,8 @@ var InitiativesMain = Mn.LayoutView.extend({
                          
                      },
                      region: self.getRegion("initiativesList"),
-                });                  
-            });
+                });  
+            })
 
         }
     },

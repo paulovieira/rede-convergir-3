@@ -31,10 +31,18 @@ var InitiativesList = Mn.LayoutView.extend({
                 throw new Error("there is no model with id " + initiativeId + " in the initiatives collection");
             }
 
-            this.channel.request("showView", {
+            // this.channel.request("showView", {
+            //     view: "initiative-edit-modal",
+            //     viewOptions: {
+            //         model: initiativeM
+            //     },
+            //     region: Radio.channel("public").request("modalRegion")
+            // });
+            this.plugin.showView({
                 view: "initiative-edit-modal",
                 viewOptions: {
-                    model: initiativeM
+                    //model: initiativeM,
+                    templateContext: initiativeM.toJSON()
                 },
                 region: Radio.channel("public").request("modalRegion")
             });

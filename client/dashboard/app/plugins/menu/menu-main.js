@@ -11,6 +11,9 @@ var Utils = require("../../common/utils");
 var Entities = require("../../common/entities");
 var Behaviors = require("../../common/behaviors");
 
+var initiativesPlugin = require("../initiatives/initiatives-plugin.js");
+var activityPlugin = require("../activity/activity-plugin.js");
+
 var MenuMainState = Mn.State.extend({
 
     modelClass: Entities.getStateModelClass({
@@ -99,34 +102,32 @@ var MenuMain = Mn.LayoutView.extend({
         //debugger;
         this.ui.menuItem.filter("[id*='initiatives']").addClass('active');
 
-        Radio.channel("initiatives").request("showView", {
+        // Radio.channel("initiatives").request("showView", {
+        //     view: "loading-view",
+        //     region: this.getRegion("default")
+        // });
+        initiativesPlugin.showView({
             view: "loading-view",
             region: this.getRegion("default")
         });
 
         //Utils.logStack();
 
-        var self = this;
-        // Q.delay(300)
-        //     .then(Entities.initiativesC.fetch())
-        Q(Entities.initiativesC.fetch())
-            .then(function(){
+        initiativesPlugin.start({
+            region: this.getRegion("default"),
+        });
 
-                Radio.channel("initiatives").request("start", {
-                    region: self.getRegion("default"),
-                    // viewOptions: {
-                    //     collection: Entities.initiativesC
-                    // }
-                });
-                
-            });
     },
 
     onActivitiesPluginStart: function(){
         //debugger;
         this.ui.menuItem.filter("[id*='activities']").addClass('active');
 
-        Radio.channel("activities").request("showView", {
+        // Radio.channel("activities").request("showView", {
+        //     view: "loading-view",
+        //     region: this.getRegion("default")
+        // });
+        activityPlugin.showView({
             view: "loading-view",
             region: this.getRegion("default")
         });
@@ -135,7 +136,10 @@ var MenuMain = Mn.LayoutView.extend({
         Q.delay(300)
             .then(function(){
 
-                Radio.channel("activities").request("start", {
+                // Radio.channel("activity").request("start", {
+                //     region: self.getRegion("default")
+                // });
+                activityPlugin.start({
                     region: self.getRegion("default")
                 });
                 

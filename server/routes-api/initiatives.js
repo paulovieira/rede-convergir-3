@@ -115,48 +115,48 @@ internals.validatePayloadForUpdate = function(value, options, next) {
         id: Joi.number().integer().min(0).required(),
 
         // from here below, it is the same validation as in "create"; see comments above;
-        name: Joi.string().trim().required(),
-        slug: Joi.string().trim(),
-        description: Joi.string().trim().required(),
-        typeId: Joi.any().only(internals.validation.type),
-        typeOther: Joi.string().trim().allow(""),
-        domains: Joi.array().items(Joi.string().only(internals.validation.domains)),
-        domainsOther: Joi.string().trim().allow(""),
-        url: Joi.string().trim().allow("").required(),
-        contactName: Joi.string().trim().required(),
-        email: Joi.string().trim().allow("").required(),
-        phone: Joi.string().trim().allow("").required(),
-        contactOther: Joi.string().trim().allow(""),
-        logo: Joi.object({
-                filename: Joi.string().allow(""),
-                min: Joi.number().integer(),
-                max: Joi.number().integer(),
-                exclusive: Joi.boolean()
-            }).required(), 
-        street: Joi.string().trim().allow("").required(),
-        city: Joi.string().trim().allow("").required(),
-        postalCode: Joi.string().trim().allow("").required(),
-        countryCode: Joi.string().trim(),
-        coordinates: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required(),  // array must contain at least two numbers
-        promoter: Joi.string().trim().allow("").required(),
-        startDate: Joi.date().iso().required(),
+            name: Joi.string().trim().required(),
+            slug: Joi.string().trim(),
+            description: Joi.string().trim().required(),
+            typeId: Joi.any().only(internals.validation.type),
+            typeOther: Joi.string().trim().allow(""),
+            domains: Joi.array().items(Joi.string().only(internals.validation.domains)),
+            domainsOther: Joi.string().trim().allow(""),
+            url: Joi.string().trim().allow("").required(),
+            contactName: Joi.string().trim().required(),
+            email: Joi.string().trim().allow("").required(),
+            phone: Joi.string().trim().allow("").required(),
+            contactOther: Joi.string().trim().allow(""),
+            logo: Joi.object({
+                    filename: Joi.string().allow(""),
+                    min: Joi.number().integer(),
+                    max: Joi.number().integer(),
+                    exclusive: Joi.boolean()
+                }).required(), 
+            street: Joi.string().trim().allow("").required(),
+            city: Joi.string().trim().allow("").required(),
+            postalCode: Joi.string().trim().allow("").required(),
+            countryCode: Joi.string().trim(),
+            coordinates: Joi.array().items(Joi.number().required(), Joi.number().required()).length(2).required(),  // array must contain at least two numbers
+            promoter: Joi.string().trim().allow("").required(),
+            startDate: Joi.date().iso().required(),
         //registryDate: Joi.date().iso(),
         //updateDate: Joi.date().iso(),
-        visitorsId: Joi.string().only(internals.validation.visitors),
-        groupSize: Joi.string().trim().allow("").required(),
-        scopeId: Joi.string().only(internals.validation.scope).required(),
+            visitorsId: Joi.string().only(internals.validation.visitors),
+            groupSize: Joi.string().trim().allow("").required(),
+            scopeId: Joi.string().only(internals.validation.scope).required(),
         
-        target: Joi.array().items(Joi.string().only(internals.validation.target)).required(),
+            target: Joi.array().items(Joi.string().only(internals.validation.target)).required(),
 
-        targetOther: Joi.string().trim().allow(""),
-        influence: Joi.array().items(Joi.number()).required(),
-        physicalArea: Joi.string().trim().allow("").required(),
-        videoUrl: Joi.string().trim().allow("").required(),
-        docUrl: Joi.string().trim().allow("").required(),
-        initiativeStatusId: Joi.string().only(internals.validation.initiativeStatus),
-        moderationStatusId: Joi.string().only(internals.validation.moderationStatus),
+            targetOther: Joi.string().trim().allow(""),
+            influence: Joi.array().items(Joi.number()).required(),
+            physicalArea: Joi.string().trim().allow("").required(),
+            videoUrl: Joi.string().trim().allow("").required(),
+            docUrl: Joi.string().trim().allow("").required(),
+            initiativeStatusId: Joi.string().only(internals.validation.initiativeStatus),
+            moderationStatusId: Joi.string().only(internals.validation.moderationStatus),
 
-        emailTemplate: Joi.string().only("awaitingApproval", "approved")
+            emailTemplate: Joi.string().only("awaitingApproval", "approved")
     });
 
     return Validate.payload(value, options, next, schemaCreate);
@@ -353,6 +353,7 @@ internals.create = {
 internals.update = {
 
     handler: function(request, reply) {
+console.log("update: \n", request.payload[0]);
 
         ///Utils.logCallsite(Hoek.callStack()[0]);
         var utils = request.server.methods.utils;

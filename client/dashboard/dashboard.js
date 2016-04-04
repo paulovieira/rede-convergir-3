@@ -145,14 +145,6 @@ internals.addNunjucksFilters = function(env){
          return "";
      });
 
-     env.addFilter('parseNewLines', function(text) {
-
-         text = text.replace("<br /><br /><br /><br />", "<br />");
-         text = text.replace("<br /><br /><br />", "<br />");
-         text = text.replace("<br /><br />", "<br />");
-
-         return text.replace("<br />", "<br /><br />");
-    });
 
     env.addFilter('toFixed', function(num, precision) {
 

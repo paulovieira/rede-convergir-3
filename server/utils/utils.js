@@ -53,7 +53,7 @@ exports.sendEmail = function sendEmail(templateName, context, callback){
     var message = template(context);
     message.html = _s.trim(message.html);
 
-    //console.log("message", message);
+    //console.log("email message (REMOVE COMMENTED CODE)\n", message);
 
     // note that we don't care about the response from mandrill, so we don't call the 
     // given callback (in fact the callback is not even given)
@@ -73,6 +73,7 @@ exports.sendEmail = function sendEmail(templateName, context, callback){
             //callback(err);
         }
     );
+    /**/
 };
 
 exports.logCallsite = function logCallsite(callsiteObj) {

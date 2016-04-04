@@ -258,7 +258,7 @@
                 <div class="list-block">
                     <div title="Descrição">
                         <span class="field-title">Descrição: </span>
-                        {{ ctx.data.description | safe | parseNewLines }}
+                        {{ ctx.data.description | safe | replace("\n", "<br />") }} 
                     </div>
                 </div>
 

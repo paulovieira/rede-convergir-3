@@ -4,9 +4,12 @@ var Backbone = require("backbone");
 var InitiativesM = Backbone.Model.extend({
     defaults: {
     },
-    // parse: function(response){
-    //     return response;
-    // }
+
+    // we need to specify the urlRoot because the url in the collection
+    // has a query string, so the updates would result in something like
+    // PUT /api/v1/initiatives?moderationStatusId=all/123
+    urlRoot: "/api/v1/initiatives"
+
 });
 
 // todo: include also the initiatives that have been excluded 
@@ -17,6 +20,8 @@ var InitiativesC = Backbone.Collection.extend({
 
 var initiativesC = new InitiativesC();
 
+// epoch time (1970.01.01)
+initiativesC.lastFetch = new Date(0).getTime();
 
 
 

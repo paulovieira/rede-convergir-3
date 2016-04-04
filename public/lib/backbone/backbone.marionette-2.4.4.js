@@ -578,6 +578,7 @@
   // utility method for parsing @ui. syntax strings
   // into associated selector
   Marionette.normalizeUIString = function(uiString, ui) {
+    //debugger;
     return uiString.replace(/@ui\.[a-zA-Z_$0-9]*/g, function(r) {
       return ui[r.slice(4)];
     });
@@ -588,6 +589,7 @@
   // swaps the @ui with the associated selector.
   // Returns a new, non-mutated, parsed events hash.
   Marionette.normalizeUIKeys = function(hash, ui) {
+    //debugger;
     return _.reduce(hash, function(memo, val, key) {
       var normalizedKey = Marionette.normalizeUIString(key, ui);
       memo[normalizedKey] = val;
@@ -599,6 +601,7 @@
   // a given value for regions
   // swaps the @ui with the associated selector
   Marionette.normalizeUIValues = function(hash, ui, properties) {
+    //debugger;
     _.each(hash, function(val, key) {
       if (_.isString(val)) {
         hash[key] = Marionette.normalizeUIString(val, ui);
@@ -1727,6 +1730,7 @@
     // normalize the keys of passed hash with the views `ui` selectors.
     // `{"@ui.foo": "bar"}`
     normalizeUIKeys: function(hash) {
+      //debugger;
       var uiBindings = _.result(this, '_uiBindings');
       return Marionette.normalizeUIKeys(hash, uiBindings || _.result(this, 'ui'));
     },
@@ -1734,6 +1738,7 @@
     // normalize the values of passed hash with the views `ui` selectors.
     // `{foo: "@ui.bar"}`
     normalizeUIValues: function(hash, properties) {
+      //debugger;
       var ui = _.result(this, 'ui');
       var uiBindings = _.result(this, '_uiBindings');
       return Marionette.normalizeUIValues(hash, uiBindings || ui, properties);
@@ -1773,6 +1778,7 @@
   
     // internal method to delegate DOM events and triggers
     _delegateDOMEvents: function(eventsArg) {
+      //debugger;
       var events = Marionette._getValue(eventsArg || this.events, this);
   
       // normalize ui keys

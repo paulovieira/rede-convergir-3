@@ -9,6 +9,8 @@ var MenuMain = require("./menu-main");
 var Entities = require("../../common/entities");
 //var MenuRouteHandlers = require("./menu-route-handlers")
 
+
+
 var MenuPlugin = Mn.Plugin.extend({
     name: "menu",
     dev: NODE_ENV==="dev",

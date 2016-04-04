@@ -1296,6 +1296,8 @@
     // using `selector`). This only works for delegate-able events: not `focus`,
     // `blur`, and not `change`, `submit`, and `reset` in Internet Explorer.
     delegate: function(eventName, selector, listener) {
+      //this.$el.on(eventName + '.delegateEvents' + this.cid, selector, listener);
+      //debugger;
       this.$el.on(eventName + '.delegateEvents' + this.cid, selector, listener);
       return this;
     },
@@ -1327,9 +1329,13 @@
     // an element from the `id`, `className` and `tagName` properties.
     _ensureElement: function() {
       if (!this.el) {
+        //debugger;
         var attrs = _.extend({}, _.result(this, 'attributes'));
         if (this.id) attrs.id = _.result(this, 'id');
         if (this.className) attrs['class'] = _.result(this, 'className');
+        
+        //attrs["data-cid"] = this.cid;
+        
         this.setElement(this._createElement(_.result(this, 'tagName')));
         this._setAttributes(attrs);
       } else {

@@ -1,4 +1,4 @@
-//require("./initiatives-edit.css");
+require("./initiative-edit-modal.css");
 
 var _ = require("underscore");
 var Backbone = require("backbone");
@@ -10,6 +10,21 @@ var Behaviors = require("../../common/behaviors");
 var Fecha = require("fecha");
 var Entities = require("../../common/entities");
 
+var InitiativeEditModalStatus = Mn.State.extend({
+
+    defaultState: {
+        moderationStatus: undefined
+    },
+
+    viewEvents: {
+        "change:moderationStatus": function(moderationStatus){
+            //debugger;
+            this.set("moderationStatus", moderationStatus);
+        }
+    },
+
+
+});
 
 var InitiativeEditModal = Mn.LayoutView.extend({
 
@@ -20,6 +35,13 @@ var InitiativeEditModal = Mn.LayoutView.extend({
     behaviors: [
         {
             behaviorClass: Behaviors.Modal,
+        },
+
+        // state syncronization setup
+        {
+            behaviorClass: Behaviors.SyncState,
+            stateClass: InitiativeEditModalStatus,
+            syncEvent: "before:render"
         }
     ],
 
@@ -36,48 +58,48 @@ var InitiativeEditModal = Mn.LayoutView.extend({
         // (makes the template logic much simpler)
         _.each(definitions.domain, function(obj){
  
-            obj.checked = _.contains(this.model.get("domains"), obj.id) ? true : false;
+            obj.checked = _.contains(this.options.templateContext.domains, obj.id) ? true : false;
         }, this);
 
         // same for the initiativeStatusId
         _.each(definitions.initiativeStatus, function(obj){
 
-            obj.checked = this.model.get("initiativeStatusId") === obj.id ? true : false;
+            obj.checked = this.options.templateContext.initiativeStatusId === obj.id ? true : false;
         }, this);
 
         // same for the moderationStatusId
         _.each(definitions.moderationStatus, function(obj){
 
-            obj.checked = this.model.get("moderationStatusId") === obj.id ? true : false;
+            obj.checked = this.options.templateContext.moderationStatusId === obj.id ? true : false;
         }, this);
 
         // same for the scopeId
         _.each(definitions.scope, function(obj){
 
-            obj.checked = this.model.get("scopeId") === obj.id ? true : false;
+            obj.checked = this.options.templateContext.scopeId === obj.id ? true : false;
         }, this);
 
         // same for target
         _.each(definitions.target, function(obj){
 
-            obj.checked = _.contains(this.model.get("target"), obj.id) ? true : false;
+            obj.checked = _.contains(this.options.templateContext.target, obj.id) ? true : false;
         }, this);
 
         // same for the typeId
         _.each(definitions.type, function(obj){
 
-            obj.checked = this.model.get("typeId") === obj.id ? true : false;
+            obj.checked = this.options.templateContext.typeId === obj.id ? true : false;
         }, this);
 
         // same for the visitorsId
         _.each(definitions.visitors, function(obj){
 
-            obj.checked = this.model.get("visitorsId") === obj.id ? true : false;
+            obj.checked = this.options.templateContext.visitorsId === obj.id ? true : false;
         }, this);
 
 
         // repeat the process for the startDate field 
-        var startDate = new Date(this.model.get("startDate"));
+        var startDate = new Date(this.options.templateContext.startDate);
         var startDateMonth = startDate.getMonth();
         var startDateYear = startDate.getFullYear();
 
@@ -107,19 +129,22 @@ var InitiativeEditModal = Mn.LayoutView.extend({
         _.each(definitions.influence, function(obj){
 
             // important: use double equals to execute string to number coercion
-            obj.checked = this.model.get("influence")[0]  == obj.id.split("-")[0] ? true : false;
+            obj.checked = this.options.templateContext.influence[0]  == obj.id.split("-")[0] ? true : false;
         }, this);
 
 
         // the contents of this object will be included in the template context (the model)
-        return {
+        return _.extend(this.options.templateContext, {
             definitions: definitions,
             startDateYear: startDateYear
-        };
+        });
+        // return {
+        //     definitions: definitions,
+        //     startDateYear: startDateYear
+        // };
     },
 
-    className: "js-initiative-edit",
-
+    className: "mn-initiative-edit-modal",
 
     ui: {
         "closeModalBtn": "button.js-close-modal",
@@ -140,19 +165,70 @@ var InitiativeEditModal = Mn.LayoutView.extend({
 
     events: {
         "click @ui.btnSave": function(e){
-            debugger;
+            //debugger;
             var data = Backbone.Syphon.serialize(this);
+
+            // convert domains and target form object to array
+            data.domains = _.chain(data.domains)
+                            .pick(function(val){ return !!val })
+                            .keys()
+                            .value();
+
+            data.target = _.chain(data.target)
+                            .pick(function(val){ return !!val })
+                            .keys()
+                            .value();
             
             // influence
             data.influence = data.influence.split("-");
 
             // start date
-            var startDate = new Date(data.startDateYear, data.startDateMonth, 1);
+            var startDate = new Date(data.startDateYear, data.startDateMonth, 1).toISOString();
+            delete data.startDateMonth;
+            delete data.startDateYear;
+
+
+            data.logo = this.options.templateContext.logo;
+            data.coordinates = this.options.templateContext.coordinates;
+            data.docUrl = this.options.templateContext.docUrl || "";
+            //data.countryCode = this.options.templateContext.countryCode;
+            //data.emailTemplate = this.options.templateContext.emailTemplate;
+            
+            var initiativeM = Entities.initiativesC.get(this.options.templateContext.id);
+            if(!initiativeM){
+                throw new Error("there is no model with id " + this.options.templateContext.id + " in the initiatives collection");
+            }
+
+            initiativeM.set(data);
+            initiativeM.save(data);
+
+            
+        },
+
+        "change @ui.formInitiativeModerationStatus": function(e){
+            //debugger;
+
+            // trigger a change in the state
+            var moderationStatusId = Backbone.Syphon.serialize(this).moderationStatusId;
+            this.trigger("change:moderationStatus", moderationStatusId);
+        },
+    },
+
+    stateEvents: {
+
+        "change:moderationStatus": function(state, currentModerationStatus, options){
+            //debugger;
+            if(currentModerationStatus==="moderation_status_002_approved" ||
+                currentModerationStatus==="moderation_status_003_rejected"){
+                console.log("show email message")
+            }
+
+                
         }
     },
 
-
     onAttach: function() {
+
 //debugger;
         // formstone checkbox plugin
         this.ui.formInitiativeTypes.checkbox();

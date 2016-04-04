@@ -7,12 +7,11 @@ var Radio = require("backbone.radio");
 //var Q = require("q");
 
 var menuPlugin = require("./plugins/menu/menu-plugin.js");
-var initiativesPlugin = require("./plugins/initiatives/initiatives-plugin.js");
-var activityPlugin = require("./plugins/activity/activity-plugin.js");
+
 
 //var EventsPlugin = require("./plugins/events/events-plugin.js");
 //var ProfilePlugin = require("./plugins/profile/profile-plugin.js");
-
+/*
 Mn.register([
     menuPlugin,
     initiativesPlugin,
@@ -22,6 +21,7 @@ Mn.register([
     //new ProfilePlugin(),
 ]);
 
+*/
 //debugger;
 
 
@@ -29,8 +29,12 @@ Mn.register([
 
 //setTimeout(function(){
 
-Radio.channel("menu").request("start", {
-    region: new Mn.Region({ el: $("<div id='mn-r-main'>").prependTo("div.container") }),
+// Radio.channel("menu").request("start", {
+//     region: new Mn.Region({ el: $("div.container") }),
+// });
+
+menuPlugin.start({
+    region: new Mn.Region({ el: $("div.container") }),
 });
 
 //}, 4000)
@@ -41,3 +45,70 @@ Radio.channel("menu").request("start", {
 // if there is some async processing involved, that should be taken into account
 
 Backbone.history.start({});
+
+
+
+
+
+
+/*
+var Child = Mn.ItemView.extend({
+
+    initialize: function(){
+        this.$el.attr('data-mn-cid', this.cid);
+    },
+
+    template: require("./_temp/child.html"),
+
+    ui: {
+        saveButtonChild: "button.mn-btn-save"
+    },
+
+    events: {
+        "click @ui.saveButtonChild": function(e){
+            debugger;
+            if(Mn.getClosestCid(e.target)!==this.cid){ return; }
+            //if(!currentTargetIsInView.call(this, e)){ return };
+
+            console.log("i'm in the child view!")
+        }
+    },
+
+});
+
+var Parent = Mn.LayoutView.extend({
+    initialize: function(){
+        this.$el.attr('data-mn-cid', this.cid);
+    },
+
+    template: require("./_temp/parent.html"),
+
+    ui: {
+        saveButtonParent: " button.mn-btn-save",
+        someRegion: "div.some-region"
+    },
+
+    events: {
+        "click @ui.saveButtonParent": function(e){
+            debugger;
+            //if(!currentTargetIsInView.call(this, e)){ return };
+            if(Mn.getClosestCid(e.target)!==this.cid){ return; }
+
+            console.log("i'm in the parent view!")
+        }
+    },
+
+    onBeforeAttach: function(){
+        this.getRegion("someRegion").show(new Child);
+    },
+
+    regions: {
+        someRegion: '@ui.someRegion'
+    }
+
+});
+
+
+var mainRegion = new Mn.Region({ el: $("<div id='mn-r-main'>").prependTo("div.container") })
+mainRegion.show(new Parent);
+*/

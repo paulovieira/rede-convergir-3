@@ -75,6 +75,8 @@ Mn.Plugin = Mn.Object.extend({
     start: function(options){
         //debugger;
 
+        if(this.isRunning){ return; }
+
         var region = options.region || this.region;
         var view = options.view || this._defaultViewName; 
         
@@ -117,6 +119,7 @@ Mn.Plugin = Mn.Object.extend({
         }
 
         var v = new View(options.viewOptions || {});
+        v.$el.attr({'data-mn-cid': v.cid, 'data-mn-view-name': options.view});
         
         var region = options.region || this.region;
         if(!(region instanceof Mn.Region)){
@@ -126,6 +129,7 @@ Mn.Plugin = Mn.Object.extend({
         // the view instance has access to the underlying plugin's channel
         //debugger;
         v.channel = this.channel;
+        v.plugin = this;
 /*
         var stateClass = v.getOption("stateClass");
         if (stateClass) {
@@ -161,11 +165,12 @@ Mn.Plugin = Mn.Object.extend({
         v.once('destroy', function(){
             //debugger;
             this.channel = undefined;
+            this.plugin = undefined;
         }, v);
 
         region.show(v);
-        v.$el.addClass("mn-view-name-" + options.view);
-        this.isRunning = true;
+        //v.$el.addClass("mn-view-name-" + options.view);
+        //this.isRunning = true;
         return v;
     },
 
@@ -181,7 +186,7 @@ Mn.Plugin = Mn.Object.extend({
     },
 
 });
-
+/*
 // object holding with all the registered plugins
 Mn._plugins = {};
 
@@ -201,11 +206,11 @@ Mn.register = function(plugins){
 
         // create the plugin's router
         //debugger;
-/*
-        if(_.keys(plugin._routes).length){
-            plugin.router = new Mn.Router({ routes: plugin._routes});
-        }
-*/
+
+        // if(_.keys(plugin._routes).length){
+        //     plugin.router = new Mn.Router({ routes: plugin._routes});
+        // }
+
         plugin.triggerMethod('register');
 
 
@@ -213,3 +218,4 @@ Mn.register = function(plugins){
 
 };
 
+*/

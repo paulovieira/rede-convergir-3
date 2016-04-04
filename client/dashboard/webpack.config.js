@@ -55,10 +55,12 @@ var config = {
 
         // in production mode: public path is used internally by webpack to reference
         // resources that have not been bundled (such as fonts and images), but that
-        // have been copied to the directory where the bundle is
+        // have been copied to the directory where the bundle is;
+        // note that we run a grunt task after webpack that moves the resources from
+        // _build/temp to _build
         publicPath: process.env.NODE_ENV === "dev" ? 
                         "http://localhost:8081/WEBPACK_DEV_SERVER" : 
-                        "/dashboard-app/_build/temp/"
+                        "/dashboard-app/_build/"
     },
 
     plugins: [

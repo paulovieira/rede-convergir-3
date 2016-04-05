@@ -7,6 +7,10 @@ require("fs.dropdown.css");
 require("fs.light-theme.css");
 require("font-awesome.css");
 
+require("leaflet.css");
+require("leaflet.awesome-markers.css");
+require("leaflet.control-geocoder.css");
+
 var $ = require("jquery");
 require("fs.background");
 require("fs.checkbox");
@@ -67,7 +71,6 @@ Mn.View.prototype.renderer = function(template, data) {
         });
     }
 
-    var output = "xxx";
     try {
         // nunjucks will look for the pre-compiled template at window.nunjucksPrecompiled;
         // more details here: https://mozilla.github.io/nunjucks/api.html#browser-usage

@@ -10,6 +10,7 @@ var Behaviors = require("../../common/behaviors");
 var Fecha = require("fecha");
 var Entities = require("../../common/entities");
 var Q = require("q");
+var L = require("leaflet");
 var Utils = require("../../common/utils");
 
 var InitiativeEditModalStatus = Mn.State.extend({
@@ -195,9 +196,9 @@ var InitiativeEditModal = Mn.LayoutView.extend({
             delete data.startDateMonth;
             delete data.startDateYear;
 
-
+            data.coordinates = _.values(this.marker.getLatLng());
+debugger;
             data.logo = this.options.templateContext.logo;
-            data.coordinates = this.options.templateContext.coordinates;
             data.docUrl = this.options.templateContext.docUrl || "";
             //data.countryCode = this.options.templateContext.countryCode;
             //data.emailTemplate = this.options.templateContext.emailTemplate;
@@ -212,7 +213,8 @@ var InitiativeEditModal = Mn.LayoutView.extend({
                 .then(function(response){
 
                     var msg = 'A iniciativa "' + data.name + '" foi actualizada';
-                    self.triggerMethod("hide:modal");
+                    //self.triggerMethod("hide:modal");
+                    self.$('[data-dismiss="modal"]').trigger("click");
                     Utils.notify("success", msg);
                     
                 })
@@ -272,13 +274,122 @@ var InitiativeEditModal = Mn.LayoutView.extend({
             placement: "right"
         });
 
-        console.log("TODO: na listagem, por uma secção com as iniciativas por aprovar, ou fazer um checkbox e actualizar a lista; nos campos, adicionar o campo do estado de aprovacao; ")
+
+
+
+  
     },
 
     regions: {
         //"initiativesList": "div.mn-r-initiatives-list"
     },
 
+    // this event is triggered by the behaviour after the internal
+    // shown.bs.modal (fired when the modal has been made visible to the user);
+    // this is a safe place to initialize the leaflet map (otherwise we would
+    // have to call map.invalidateSize() )
+    onShownBsModal: function(){
+        
+        // map + base layers
+
+        var streetsLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {});
+        
+        var satelliteLayer = L.featureGroup([
+            L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"),
+            L.tileLayer('http://{s}.tile.openstreetmap.se/hydda/roads_and_labels/{z}/{x}/{y}.png'),
+        ]);
+
+        var center = this.options.templateContext.coordinates;
+        var map = L.map('leaflet-map', {
+            center: center,
+            zoom: 9,
+            layers: [streetsLayer],
+            scrollWheelZoom: false
+        });
+
+
+        // layers control
+        var layersControl = L.control.layers(
+            {
+                "satélite&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;": satelliteLayer,
+                "estradas": streetsLayer,
+            }, 
+            undefined, 
+            { collapsed: false, position: "topleft" }
+        );
+
+        map.addControl(layersControl);
+
+        // pretty marker with font awesome icon
+
+        var createMarker = function(){
+
+            var marker = this.marker = 
+            new L.Marker(undefined, {
+                draggable: true,
+                icon: L.AwesomeMarkers.icon({
+                    icon: "home",
+                    iconColor: "white",
+                    extraClasses: "icon-marker-lg",
+                    prefix: "fa",
+                    markerColor: "darkgreen",
+                    popupAnchor: [1, -41],
+                })
+            });
+
+            marker.on("popupclose", function(e){
+
+                e.target.unbindPopup(e);
+            });
+
+            return marker;
+        };
+
+        createMarker.call(this)
+                    .setLatLng(center)
+                    .bindPopup("Clique na lupa ou arraste o marcador")
+                    .addTo(map)
+                    .openPopup();
+
+
+        // geocoder control
+        var geocoderControl = L.Control.geocoder({
+            collapsed: false,
+            placeholder: "Pesquisar morada",
+            errorMessage: "Morada não encontrada. Por favor arraste manualmente o marcador <br> para a localização da iniciativa (pode fazer zoom in / zoom out).",
+            geocoder: L.Control.Geocoder.bing('AoArA0sD6eBGZyt5PluxhuN7N7X1vloSEIhzaKVkBBGL37akEVbrr0wn17hoYAMy'),
+        });
+
+        var self = this;
+        geocoderControl.markGeocode = function(result) {
+debugger;
+            this._map.fitBounds(result.bbox, {
+                maxZoom: 15
+            });
+
+            this._map.eachLayer(function(layer){
+                
+                if(layer instanceof L.Marker){
+                    this._map.removeLayer(layer);
+                }
+            }, this);
+
+            createMarker.call(self)
+                        .setLatLng(result.center)
+                        .bindPopup(result.html || result.name)
+                        .addTo(this._map)
+                        .openPopup();
+
+            return this;
+        }
+
+        map.addControl(geocoderControl);
+    },
+
+    onBeforeDestroy: function(){
+
+        this.marker = undefined;
+    }
 
 
 });

@@ -10,6 +10,7 @@ var Pre = require("../../server/common/prerequisites");
 var Boom = require("boom");
 //var _ = require("underscore");
 var Glob = require("glob");
+var Utils = require("../../server/utils/utils");
 
 var internals = {};
 
@@ -36,8 +37,27 @@ internals.validation.domainsIds = internals.getDefinitionsArray("domain");
 internals.validation.baseLayersIds = ["stamen", "esri_satellite", "mapquest"];
 */
 
+internals.build = function(commands){
+
+    var webpackConfig = Path.join(Config.get("rootDir"), "client/initiatives/webpack.config.js");
+    var gruntfile = Path.join(Config.get("rootDir"), "client/initiatives/Gruntfile.js");
+
+    var buildCommands = [
+        `webpack --config ${ webpackConfig}`,
+        `grunt --base ${ Config.get("rootDir") } --gruntfile ${ gruntfile }`
+    ];
+
+    Utils.shellExec(buildCommands);
+    process.stdout.write("Build successful!");
+};
 
 exports.register = function(server, options, next){
+
+    // the build commands (webpack + grunt ) should always be executed
+    // in production mode 
+    if(process.env.NODE_ENV==="production"){
+        internals.build();    
+    }
 
     var pluginName = exports.register.attributes.name;
 

@@ -16,18 +16,30 @@ var Modal = Mn.Behavior.extend({
     // http://getbootstrap.com/javascript/#modals-methods
     onAttach: function(){
 
-        this.$modal.modal("show");
+        var self = this;
+
+        // trigger a custom event on the view when the modal has been made visible 
+        // to the user (will wait for CSS transitions to complete).
+        // we need this to start other plugins/libs that requires the modal to fully
+        // loaded (such as creating a leaflet map)
+        this.$modal.one('shown.bs.modal', function(){
+
+            self.view.triggerMethod("shown:bs:modal");
+        });
 
         // the dom manipulation to hide the modal is completely handled by bootstrap (via the "data-dismiss"
         // attribute) but we still have to attach a handler to actually empty the modalRegion (we just care
         // about destroying the view)
-        var self = this;
+
         this.$modal.one('hidden.bs.modal', function(){
 
             self.modalRegion.empty();
         });
-    },
 
+        this.$modal.modal("show");
+
+    },
+/*
     onHideModal: function(){
         
         // this method is called after we get the response to the PUT request (save data);
@@ -38,7 +50,7 @@ var Modal = Mn.Behavior.extend({
         // identifies as the element whose click will close the modal
         this.view.$('[data-dismiss="modal"]').trigger("click");
     }
-
+*/
 });
 
 var SyncState = Mn.Behavior.extend({

@@ -34,6 +34,12 @@ var config = {
             Path.resolve(libDir, "jquery/formstone-1.0.0/js/checkbox.js"),
             Path.resolve(libDir, "jquery/formstone-1.0.0/js/dropdown.js"),
             Path.resolve(rootDir, "node_modules/fecha"),
+            //Path.resolve(libDir, "leaflet/leaflet-1.0beta2/leaflet-src.js"),
+            
+            Path.resolve(libDir, "leaflet/leaflet-0.7.7/leaflet-src.js"),
+            Path.resolve(libDir, "leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"),
+            Path.resolve(libDir, "leaflet/leaflet-control-geocoder-1.3.4/src/index.js"),
+
             
         ]
     },
@@ -108,6 +114,12 @@ var config = {
             "stacktrace": Path.resolve(rootDir, "node_modules/stacktrace-js"),
             "fecha": Path.resolve(rootDir, "node_modules/fecha"),
             
+            //"leaflet": Path.resolve(libDir, "leaflet/leaflet-1.0beta2/leaflet-src.js"),
+            "leaflet": Path.resolve(libDir, "leaflet/leaflet-0.7.7/leaflet-src.js"),
+            "leaflet.awesome-markers": Path.resolve(libDir, "leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"),
+            "leaflet.control-geocoder": Path.resolve(libDir, "leaflet/leaflet-control-geocoder-1.3.4/src/index.js"),
+
+
             // formstone
             "fs.background": Path.resolve(libDir, "jquery/formstone-1.0.0/js/background.js"),
             "fs.checkbox": Path.resolve(libDir, "jquery/formstone-1.0.0/js/checkbox.js"),
@@ -120,6 +132,14 @@ var config = {
             "fs.dropdown.css": Path.resolve(libDir, "jquery/formstone-1.0.0/css/dropdown.css"),
             "bootflat.css": Path.resolve(libDir, "bootstrap/bootflat-2.0.4/bootflat.css"),
             "bootstrap.css": Path.resolve(libDir, "bootstrap/3.3.5/css/bootstrap.css"),
+            
+            //"leaflet.css": Path.resolve(libDir, "leaflet/leaflet-1.0beta2/leaflet.css"),
+            "leaflet.css": Path.resolve(libDir, "leaflet/leaflet-0.7.7/leaflet.css"),
+            "leaflet.awesome-markers.css": Path.resolve(libDir, "leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.css"),
+            "leaflet.control-geocoder.css": Path.resolve(libDir, "leaflet/leaflet-control-geocoder-1.3.4/Control.Geocoder.css"),
+
+            
+
 
             // NOTE: we have manually edit font-awesome.css and remove the query string
             // in the lines with "url('...')". Example: 
@@ -139,7 +159,7 @@ var config = {
         { 
             // inline base64 URLs for images that are <= 1k; direct URLs for the others 
             // (the files will be copied to the output dir: _build/temp)
-            test: /\.(png|jpg)$/,
+            test: /\.(png|jpg|gif)$/,
             loader: 'url-loader',
             query: {
                 limit: 1024
@@ -172,7 +192,17 @@ var config = {
             query: {
                 jQuery: "jquery"
             }
+        },
+        {
+            test: /(leaflet.awesome-markers.js)$/,
+            loader: 'imports',
+            query: {
+                L: "leaflet"
+            }
         }
+
+
+        
 
         ]
     },

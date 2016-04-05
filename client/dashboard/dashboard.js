@@ -10,6 +10,7 @@ var Pre = require("../../server/common/prerequisites");
 var Boom = require("boom");
 //var _ = require("underscore");
 var Glob = require("glob");
+var Utils = require("../../server/utils/utils");
 
 
 var internals = {};
@@ -17,10 +18,30 @@ var internals = {};
 // directory of the client-app (relative to the root dir)
 internals.clientAppRelDir = "client/dashboard/app";
 
+internals.build = function(commands){
+
+    var webpackConfig = Path.join(Config.get("rootDir"), "client/dashboard/webpack.config.js");
+    var gruntfile = Path.join(Config.get("rootDir"), "client/dashboard/grunt.config.js");
+
+    var buildCommands = [
+        `webpack --config ${ webpackConfig}`,
+        `grunt --base ${ Config.get("rootDir") } --gruntfile ${ gruntfile }`
+    ];
+
+    Utils.shellExec(buildCommands);
+    process.stdout.write("Build successful!");
+};
 
 exports.register = function(server, options, next){
 
+    // the build commands (webpack + grunt ) should always be executed
+    // in production mode 
+    if(process.env.NODE_ENV==="production"){
+        internals.build();    
+    }
+
     var pluginName = exports.register.attributes.name;
+   
 
     // configure nunjucks
     //var env = Nunjucks.configure(Path.join(__dirname, "templates"), { 

@@ -4,6 +4,7 @@ var Mandrill = require("mandrill-api/mandrill").Mandrill;
 var _ = require("underscore");
 var _s = require('underscore.string');
 var Purdy = require("purdy");
+var Shell = require("shelljs");
 
 var internals = {};
 
@@ -105,6 +106,23 @@ exports.log = function log(){
         Purdy(arguments[0] + ":");
         Purdy(arguments[1], internals.purdyOptions);
     }
+};
+
+exports.shellExec = function(commands){
+
+    var output;
+
+    commands.forEach(function(command){
+
+        console.log("[shelljs] Executing command: " + command);
+        output = Shell.exec(command, {silent: true});
+
+        if(output.code!==0){
+            console.log("");
+            var message = "The following command did not finish:\n" + command;
+            throw new Error(message);
+        }
+    });
 };
 
 exports.changeCase = function changeCase(obj, methodName){
@@ -290,3 +308,5 @@ internals.mandrillParams = {
     ip_pool: null,
     send_at: null
 };
+
+

@@ -2,3 +2,19 @@
 .mn-initiative-edit-modal input[type='text'] {
     margin-bottom: 15px;
 }
+
+#leaflet-map {
+    height: 400px;
+}
+/*
+.icon-marker-lg {
+    font-size: 20px !important;
+}
+
+.leaflet-control-geocoder-form > input[type='text'] {
+    width: "350px";
+    height: "25px";
+    font-size: "15px";
+    font-weight: "bold";
+}
+*/

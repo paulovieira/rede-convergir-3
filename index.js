@@ -10,46 +10,9 @@ process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 var Config = require("config");
 var Hoek = require("hoek");
 var Glue = require("glue");
-var Shell = require("shelljs");
-
-var internals = {};
 
 
-// TODO: move these commands into npm scripts?
-// https://docs.npmjs.com/misc/scripts
-internals.build = function(){
-
-    var commands = [
-        // initiatives client app
-        "webpack --config ./client/initiatives/webpack.config.js",
-        "grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js",
-
-        // dashboard client app
-        "webpack --config ./client/dashboard/webpack.config.js",
-        "grunt --base ./ --gruntfile ./client/dashboard/grunt.config.js"
-    ];
-    var output;
-
-    process.stdout.write("Executing build tasks...\n");
-    commands.forEach(function(command){
-        console.log(command);
-        output = Shell.exec(command, {silent: true});
-        if(output.code!==0){
-            console.log("");
-            var message = "The following command did not finish:\n" + command;
-            throw new Error(message);
-        }
-    });
-
-    process.stdout.write("all done!\n");
-};
-
-// in production mode the grunt tasks should always be executed
-if(process.env.NODE_ENV==="production"){
-    internals.build();
-}
-
-
+//var internals = {};
 
 var manifest = {
 

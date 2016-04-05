@@ -1,11 +1,10 @@
 require("./_config/config");
 
+
 var $ = require("jquery");
 var Backbone = require("backbone");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
-//var Q = require("q");
-
 var menuPlugin = require("./plugins/menu/menu-plugin.js");
 
 
@@ -26,18 +25,10 @@ Mn.register([
 
 
 
-
-//setTimeout(function(){
-
-// Radio.channel("menu").request("start", {
-//     region: new Mn.Region({ el: $("div.container") }),
-// });
-
+/**/
 menuPlugin.start({
     region: new Mn.Region({ el: $("div.container") }),
 });
-
-//}, 4000)
 
 
 // it's better to call history.start only at the end to make sure that the  
@@ -112,3 +103,9 @@ var Parent = Mn.LayoutView.extend({
 var mainRegion = new Mn.Region({ el: $("<div id='mn-r-main'>").prependTo("div.container") })
 mainRegion.show(new Parent);
 */
+
+
+
+
+
+

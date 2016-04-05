@@ -11,6 +11,8 @@ require("leaflet.css");
 require("leaflet.awesome-markers.css");
 require("leaflet.control-geocoder.css");
 
+require("./stacked-modals.less");
+
 var $ = require("jquery");
 require("fs.background");
 require("fs.checkbox");

@@ -156,6 +156,10 @@ var config = {
             test: /\.css$/,
             loader: "style!css"
         },
+        {
+            test: /\.less$/,
+            loader: "style!css!less"
+        },
         { 
             // inline base64 URLs for images that are <= 1k; direct URLs for the others 
             // (the files will be copied to the output dir: _build/temp)

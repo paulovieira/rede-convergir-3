@@ -18,13 +18,15 @@
     <div style="margin-top: 30px; " class="container">
     </div>
 
-    {# container for modal #}
+    {# container for modal     #}
     <div class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content mn-r-modal-contents">
             </div>
         </div>
     </div>
+
+
 
     {# inject data coming from the server directly into the page source (we could also setup an ajax endpoint for this) #}
     <script>
@@ -47,6 +49,86 @@
 #}
 
     {% endif %}
+
+
+
+
+
+{# stack modals#}
+    <button class="btn btn-primary btn-lg btn-modal-stack" data-toggle="modal" data-target="#test-modal">launch modal 1</button>
+
+    <div class="modal modal-stack fade" id="test-modal" data-modal-index="1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <p>modal 1</p>
+                <button class="btn btn-default btn-modal-stack" data-toggle="modal" data-target="#test-modal-2">launch Modal 2</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close modal 1</button>
+            </div>
+        </div>
+     </div>
+
+    <div class="modal modal-stack fade" id="test-modal-2" data-modal-index="2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <p>modal 2</p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close modal 2</button>
+            </div>
+        </div>
+     </div>
+
+    <script>
+
+    $('.modal-stack').on('show.bs.modal', function(e) {
+        debugger;
+        var $targetDialog = $(this);
+        var $btn = $(e.relatedTarget);
+        var $currentDialog = $btn.closest('.modal-dialog');
+
+        if (!($currentDialog.length)){ return; }
+
+        $currentDialog.addClass('aside');
+        var stackedDialogCount = $('.modal.in .modal-dialog.aside').length;
+        if (stackedDialogCount <= 5) {
+            $currentDialog.addClass('aside-' + stackedDialogCount);
+        }
+        $targetDialog.data('previous-dialog', $currentDialog);
+        
+    });
+
+    $('.modal-stack').on('shown.bs.modal', function(e) {
+        debugger;
+        var foo = $(this);
+        var $btn = $(e.relatedTarget);
+        
+    });
+
+    $('.modal-stack').on('hide.bs.modal', function(e) {
+        debugger;
+        var $currentDialog = $(this);
+        var $btn = $(e.relatedTarget);
+
+        var $previousDialog = $currentDialog.data('previous-dialog');
+        if ($previousDialog) {
+            console.log("TODO: remove the aside-1 classes")
+            var xxx = $previousDialog.hasClass('aside-1');
+            $previousDialog.removeClass('aside');
+
+            $currentDialog.data('previous-dialog', undefined);
+        }
+    });
+
+    $('.modal-stack').on('hidden.bs.modal', function(e) {
+        debugger;
+        var $currentDialog = $(this);
+        var $btn = $(e.relatedTarget);
+        
+        //empty the region
+    });
+
+
+    </script>
+
+
 
 </body>
 

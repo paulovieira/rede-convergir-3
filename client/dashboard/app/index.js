@@ -39,10 +39,80 @@ Backbone.history.start({});
 
 
 
+/*
+// with backbone only
+var ChildV = Backbone.View.extend({
+
+    initialize: function() {
+        this.template = _.template(`
+            <p>child view</p>
+            <button class="btn-save">save</button>
+        `);
+    },
+
+    attributes: {
+        style: "border: 1px solid red; margin: 5px;"
+    },
+
+    events: {
+        "click button.btn-save": function(e) {
+            alert("this is the child view handler!");
+        }
+    },
+
+    render: function() {
+        this.$el.html(this.template())
+        return this;
+    }
+});
+
+var ParentV = Backbone.View.extend({
+
+    initialize: function() {
+        this.template = _.template(`
+                <p>parent view</p>
+                <button class="btn-save">save</button>
+              
+              <div class="some-region"></div>
+        `);
+    },
+
+
+    attributes: {
+        style: "border: 1px solid blue; padding: 5px;"
+    },
+
+    events: {
+        "click button.btn-save": function(e) {
+            alert("this is the parent view handler!");
+        }
+    },
+
+    render: function() {
+
+        this.$el.html(this.template())
+
+        // insert the child view         
+        var childV = new ChildV;
+        childV.render()
+        this.$("div.some-region").append(childV.el);
+
+        return this;
+    }
+});
+
+var parentV = new ParentV;
+parentV.render();
+$("body").append(parentV.el)
+*/
+
 
 
 
 /*
+
+// with marionette
+
 var Child = Mn.ItemView.extend({
 
     initialize: function(){

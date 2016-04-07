@@ -22,6 +22,25 @@ exports.register = function(server, options, next){
 		 { method: "DELETE",  path: "/initiatives/{ids}",   config: Initiatives.config.delete  },
 		 //{ method: "GET",     path: "/initiatives-test",         config: Initiatives.config.readTest },
 
+		 //
+		 
+		{ 
+			method: "PUT",
+			path: "/count-downloads",   
+			config: {
+				handler: function(request, reply){
+					console.log("count downloads");
+					console.log(request.payload);
+					console.log(typeof request.payload);
+					//TODO: log ip, browser, data
+
+					var count = 100;
+					count++;
+					return reply({count: count});
+				}
+			}
+		},
+
 		// catch-all endpoint, that is, any other request for "/api/v1" (regardless of the method)
 
 		// we list explicitely all the http method (instead of using "*") to make sure this route

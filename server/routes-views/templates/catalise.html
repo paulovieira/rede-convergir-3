@@ -153,14 +153,14 @@
                 <hr>
 
                 <div>
-                    <h4>Publicações <span style="font-weight: normal; font-size: 18px;">(brevemente)</span></h4> 
+                    <h4>Publicações <span style="font-weight: normal; font-size: 18px;"></span></h4> 
                     <ul style="padding-left: 30px;">
 <!--                         <li><a href="#">Guia de boas práticas</a></li>
                         <li><a href="">Caderno de recomendações políticas</a></li>
                         <li><a href="">Relatório</a></li> -->
                         <li><a href="https://drive.google.com/file/d/0B7Ayz3ikln3vZlRQOUZJbEJNRDg/view">Síntese sobre o Projecto CATALISE</a></li>
-                        <li>Guia de boas práticas</li>
-                        <li>Caderno de recomendações políticas</li>
+                        <li><a data-download="true" href="/public/catalise-guia-praticas-web.pdf">Guia de boas práticas</a></li>
+                        <li><a data-download="true" href="/public/catalise-caderno-recomendacoes-web.pdf">Caderno de recomendações políticas</a></li>
                         <li>Relatório</li>
                     </ul>
                 </div>
@@ -776,7 +776,17 @@ $(".leaflet-panel-layers").css({
     "right": "10px"
 });
 
-
+$('a[data-download="true"]').on("click", function(e){
+    
+    var $target = $(e.target);
+    var file = $target.prop("href").split("/").pop();
+    $.ajax({
+        url: "/api/v1/count-downloads",
+        method: "PUT",
+        data: JSON.stringify({ resource: file }),
+        contentType: "application/json",
+    });
+});
 
 </script>
 

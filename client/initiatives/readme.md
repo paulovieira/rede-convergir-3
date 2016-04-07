@@ -16,12 +16,12 @@ grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js watch
 In production mode the commands are the same:
 
 ```bash
-webpack --config ./client/initiatives/webpack.config.js --watch
+webpack --config ./client/initiatives/webpack.config.js
 ```
 
 In other terminal run grunt's watch task for all targets:
 ```bash
-grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js watch
+grunt --base ./ --gruntfile ./client/initiatives/Gruntfile.js
 ```
 
 The workflow is this:

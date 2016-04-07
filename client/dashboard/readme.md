@@ -72,7 +72,7 @@ export NODE_ENV=production; node index.js;
 export NODE_ENV=production; webpack --config ./client/dashboard/webpack.config.js
 
 # in a 3rd terminal run grunt to execute the static_timestamp task
-grunt --base ./ --gruntfile ./client/dashboard/Gruntfile.js
+grunt --base ./ --gruntfile ./client/dashboard/grunt.config.js
 ```
 
 

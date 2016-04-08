@@ -138,6 +138,33 @@ exports.register = function(server, options, next){
         },
     });
 
+    // temporary endpoint to make sure the map in the http://www.shareable.net/cities/lisboa-portugal
+    // page actually shows something; this endpoint is a copy of "/export/iniciativas"
+    server.route({
+        path: "/v2",
+        method: "GET",
+        config: {
+            handler: function(request, reply) {
+
+                //console.log(request.pre.initiatives);
+                var context = {
+                    urlParam1: "initiatives",
+                    initiatives: request.pre.initiatives,
+                    definitions: request.pre.definitions,
+                    export: true
+                };
+
+                return reply.view(Path.join(__dirname, "templates/initiatives.html"), {ctx: context});
+            },
+
+            pre: [
+                [Pre.readInitiativesSlim, Pre.readDefinitions2]
+            ],
+        },
+    });
+
+
+
     server.route({
         path: "/initiatives-app/{anyPath*}",
         method: "GET",

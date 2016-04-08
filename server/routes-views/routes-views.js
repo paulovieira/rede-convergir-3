@@ -1,6 +1,8 @@
 var Fs = require("fs");
 var Path = require("path");
 var Config = require("config");
+var Promise = require('bluebird');
+var Db = require("../../database");
 //var Hoek = require("hoek");
 //var Joi = require("joi");
 var JSON5 = require("json5");
@@ -226,14 +228,61 @@ exports.register = function(server, options, next){
         path: "/catalise",
         method: "GET",
         config: {
+            pre: [
+            {
+                method: function(request, reply){
+
+                    // get the download count of the pdf file in this page
+                    Promise.resolve()
+                        .then(function(){
+
+                            var pdfs = [
+                                "catalise-guia-praticas-web.pdf",
+                                "catalise-caderno-recomendacoes-web.pdf"
+                            ];
+
+                            var selectQuery = `
+                              select data->>'resource' as resource, count(data->>'resource') 
+                                from log 
+                                where data->>'type'='download' and (data->>'resource'='${ pdfs[0] }' or data->>'resource'='${ pdfs[1] }')
+                                group by data->>'resource';
+                            `;
+                            return Db.query(selectQuery);
+                        })
+                        .then(function(resp){
+
+                            var downloadCount = {};
+                            resp.forEach(function(obj){
+
+                                downloadCount[obj["resource"]] = Number(obj["count"] || "0");
+                            });
+
+                            reply(downloadCount);
+                        })
+                        .catch(function(err){
+
+                            // if there's an error reading from the db, ignore it and send a blank obj
+                            reply({})
+                        });
+
+                },
+                assign: "downloadCount"
+            }
+            ],
+
             handler: function(request, reply) {
 
                 var context = {
-                    urlParam1: "catalise"
+                    downloadCount: request.pre.downloadCount || {},
+                    urlParam1: "catalise",
                 };
+
+                console.log(context);
 
                 return reply.view(Path.join(__dirname, "templates/catalise.html"), {ctx: context});
             },
+
+
         }
     });
 

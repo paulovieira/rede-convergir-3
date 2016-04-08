@@ -159,8 +159,20 @@
                         <li><a href="">Caderno de recomendações políticas</a></li>
                         <li><a href="">Relatório</a></li> -->
                         <li><a href="https://drive.google.com/file/d/0B7Ayz3ikln3vZlRQOUZJbEJNRDg/view">Síntese sobre o Projecto CATALISE</a></li>
-                        <li><a data-download="true" href="/public/catalise-guia-praticas-web.pdf">Guia de boas práticas</a></li>
-                        <li><a data-download="true" href="/public/catalise-caderno-recomendacoes-web.pdf">Caderno de recomendações políticas</a></li>
+                        <li>
+                            <a data-download="true" target="_blank" href="/public/catalise-guia-praticas-web.pdf">Guia de boas práticas</a> 
+                            
+                            <span style="margin-left: 3px;" class="badge" title="{{ ctx.downloadCount['catalise-guia-praticas-web.pdf'] }} downloads">
+                                {{ ctx.downloadCount['catalise-guia-praticas-web.pdf'] }}
+                            </span>
+                        </li>
+                        <li>
+                            <a data-download="true" target="_blank" href="/public/catalise-caderno-recomendacoes-web.pdf">Caderno de recomendações políticas</a>
+
+                            <span style="margin-left: 3px;" class="badge" title="{{ ctx.downloadCount['catalise-caderno-recomendacoes-web.pdf'] }} downloads">
+                                {{ ctx.downloadCount['catalise-caderno-recomendacoes-web.pdf'] }}
+                            </span>
+                        </li>
                         <li>Relatório</li>
                     </ul>
                 </div>
@@ -260,6 +272,8 @@
 <script>
 
 var Catalise = {};
+
+Catalise.downloadCount = {{ ctx.downloadCount | stringify }};
 
 Catalise.$readMoreBtn = $("a[href='#read-more']");
 Catalise.$readMoreBtn.on("click", function(){
@@ -781,7 +795,7 @@ $('a[data-download="true"]').on("click", function(e){
     var $target = $(e.target);
     var file = $target.prop("href").split("/").pop();
     $.ajax({
-        url: "/api/v1/count-downloads",
+        url: "/api/v1/log-download",
         method: "PUT",
         data: JSON.stringify({ resource: file }),
         contentType: "application/json",

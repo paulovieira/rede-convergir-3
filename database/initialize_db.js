@@ -10,6 +10,7 @@ var psqlPath = process.argv[3];
 
 if(!dbname){
 	console.log("Usage: " + process.argv[0] + " " + process.argv[1] + " <database_name>");
+	process.exit();
 }
 
 // use the default psql if not given
@@ -37,6 +38,7 @@ for(var i=0; i<scripts.length; i++){
 		filename: scripts[i] ,
 		psqlPath: psqlPath
 	});
+	console.log(command)
 	execPsql(command);
 }
 

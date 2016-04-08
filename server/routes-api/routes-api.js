@@ -1,5 +1,7 @@
 var Path = require("path");
 var Boom = require("boom");
+var Promise = require('bluebird');
+var Db = require("../../database");
 //var Hoek = require("hoek");
 //var Config = require("config");
 //var Utils = require("./common/utils");
@@ -26,17 +28,36 @@ exports.register = function(server, options, next){
 		 
 		{ 
 			method: "PUT",
-			path: "/count-downloads",   
+			path: "/log-download",
 			config: {
 				handler: function(request, reply){
-					console.log("count downloads");
-					console.log(request.payload);
-					console.log(typeof request.payload);
-					//TODO: log ip, browser, data
 
-					var count = 100;
-					count++;
-					return reply({count: count});
+					var resource = request.payload.resource || "";
+					var data = JSON.stringify({
+						type: "download",
+						resource: resource,
+						remoteAddress: request.info.remoteAddress,
+						ts: (new Date()).toISOString()
+					});
+
+			    
+				    Promise.resolve()
+				    	.then(function(){
+
+							var insertQuery = `INSERT INTO log(data) VALUES('${ data }');`;
+				    		return Db.query(insertQuery);
+				    	})
+				        .then(function(){
+
+				        	var selectQuery = `SELECT count(id) FROM log WHERE data->>'type'='download' AND data->>'resource'='${ resource }';`
+				        	return Db.query(selectQuery);	
+				        })
+				        .then(function(res){
+
+				        	var count = res[0].count;
+				        	return reply({count: Number(count)});
+				        });
+
 				}
 			}
 		},

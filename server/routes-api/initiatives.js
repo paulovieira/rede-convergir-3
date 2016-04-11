@@ -7,6 +7,9 @@ var JSON5 = require("json5");
 var _ = require("underscore");
 var _s = require("underscore.string");
 
+var Promise = require('bluebird');
+var CsvStringify = Promise.promisify(require("csv-stringify"));
+
 var Config = require("config");
 // var Pre = require("../common/prerequisites");
 var Validate = require("../common/validate");
@@ -193,6 +196,7 @@ internals.readAll = {
             searchConditions["type_id"] = request.query.typeId;
         }
 
+
         var Seneca = request.server.plugins["seneca-promise"]["seneca"];
         Seneca.actAsync({
                 role: "initiatives", 
@@ -201,6 +205,20 @@ internals.readAll = {
             })
             .then(function(data){
 
+                if(request.query.csv){
+                    // return promise
+                    return CsvStringify(data, {header: true})
+                        .then(function(csv){
+                            
+                            return reply(csv)
+                                .code(200)
+                                .header('content-type', 'text/csv')
+                                .header('content-disposition', 'attachment; filename="rede_convergir_initiatives.csv"')
+
+                        });
+
+                }
+                
                 return reply(data).code(200);
             })
             .catch(function(err){
@@ -215,7 +233,8 @@ internals.readAll = {
     validate: {
         query: {
             typeId: Joi.string().insensitive().valid(internals.validation.type),
-            moderationStatusId: Joi.string().insensitive().valid(internals.validation.moderationStatus).default("moderation_status_002_approved")
+            moderationStatusId: Joi.string().insensitive().valid(internals.validation.moderationStatus).default("moderation_status_002_approved"),
+            csv: Joi.boolean().default(false)
         }
     },
 

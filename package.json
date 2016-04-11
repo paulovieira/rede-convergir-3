@@ -14,6 +14,7 @@
     "cheerio": "^0.20.0",
     "config": "^1.16.0",
     "css-loader": "^0.23.1",
+    "csv-stringify": "^1.0.2",
     "exports-loader": "^0.6.3",
     "fecha": "^2.1.0",
     "file-loader": "^0.8.5",

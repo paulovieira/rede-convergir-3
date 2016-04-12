@@ -50,13 +50,13 @@ div.leaflet-control-container
 }
 
 /* resize the menu width (use the same breakpoints as in bootstrap) */
-@media (max-width: 767px) {
+@media (max-width: 544px) {
     .leaflet-control-open {
         width: 100%;
     }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 544px) and (max-width: 991px) {
     .leaflet-control-open {
         width: 50%;
     }

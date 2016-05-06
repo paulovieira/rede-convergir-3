@@ -1,5 +1,5 @@
 var Path = require("path");
-var Config = require("config");
+var Config = require('nconf');
 var Mandrill = require("mandrill-api/mandrill").Mandrill;
 var _ = require("underscore");
 var _s = require('underscore.string');
@@ -8,7 +8,7 @@ var Shell = require("shelljs");
 
 var internals = {};
 
-internals.mandrillClient = new Mandrill(Config.get("email.mandrill.apiKey"), process.env.NODE_ENV==="dev");
+internals.mandrillClient = new Mandrill(Config.get("email:mandrill:apiKey"), process.env.NODE_ENV==="dev");
 
 internals.emailTemplates = {
     awaitingApproval: require("./email-templates/awaiting-approval"),

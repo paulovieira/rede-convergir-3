@@ -1,5 +1,5 @@
 var Path = require("path");
-var Config = require("config");
+var Config = require('nconf');
 
 module.exports = [{
     options: {

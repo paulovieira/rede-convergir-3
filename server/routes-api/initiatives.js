@@ -9,8 +9,7 @@ var _s = require("underscore.string");
 
 var Promise = require('bluebird');
 var CsvStringify = Promise.promisify(require("csv-stringify"));
-
-var Config = require("config");
+var Config = require('nconf');
 // var Pre = require("../common/prerequisites");
 var Validate = require("../common/validate");
 
@@ -337,7 +336,7 @@ internals.create = {
 
                 //console.log("createdData", createdData);
 
-                if(Config.get("email.send")===true && createdData.length>=1){
+                if(Config.get("email:send")===true && createdData.length>=1){
                     console.log("send email")
                     var emailCtx = {
                         lang: "pt",
@@ -410,7 +409,7 @@ console.log("update: \n", request.payload[0]);
             })
             .then(function(updatedData){
 
-                if(Config.get("email.send")===true 
+                if(Config.get("email:send")===true 
                     && updatedData.length>=1
                     && previousData[0].moderationStatusId === "moderation_status_001_pending"
                     && updatedData[0].moderationStatusId === "moderation_status_002_approved"

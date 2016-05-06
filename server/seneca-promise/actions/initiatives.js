@@ -3,7 +3,6 @@
 //var Fs = require("fs");
 var Hoek = require("hoek");
 var Boom = require("boom");
-//var Config = require("config");
 //var _ = require("underscore");
 //var _s = require("underscore.string");
 var slug = require("slug");

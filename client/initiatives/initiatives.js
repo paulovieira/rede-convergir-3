@@ -1,6 +1,6 @@
 //var Fs = require("fs");
 var Path = require("path");
-var Config = require("config");
+var Config = require("nconf");
 //var Hoek = require("hoek");
 //var Joi = require("joi");
 //var JSON5 = require("json5");

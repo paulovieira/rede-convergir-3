@@ -1,10 +1,10 @@
-var Config = require("config");
+var Config = require('nconf');
 var Boom = require("boom");
 
 var internals = {};
 
-internals.validUser = Config.get("dashboard.user");
-internals.validPassword = Config.get("dashboard.password");
+internals.validUser = Config.get("dashboard:user");
+internals.validPassword = Config.get("dashboard:password");
 
 module.exports = [{
 
@@ -46,7 +46,7 @@ debugger;
 
                     // strategy options - see hapi-auth-cookie and the options to server.auth.strategy
                     // in the main docs; if some option is not given, the defaults will be used
-                    ironPassword: Config.get("hapi.ironPassword"),
+                    ironPassword: Config.get("hapi:ironPassword"),
                     isSecure: false,
                     clearInvalid: true,
                     appendNext: true,

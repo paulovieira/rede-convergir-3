@@ -3,7 +3,6 @@ var Boom = require("boom");
 var Promise = require('bluebird');
 var Db = require("../../database");
 //var Hoek = require("hoek");
-//var Config = require("config");
 //var Utils = require("./common/utils");
 
 var Initiatives = require("./initiatives");

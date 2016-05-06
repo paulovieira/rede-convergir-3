@@ -3,7 +3,7 @@ var Hoek = require("hoek");
 var Boom = require("boom");
 var _s = require('underscore.string');
 var _ = require('underscore');
-var Config = require('config');
+var Config = require('nconf');
 var Nunjucks = require('hapi-nunjucks');
 //var ChangeCase = require('change-case-keys');
 
@@ -22,7 +22,7 @@ internals.generalParamValidation = function(value, options, next, paramNameSingu
     objKeys[paramNamePlural] = Joi.array().unique().items(schema);
     var objSchema = Joi.object().keys(objKeys);
 
-    var validation = Joi.validate(value, objSchema, Config.get('hapi.joi'));
+    var validation = Joi.validate(value, objSchema, Config.get('hapi:joi'));
 
     if (validation.error) {
         return next(validation.error);
@@ -72,7 +72,7 @@ exports.ids = function(value, options, next) {
         ids: Joi.array().unique().items(idSchema)
     });
 
-    var validation = Joi.validate(value, schema, Config.get('hapi.joi'));
+    var validation = Joi.validate(value, schema, Config.get('hapi:joi'));
 
     if (validation.error) {
         return next(validation.error);
@@ -103,7 +103,7 @@ exports.payload = function(value, options, next, schema, overrideJoiOptions) {
 
     var validated = [], tempValidate;
     for(var i=0; i<value.length; i++){
-        tempValidate = Joi.validate(value[i], schema, Config.get('hapi.joi'));
+        tempValidate = Joi.validate(value[i], schema, Config.get('hapi:joi'));
         if (tempValidate.error) {
             return next(tempValidate.error);
         }

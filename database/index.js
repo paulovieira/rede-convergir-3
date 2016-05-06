@@ -2,7 +2,7 @@ var Fs = require("fs");
 var Path = require("path");
 var pgpLib = require('pg-promise');
 var PgMonitor = require("pg-monitor");
-var Config = require("config");
+var Config = require('nconf');
 //var Q = require("q");
 var Promise = require('bluebird');
 
@@ -16,11 +16,11 @@ var pgp = pgpLib(pgpOptions);
 
 
 var connectionOptions = {
-    host: Config.get("db.postgres.host"),
-    port: Config.get("db.postgres.port"),
-    user: Config.get("db.postgres.username"),
-    password: Config.get("db.postgres.password"),
-    database: Config.get("db.postgres.database"),
+    host: Config.get("db:postgres:host"),
+    port: Config.get("db:postgres:port"),
+    user: Config.get("db:postgres:username"),
+    password: Config.get("db:postgres:password"),
+    database: Config.get("db:postgres:database"),
     //pgFormatting: true
 };
 

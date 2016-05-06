@@ -1,4 +1,4 @@
-var Config = require("config");
+var Config = require('nconf');
 
 var internals = {};
 
@@ -8,11 +8,11 @@ internals.template["pt"] = function(ctx){
 
     ctx = ctx || {};
 
-    ctx.infoAddress = Config.get("email.infoAddress");
-    ctx.infoName    = Config.get("email.infoName");
+    ctx.infoAddress = Config.get("email:infoAddress");
+    ctx.infoName    = Config.get("email:infoName");
 
-    ctx.moderatorAddress = Config.get("email.moderatorAddress");
-    ctx.moderatorName    = Config.get("email.moderatorName");
+    ctx.moderatorAddress = Config.get("email:moderatorAddress");
+    ctx.moderatorName    = Config.get("email:moderatorName");
 
     ctx.publicUri = Config.get("publicUri");
 

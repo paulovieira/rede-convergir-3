@@ -1,5 +1,4 @@
 var Hoek = require("hoek");
-//var Config = require("config");
 var _ = require("underscore");
 var _s = require("underscore.string");
 var Boom = require("boom");

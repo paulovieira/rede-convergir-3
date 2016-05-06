@@ -7,7 +7,8 @@ process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 
 // the above env variables must be defined before the config module is first required
 //var Path = require("path");
-var Config = require("config");
+require('./config/load');
+var Config = require('nconf');
 var Hoek = require("hoek");
 var Glue = require("glue");
 

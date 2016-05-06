@@ -1,6 +1,6 @@
 var Fs = require("fs");
 var Path = require("path");
-var Config = require("config");
+var Config = require('nconf');
 var Promise = require('bluebird');
 var Db = require("../../database");
 //var Hoek = require("hoek");

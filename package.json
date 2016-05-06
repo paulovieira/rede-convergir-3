@@ -47,6 +47,7 @@
     "mandrill-api": "^1.0.45",
     "minimist": "^1.2.0",
     "moment": "^2.10.6",
+    "nconf": "^0.8.4",
     "node-uuid": "^1.4.7",
     "nunjucks": "^2.4.x",
     "nunjucks-loader": "^2.3.0",

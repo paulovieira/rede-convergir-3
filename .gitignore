@@ -17,13 +17,9 @@ coverage.*
 
 # configuration files (contain sensitive data - passwords, api keys, etc)
 
-client/**/_build/**/*
+plugins/**/_build/**/*
 config/dev.js
 config/dev-email.js
 config/production.js
 #lib/web/client/static/_js/*min.js*
 .tern-port
-tiles
-
-
-

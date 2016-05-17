@@ -75,7 +75,7 @@ var manifest = {
 
         // dependencies: []        
         {
-            "./server/utils/utils.js": [{
+            "./util/utils.js": [{
                 options: {}
             }]
         },
@@ -88,7 +88,7 @@ var manifest = {
 
         // dependencies: ["inert"]
         {
-            "./server/hapi-public/hapi-public.js": require("./config/plugins/hapi-public")
+            "./plugins/hapi-public/hapi-public.js": require("./config/plugins/hapi-public")
         },
 
         // dependencies: ["hapi-auth-cookie"]
@@ -101,39 +101,34 @@ var manifest = {
         //   this is where we configure the views manager (using nunjucks) and declare the routes that
         //   return a view; note that reply.view is only available inside the plugin
         {   
-            "./server/routes-views/routes-views.js": [{
+            "./plugins/routes-views/routes-views.js": [{
                 options: {}
             }]
         },
 
 
         {   
-            "./server/routes-api/routes-api.js": require("./config/plugins/routes-api")
+            "./plugins/routes-api/routes-api.js": require("./config/plugins/routes-api")
         },
 
         {
-            "./server/seneca-promise/seneca-promise.js": [{
+            "./plugins/seneca-promise/seneca-promise.js": [{
                 options: {}
             }]
         },
 
         {   
-            "./client/initiatives/initiatives.js": [{
+            "./plugins/initiatives/initiatives.js": [{
                 options: {}
             }]
         },
 
         {   
-            "./client/dashboard/dashboard.js": [{
+            "./plugins/dashboard/dashboard.js": [{
                 options: {}
             }]
-        },
-        // {
-        //     "tv": {
-        //         host: Config.get("publicIp"),
-        //         port: 6002
-        //     }
-        // },
+        }
+
     ]
 };
 
@@ -161,21 +156,3 @@ Glue.compose(manifest, options, function (err, server) {
 });
 
 
-/*
-var obj = {
-    helloWorld: 123,
-    anArray: ["a", "b", { insideTheArray: { veryDeepInside: 456}}],
-    nestedObj: {
-        somethingOne: "fff",
-        somethingTwo: {
-            blahBlach: "xxx"
-        }
-    }
-};
-
-var obj2 = Utils.changeCase(obj, "underscored");
-
-console.log(JSON.stringify(obj, null, 4))
-console.log("")
-console.log(JSON.stringify(obj2, null, 4))
-*/

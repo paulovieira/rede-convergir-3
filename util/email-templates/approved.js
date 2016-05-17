@@ -1,4 +1,4 @@
-var Config = require('nconf');
+var Config = require("nconf");
 
 var internals = {};
 
@@ -7,20 +7,13 @@ internals.template = {};
 internals.template["pt"] = function(ctx){
 
     ctx = ctx || {};
-
-    ctx.infoAddress = Config.get("email:infoAddress");
-    ctx.infoName    = Config.get("email:infoName");
-
-    ctx.moderatorAddress = Config.get("email:moderatorAddress");
-    ctx.moderatorName    = Config.get("email:moderatorName");
-
     ctx.publicUri = Config.get("publicUri");
 
     return {
 
-        subject: `A iniciativa ${ ctx.name } foi adicionada à Rede Convergir: `,
+        subject: `A iniciativa ${ ctx.name } foi adicionada à Rede Convergir`,
 
-        html: `
+        text: `
 Caro(a) ${ ctx.contactName }
 <br>
 <br>
@@ -45,20 +38,18 @@ A equipa da Rede Convergir
 
         `,
 
+        from: Config.get("email:infoAddress"),
+        fromname: Config.get("email:infoName"),
 
-        from_email: ctx.infoAddress,
-        from_name: ctx.infoName,
+        // in development mode, moderatorAddress should be a personal address (just for testing purposes)
+        to: [ctx.email],
+        toname: [ctx.name],
 
-        // in development mode, moderatorAddress should be a personal address (to test)
-        to: [
-            { type: "to", email: `${ctx.email}`, name: `${ctx.name}` },
-            { type: "cc", email: ctx.moderatorAddress, name: ctx.moderatorName  }
-        ],
+        cc: [Config.get("email:moderatorAddress")],
+        ccname: [Config.get("email:moderatorName")],
 
-        headers: {
-            "Reply-To": ctx.moderatorAddress
-        },
-        auto_text: true
+        "replyto": Config.get("email:moderatorAddress")
+
     };
 };
 

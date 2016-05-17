@@ -1,14 +1,12 @@
 var Path = require("path");
 var Config = require('nconf');
-var Mandrill = require("mandrill-api/mandrill").Mandrill;
+var Sendgrid = require('sendgrid-promise');
 var _ = require("underscore");
 var _s = require('underscore.string');
 var Purdy = require("purdy");
 var Shell = require("shelljs");
 
 var internals = {};
-
-internals.mandrillClient = new Mandrill(Config.get("email:mandrill:apiKey"), process.env.NODE_ENV==="dev");
 
 internals.emailTemplates = {
     awaitingApproval: require("./email-templates/awaiting-approval"),
@@ -51,30 +49,23 @@ exports.sendEmail = function sendEmail(templateName, context, callback){
         return;
     }
     var template = internals.emailTemplates[templateName][context.lang];
-    var message = template(context);
-    message.html = _s.trim(message.html);
+    var emailObj = template(context);
+    emailObj.text = emailObj.text.trim();
 
-    //console.log("email message (REMOVE COMMENTED CODE)\n", message);
+    console.log("emailObj\n", emailObj);
 
-    // note that we don't care about the response from mandrill, so we don't call the 
-    // given callback (in fact the callback is not even given)
-    internals.mandrillClient.messages.send(
-        {
-            message: message,
-            async: false,
-            ip_pool: null,
-            send_at: null
-        }, 
-        function(result) {
-            console.log("Mandrill plugin: email sent: \n", result);
-            //callback(null, result);
-        }, 
-        function(err) {
-            console.log("Mandrill plugin: email not sent: " + err.name + " - " + err.message);
-            //callback(err);
-        }
-    );
-    /**/
+    // TBD: handle the response from sendgrid (log if there was an error, etc)
+    xxx
+    Sendgrid.sendAsync(emailObj)
+        .then(function(response){
+
+            console.log("Sendgrid: email was sent successfully\n", response);
+        })
+        .catch(function(err){
+
+            throw err;
+        });
+
 };
 
 exports.logCallsite = function logCallsite(callsiteObj) {
@@ -271,6 +262,7 @@ exports.register.attributes = {
 // 2) How to Use SMTP Headers to Customize Your Messages (more details about the API options)
 //    https://mandrill.zendesk.com/hc/en-us/articles/205582117-How-to-Use-SMTP-Headers-to-Customize-Your-Messages
 
+/*
 internals.mandrillParams = {
     // parameters to pass to the request
     message: {
@@ -308,5 +300,5 @@ internals.mandrillParams = {
     ip_pool: null,
     send_at: null
 };
-
+*/
 

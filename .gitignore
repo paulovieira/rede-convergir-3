@@ -19,7 +19,6 @@ coverage.*
 
 plugins/**/_build/**/*
 config/dev.js
-config/dev-email.js
 config/production.js
 #lib/web/client/static/_js/*min.js*
 .tern-port

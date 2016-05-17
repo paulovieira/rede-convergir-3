@@ -94,8 +94,6 @@ module.exports = function(grunt) {
     grunt.registerTask("app", [
         "compress:app",
         "static_timestamp:app"
-
-        
     ]);
 
     grunt.registerTask("lib", [

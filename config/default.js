@@ -10,7 +10,7 @@ module.exports = {
     host: "localhost",
     port: 6001,
 
-    publicUri: "localhost",  // host
+    publicUri: "",  // host
     publicPort: 6001,  // probably 80
     publicIp: "127.0.0.1",
 
@@ -24,6 +24,10 @@ module.exports = {
         infoName: "Rede Convergir - info",
 
         mandrill: {
+            apiKey: ""
+        },
+
+        sendgrid: {
             apiKey: ""
         },
         //templatesDir: Path.join(internals.rootDir, "server/email-mandrill/templates"),

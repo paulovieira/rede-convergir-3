@@ -1,0 +1,21 @@
+Caro(a) {{ contactName }}
+<br>
+<br>
+A iniciativa {{ name }} foi adicionada à RedeConvergir. Para visualizar a vossa informação basta visitar o seguinte endereço: 
+<br>
+{{ publicUri }}/iniciativas/{{ slug }}
+<br>
+<br>
+Em breve será possível a vossa contribuição para o calendário de eventos, cujo o objectivo é reunir e divulgar as actividades das iniciativas que fazem parte da Rede Convergir. 
+<br>
+<br>
+Estamos ao vosso dispor para mais informações e desejamos muito boa sorte para a vossa iniciativa.
+<br>
+<br>
+Cumprimentos,
+<br>
+<br>
+A equipa da Rede Convergir
+<br>
+<br>
+<img src="{{ publicUri }}/public/images/convergir_logo_5.png">

@@ -1,0 +1,7 @@
+Caro(a) {{ contactName }}
+
+Obrigado pela submissão da iniciativa {{ name }}. A iniciativa encontra-se agora pendente para moderação. Em breve irá receber uma resposta por parte dos moderadores.
+
+Cumprimentos,
+
+A equipa da Rede Convergir

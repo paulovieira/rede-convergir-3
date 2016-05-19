@@ -11,6 +11,7 @@ var Promise = require('bluebird');
 var CsvStringify = Promise.promisify(require("csv-stringify"));
 var Config = require('nconf');
 var Validate = require("../../util/validate");
+var Utils = require("../../util/utils");
 
 var internals = {};
 
@@ -166,18 +167,6 @@ internals.validatePayloadForUpdate = function(value, options, next) {
 internals.readAll = {
 
 	handler: function(request, reply) {
-        
-        // var emailCtx = {
-        //     lang: "pt",
-        //     name: "paulo",
-        //     email: "x@x.com",
-        // };
-
-        // request.server.methods.sendEmail("awaitingApproval", emailCtx, function(err, output){
-        //     if(err){
-        //         console.log("yyy", err.message)
-        //     }
-        // });
 
         request.server.methods.utils.logCallsite(Hoek.callStack()[0]);
 
@@ -336,6 +325,7 @@ internals.create = {
                 //console.log("createdData", createdData);
 
                 if(Config.get("email:send")===true && createdData.length>=1){
+                    
                     console.log("send email")
                     var emailCtx = {
                         lang: "pt",
@@ -345,10 +335,8 @@ internals.create = {
                     };
 
                     // TODO: the name of the template should be in the payload
-                    // note: we don't care about the response, so no need to give the cb
-                    //request.server.methods.sendEmail(request.payload[0].emailTemplate, emailCtx);
-                    utils.sendEmail(request.payload[0].emailTemplate, emailCtx);
-
+                    var templateName = request.payload[0].emailTemplate;
+                    Utils.sendEmail(templateName, emailCtx);
                 }
 
                 return reply(createdData).code(201);
@@ -423,8 +411,8 @@ console.log("update: \n", request.payload[0]);
                     };
                     
                     // TODO: the name of the template should be in the payload
-                    // note: we don't care about the response, so no need to give the cb
-                    utils.sendEmail("approved", emailCtx);
+                    var templateName = "approved";
+                    Utils.sendEmail(templateName, emailCtx);
 
                 }
 

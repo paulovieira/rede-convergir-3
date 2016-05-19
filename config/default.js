@@ -22,15 +22,6 @@ module.exports = {
         moderatorName: "Rede Convergir - moderadores",
         infoAddress: "info@redeconvergir.net",
         infoName: "Rede Convergir - info",
-
-        mandrill: {
-            apiKey: ""
-        },
-
-        sendgrid: {
-            apiKey: ""
-        },
-        //templatesDir: Path.join(internals.rootDir, "server/email-mandrill/templates"),
     },
 
     db: {

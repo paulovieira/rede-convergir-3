@@ -20,5 +20,6 @@ coverage.*
 plugins/**/_build/**/*
 config/dev.js
 config/production.js
+config/sendgrid-key.txt
 #lib/web/client/static/_js/*min.js*
 .tern-port

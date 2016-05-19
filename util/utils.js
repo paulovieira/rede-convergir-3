@@ -1,17 +1,11 @@
 var Path = require("path");
 var Config = require('nconf');
-var Sendgrid = require('sendgrid-promise');
 var _ = require("underscore");
 var _s = require('underscore.string');
 var Purdy = require("purdy");
 var Shell = require("shelljs");
 
 var internals = {};
-
-internals.emailTemplates = {
-    awaitingApproval: require("./email-templates/awaiting-approval"),
-    approved:         require("./email-templates/approved")
-};
 
 internals.sgrColors = {
     "reset": "\x1b[0m",
@@ -40,33 +34,7 @@ internals.purdyOptions = {
     path: true
 };
 
-
-exports.sendEmail = function sendEmail(templateName, context, callback){
-    
-    if(!internals.emailTemplates[templateName] || !internals.emailTemplates[templateName][context.lang]){
-        //return callback(Boom.badImplementation("email template is missing for lang: " + context.lang));
-        console.log("Email template not found: ", templateName);
-        return;
-    }
-    var template = internals.emailTemplates[templateName][context.lang];
-    var emailObj = template(context);
-    emailObj.text = emailObj.text.trim();
-
-    console.log("emailObj\n", emailObj);
-
-    // TBD: handle the response from sendgrid (log if there was an error, etc)
-    xxx
-    Sendgrid.sendAsync(emailObj)
-        .then(function(response){
-
-            console.log("Sendgrid: email was sent successfully\n", response);
-        })
-        .catch(function(err){
-
-            throw err;
-        });
-
-};
+exports.sendEmail = require("./send-email");
 
 exports.logCallsite = function logCallsite(callsiteObj) {
 
@@ -222,11 +190,6 @@ exports.getErrMsg = function getErrMsg(err){
 exports.register = function(server, options, next){
 
     server.method({
-        name: "utils.sendEmail", 
-        method: exports.sendEmail
-    });
-
-    server.method({
         name: "utils.logCallsite",
         method: function(callsiteObj){
 
@@ -253,52 +216,4 @@ exports.register.attributes = {
     name: Path.parse(__dirname).name,
     dependencies: []
 };
-
-
-
-// for reference purpose only (these should be the important properties that we need); for more details see:
-// 1) Mandrill API Docs -> Messages -> Send
-//    https://mandrillapp.com/api/docs/messages.html
-// 2) How to Use SMTP Headers to Customize Your Messages (more details about the API options)
-//    https://mandrill.zendesk.com/hc/en-us/articles/205582117-How-to-Use-SMTP-Headers-to-Customize-Your-Messages
-
-/*
-internals.mandrillParams = {
-    // parameters to pass to the request
-    message: {
-        // the full HTML content to be sent
-        html: "",
-
-        // the message subject
-        subject: "",
-        
-        // the sender email address
-        from_email: "",
-        
-        // from name to be used (optional)
-        from_name: "",
-        
-        // an array of objects with the recipient information; the properties should be:
-        //   email: "the email address of the recipient",
-        //   name: "the optional display name to use for the recipient",
-        //   type: "the header type to use for the recipient ("to", "cc", "bcc"); defaults to "to"
-        to: [{email: "", name: "", type: "" }, {email: "", name: "", type: "" }],
-        
-        // optional extra headers to add to the message (most headers are allowed)
-        headers: {  
-            "Reply-To": ""
-        },
-        
-        // whether or not to automatically generate a text part for messages that are not given text (boolean)
-        // see: http://stackoverflow.com/questions/20509234/mandrill-what-does-auto-text-do
-        auto_text: true,
-        
-        // whether this message is important, and should be delivered ahead of non-important messages (boolean)
-        important: false
-    },
-    async: false,
-    ip_pool: null,
-    send_at: null
-};
-*/
 

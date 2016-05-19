@@ -1,0 +1,14 @@
+Caro(a) {{ contactName }}
+<br>
+<br>
+Obrigado pela submissão da iniciativa <b>{{ name }}</b>. A iniciativa encontra-se agora pendente para moderação. Em breve irá receber uma resposta por parte dos moderadores.
+<br>
+<br>
+Cumprimentos,
+<br>
+<br>
+A equipa da Rede Convergir
+<br>
+<br>
+<img src='{{ publicUri }}/public/images/convergir_logo_5.png'>
+

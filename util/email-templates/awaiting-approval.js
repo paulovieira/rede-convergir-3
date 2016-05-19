@@ -1,46 +1,50 @@
-var Config = require("nconf");
+var Path = require('path')
+var Fs = require('fs');
+var Config = require('nconf');
+var _ = require('underscore')
+
+// mustache.js-style templating:
+_.templateSettings = {
+    interpolate: /\{\{(.+?)\}\}/g
+};
 
 var internals = {};
 
+internals.subjectString = Fs.readFileSync(Path.join(__dirname, 'awaiting-approval-pt-subject.txt'), 'utf8');
+internals.textString = Fs.readFileSync(Path.join(__dirname, 'awaiting-approval-pt-text.txt'), 'utf8');
+internals.htmlString = Fs.readFileSync(Path.join(__dirname, 'awaiting-approval-pt-html.txt'), 'utf8');
+
+internals.subject = _.template(internals.subjectString.trim());
+internals.text = _.template(internals.textString.trim());
+internals.html = _.template(internals.htmlString.trim());
+
 internals.template = {};
 
-internals.template["pt"] = function(ctx){
+internals.template['pt'] = function(ctx){
 
     ctx = ctx || {};
-    ctx.publicUri = Config.get("publicUri");
+    ctx.publicUri = Config.get('publicUri');
 
-    return {
+    var emailObj = {
 
-        subject: `Nova iniciativa submetida na Rede Convergir: ${ ctx.name }`,
+        subject: internals.subject(ctx),
+        text: internals.text(ctx),
+        html: internals.html(ctx),
 
-        text: `
-Caro(a) ${ ctx.contactName }
-<br>
-<br>
-Obrigado pela submissão da iniciativa <b>${ ctx.name }</b>. A iniciativa encontra-se agora pendente para moderação. Em breve irá receber uma resposta por parte dos moderadores.
-<br>
-<br>
-Cumprimentos,
-<br>
-<br>
-A equipa da Rede Convergir
-<br>
-<br>
-<img src="${ ctx.publicUri }/public/images/convergir_logo_5.png">
-        `,
-
-        from: Config.get("email:infoAddress"),
-        fromname: Config.get("email:infoName"),
+        from: Config.get('email:infoAddress'),
+        fromname: Config.get('email:infoName'),
 
         // in development mode, moderatorAddress should be a personal address (just for testing purposes)
         to: [ctx.email],
         toname: [ctx.name],
 
-        cc: [Config.get("email:moderatorAddress")],
-        ccname: [Config.get("email:moderatorName")],
+        cc: [Config.get('email:moderatorAddress')],
+        ccname: [Config.get('email:moderatorName')],
 
-        "replyto": Config.get("email:moderatorAddress")
+        'replyto': Config.get('email:moderatorAddress')
     };
+
+    return emailObj;
 };
 
 module.exports = internals.template;

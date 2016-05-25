@@ -1,13 +1,18 @@
 Caro(a) {{ contactName }}
 
-A iniciativa {{ name }} foi adicionada à RedeConvergir. Para visualizar a vossa informação basta visitar o seguinte endereço: 
+A iniciativa {{ name }} foi adicionada à Rede CONVERGIR. Para visualizar a sua informação visite o novo endereço na Rede: 
 
 {{ publicUri }}/iniciativas/{{ slug }}
 
-Em breve será possível a vossa contribuição para o calendário de eventos, cujo o objectivo é reunir e divulgar as actividades das iniciativas que fazem parte da Rede Convergir. 
+Lembramos que pode participar de várias maneiras: 
+ - subscrição e partilha da newletter mensal; 
+ - inserindo o mapa e calendário de eventos da Rede no website da iniciativa; 
+ - contribuição de novos eventos para o calendário; 
+ - contribuição com artigos de opinião, links e informações relevantes; 
+ - contribuição por partilhar a missão.
 
-Estamos ao vosso dispor para mais informações e desejamos muito boa sorte para a vossa iniciativa.
+Estamos ao vosso dispor para mais informações e reflexões, e desejamos muito boa sorte para a vossa iniciativa. 
 
-Cumprimentos,
+Cumprimentos convergentes, 
 
 A equipa da Rede Convergir

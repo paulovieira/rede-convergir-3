@@ -1,9 +1,4 @@
-BEGIN;
-
--- here we are not using upsert, so delete all data first
-DELETE FROM countries;
-
-COPY countries (name, code, id) FROM stdin DELIMITER '|';
+name|code|id
 Afghanistan|AF|4
 Albania|AL|8
 Algeria|DZ|12
@@ -55,7 +50,7 @@ Congo|CG|178
 Congo, The Democratic Republic of the|CD|180
 Cook Islands|CK|184
 Costa Rica|CR|188
-Cote D'Ivoire|CI|384
+Cote D''Ivoire|CI|384
 Croatia (local name: Hrvatska)|HR|191
 Cuba|CU|192
 Cyprus|CY|196
@@ -116,11 +111,11 @@ Jordan|JO|400
 Kazakhstan|KZ|398
 Kenya|KE|404
 Kiribati|KI|296
-Korea, Democratic People's Republic of|KP|408
+Korea, Democratic People''s Republic of|KP|408
 Korea, Republic of|KR|410
 Kuwait|KW|414
 Kyrgyzstan|KG|417
-Lao People's Democratic Republic|LA|418
+Lao People''s Democratic Republic|LA|418
 Latvia|LV|428
 Lebanon|LB|422
 Lesotho|LS|426
@@ -246,8 +241,3 @@ Canada|CA|124
 Mexico|MX|484
 United Kingdom|GB|826
 United States|US|840
-\.
-
-COMMIT;
-
-ANALYZE countries;

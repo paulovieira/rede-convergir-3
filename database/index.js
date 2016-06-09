@@ -1,42 +1,42 @@
-var Fs = require("fs");
-var Path = require("path");
-var pgpLib = require('pg-promise');
-var PgMonitor = require("pg-monitor");
 var Config = require('nconf');
-//var Q = require("q");
 var Promise = require('bluebird');
+var PgPromise = require('pg-promise');
+var PgMonitor = require("pg-monitor");
 
-var pgpOptions = {
+var internals = {};
+
+internals.pgpConfig = {
     promiseLib: Promise
 };
 
-PgMonitor.attach(pgpOptions);
+// initialize the pg-promise library; 
+internals.pgp = PgPromise(internals.pgpConfig); 
 
-var pgp = pgpLib(pgpOptions); 
+// activate postgres monitor; we must use the same configuration object that was used to initialize pg-promise;
+PgMonitor.attach(internals.pgpConfig);
 
-
-var connectionOptions = {
-    host: Config.get("db:postgres:host"),
-    port: Config.get("db:postgres:port"),
-    user: Config.get("db:postgres:username"),
-    password: Config.get("db:postgres:password"),
+// the main database/connection object; this will be the exported object (to used in the rest of the application)
+internals.connection = internals.pgp({
+    host:     Config.get("db:postgres:host"),
+    port:     Config.get("db:postgres:port"),
     database: Config.get("db:postgres:database"),
-    //pgFormatting: true
-};
+    user:     Config.get("db:postgres:username"),
+    password: Config.get("db:postgres:password"),
+    application_name: Config.get("applicationTitle"),
 
-// db will be the exported object
-module.exports = pgp(connectionOptions);
+    // advanced options:
 
-module.exports.queryResult = {
-    one: 1,     // single-row result is expected;
-    many: 2,    // multi-row result is expected;
-    none: 4,    // no rows expected;
-    any: 6      // (default) = many|none = any result.
-};
+    // ssl: ...,
+    // binary: ...,
+    // client_encoding: ...,
+    // fallback_application_name: ...,
+    // poolSize: ...,
+});
 
-module.exports.as = pgp.as;
+module.exports = internals.connection;
 
 module.exports.end = function(){
-    pgp.end();
-    console.log("Released all connections. Goodbye!");
+    PgPromise.end();
+    console.log("All postgres connections have been released. Goodbye!");
 };
+

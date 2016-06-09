@@ -67,6 +67,7 @@ exports.log = function log(){
     }
 };
 
+// todo: use execFile
 exports.shellExec = function(commands){
 
     var output;

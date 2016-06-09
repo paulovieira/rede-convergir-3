@@ -1,19 +1,12 @@
-process.title = "rede-convergir";
-
-// the NODE_ENV env variables should be defined before the node process is started; 
-// if not defined we use the following defaults;
-process.env.NODE_ENV = process.env.NODE_ENV || "dev";
-
-
-// the above env variables must be defined before the config module is first required
-//var Path = require("path");
 require('./config/load');
+
 var Config = require('nconf');
 var Hoek = require("hoek");
 var Glue = require("glue");
+var Chalk = require('chalk');
+var Db = require("./database");
 
-
-//var internals = {};
+process.title = Config.get("applicationTitle");
 
 var manifest = {
 
@@ -41,7 +34,6 @@ var manifest = {
                 }
             }
         },
-
     },
 
     connections: [
@@ -149,9 +141,19 @@ Glue.compose(manifest, options, function (err, server) {
 
         Hoek.assert(!err, 'Failed server start: ' + err);
         
-        console.log('Server started at: ' + server.info.uri);
+        // show some informations about the server
+        console.log(Chalk.green('================='));
         console.log("Hapi version: " + server.version);
-        console.log("NODE_ENV: ", process.env.NODE_ENV);
+        console.log('host: ' + server.info.host);
+        console.log('port: ' + server.info.port);
+        console.log("process.env.NODE_ENV: ", process.env.NODE_ENV);
+
+        Db.query("SELECT * FROM version()")
+            .then(function(result){
+                console.log("database: ", result[0].version);
+                console.log(Chalk.green('================='));
+            });
+        
     });
 });
 

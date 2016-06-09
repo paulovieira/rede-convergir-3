@@ -1,11 +1,13 @@
 var Path = require("path");
-//var Fs = require("fs");
 
-var internals = {};
-
-internals.rootDir  = Path.join(__dirname, "..");
+var internals = {
+    rootDir: Path.join(__dirname, "..")
+};
 
 module.exports = {
+
+    
+    applicationTitle: 'rede-convergir',
 
     host: "localhost",
     port: 6001,
@@ -27,19 +29,11 @@ module.exports = {
     db: {
 
         postgres: {
-            host: "",
+            host: "localhost",
             port: 5432,
             database: "",
             username: "",
             password: "",
-
-            getConnectionString: function(){
-                return "postgres://" +
-                        this.username + ":" +
-                        this.password + "@" +
-                        this.host + ":" + this.port +  "/" +
-                        this.database;
-            }
         },
     },
 

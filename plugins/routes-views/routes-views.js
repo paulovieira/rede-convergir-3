@@ -44,7 +44,7 @@ exports.register = function(server, options, next){
     var env = Nunjucks.configure(Config.get("rootDir"), { 
         autoescape: false,
         watch: false,
-        noCache: process.env.NODE_ENV === "production" ? true : false,
+        noCache: Config.get("env") === "production" ? true : false,
         pluginName: pluginName,
         // throwOnUndefined: false,
     });
@@ -561,8 +561,8 @@ internals.addNunjucksFilters = function(env){
 };
 
 internals.addNunjucksGlobals = function(env){
-
-    env.addGlobal("NODE_ENV", process.env.NODE_ENV);
+   
+    env.addGlobal("NODE_ENV", Config.get("env"));
     env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
     env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
 };

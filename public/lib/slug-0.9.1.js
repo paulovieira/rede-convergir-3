@@ -1,3 +1,6 @@
+// https://github.com/dodo/node-slug
+
+
 (function (root) {
 // lazy require symbols table
 var _symbols, removelist;

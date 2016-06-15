@@ -2,8 +2,8 @@ var Path = require('path');
 var Nconf = require('nconf');
 var Chalk = require('chalk');
 
-// 1 - load empty configuration from a file (we do this only to be able to use the .set method below);
-// this is a bug from nconf, for more details see: https://github.com/indexzero/nconf/issues/197
+// 1 - load a dummy empty configuration from file; we do this only to be able to use the .set method below;
+// (this is a bug from nconf, for more details see: https://github.com/indexzero/nconf/issues/197 )
 Nconf.file('empty.json')
 
 
@@ -12,7 +12,7 @@ Nconf.file('empty.json')
 Nconf.argv();
 
 
-// 3 - load the configuration specific to the environment (either config/production.js or config/dev.js)
+// 3 - load the configuration object specific to the environment (either config/production.js or config/dev.js)
 var configPath = '';
 
 var env = '';
@@ -34,9 +34,10 @@ else{
 Nconf.set('env', env);
 
 // the NODE_ENV env variable is used by webpack to build different targets, so we set it as well;
-// note that setting "export NODE_ENV=..." in the shell doesn't have any effect because we are
+// note that by setting "export NODE_ENV=..." in the shell won't have any effect because we are
 // setting the property directly in the process.env object
 process.env.NODE_ENV = env;
+global.NODE_ENV = env;
 
 Nconf.overrides(require(configPath));
 

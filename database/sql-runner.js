@@ -43,70 +43,92 @@ internals.createFunctions = function(){
 
 };
 
-internals.insertInitialData = function(){
 
-	// for the scripts with initial data we should do it case by case
-	var inputFile, data, upsertQuery = '';
+// below are scripts to insert initial data; the upsert functionality available in postgres 9.5 is used;
+// if the data is already present when the script is run for the 2nd time, it might be overwritten;
+// this might be desirable (if we want to update some data that cannot be changed in any other way)
+// or not (if the data is meant to be edited by the users using the web UI);
 
+// if the data is meant to be overwritten (updated), we should use "insert... on conflict do update"
+// if not, we should use "insert... on conflict do nothing"
+internals.insertInitialData = {};
 
-	// a) countries
+// a) initial data - countries (in csv format); 
 
-	// here we read the initial data from a csv file and create an upsert command to be executed by psql
-	inputFile = './database/90_initial_data/9011_populate_countries.csv';
+// data was taken from http://pgfoundry.org/projects/dbsamples  (search for "iso-3166")
+internals.insertInitialData.countries = function(){
+
+	var inputFile, data;
+
+	// read the initial data from the file, parse it, and create an upsert command to be executed by psql
+	inputFile = './database/90_initial_data/9011-countries-iso-3166.csv';
 	data = Fs.readFileSync(inputFile, 'utf8')
 				.split('\n')
 				.map( line => line.split('|'));
 
+	var upsertQuery = ''
+
+	// skip the first line (csv header)
 	for(var i=1; i<data.length; i++){
 
-		if(data[i].length!==3){ throw new Error(JSON.stringify(data[i]))}
-		upsertQuery += `   \
-INSERT INTO countries(name, code, id)   \
+		if(data[i].length!==3){ 
+			throw new Error(JSON.stringify(data[i]))
+		}
+
+		upsertQuery += `   
+
+INSERT INTO countries(name, code, id)                      \
 VALUES ('${data[i][0]}', '${data[i][1]}', ${data[i][2]})   \
-ON CONFLICT (code) DO UPDATE SET   \
-	name = EXCLUDED.name,   \
-	code = EXCLUDED.code,   \
-	id = EXCLUDED.id;  \
+ON CONFLICT (code) DO UPDATE SET                           \
+	name = EXCLUDED.name,                                  \
+	code = EXCLUDED.code,                                  \
+	id = EXCLUDED.id;  
+
 `;
 
 	}
 
 	try{
-		Psql({ command: upsertQuery  });
+		Psql({ command: upsertQuery.trim() });
 	}
 	catch(err){
 		process.exit();
 	}
 
-	
+}
 
-	// b) definitions
 
-	// here we read the initial data from a json file and create a sql file on-the-fly;
-	// data is inserted using the auxiliary "definitions_upsert" function (already defined in one of the previous scripts);
-	// 
-	// for each object in the json file we create the corresponding sql command; example:
-	//
-	//   SELECT * FROM definitions_upsert('{ name: "xyz", age: 10}')
-	//
-	// this command is written to a temporary file, which is then executed with psql as above 
-	// (using the '--file' option)
-	//
-	// we do it this way because the quotes are difficult to handle in the shell (if the sql command was given
-	// directly with the '--command' option)
+// b) initial data - definitions (in json)
 
-	inputFile = "./database/90_initial_data/9040_populate_definitions.json";
-	data = JSON5.parse(Fs.readFileSync(inputFile, "utf8"));
+// here we read the initial data from a json file and create a sql file on-the-fly;
+// data is inserted using the auxiliary "definitions_upsert" function (already defined in one of the previous scripts);
+// 
+// for each object in the json file we create the corresponding sql command; example:
+//
+//   SELECT * FROM definitions_upsert('{ name: "xyz", age: 10}')
+//
+// the commands are written to a temporary file, which is then executed using the psql wrapper; 
+// we do it this way because the quotes are difficult to handle in the shell (if the sql command was given
+// directly with the '--command' option instead of '--file')
 
-	var tempDir = Path.join(__dirname, "temp_" + String(Date.now()).substr(-5));
+internals.insertInitialData.definitions = function(){
+
+	var inputFile, data;
+
+	inputFile = './database/90_initial_data/9040-definitions.json';
+	data = JSON5.parse(Fs.readFileSync(inputFile, 'utf8'));
+
+	// temporary directory with random name
+	var tempDir = Path.join(__dirname, '__temp__' + String(Date.now()).substr(-6));
 
 	// "mkdir" method from fs-extra ("If the parent hierarchy doesn't exist, it's created. Like mkdir -p")
 	Fs.mkdirsSync(tempDir);
 
-	upsertQuery = '';
+	var upsertQuery = ''
 	for(i=0; i<data.length; i++){
 
 		upsertQuery += `
+
 SELECT * FROM definitions_upsert(' ${ JSON.stringify(data[i]) } ');
 
 		`;
@@ -133,7 +155,9 @@ Psql.configure({
 
 internals.createTables();
 internals.createFunctions();
-internals.insertInitialData()
+
+internals.insertInitialData.countries();
+internals.insertInitialData.definitions();
 
 console.log(Chalk.green.bold("\nsql scripts ran successfully!"));
 

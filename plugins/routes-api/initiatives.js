@@ -15,7 +15,7 @@ var Utils = require("../../util/utils");
 
 var internals = {};
 
-internals.definitions = JSON5.parse(Fs.readFileSync(Path.join(Config.get("rootDir"), "database/90_initial_data/9040_populate_definitions.json"), "utf8")); 
+internals.definitions = JSON5.parse(Fs.readFileSync(Path.join(Config.get("rootDir"), "database/90_initial_data/9040-definitions.json"), "utf8")); 
 
 internals.getDefinitionsArray = function(definitionPrefix){
 
@@ -168,7 +168,7 @@ internals.readAll = {
 
 	handler: function(request, reply) {
 
-        request.server.methods.utils.logCallsite(Hoek.callStack()[0]);
+        if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
         var searchConditions = {};
 
@@ -234,7 +234,7 @@ internals.readTest = {
 
     handler: function(request, reply) {
 
-        //Utils.logCallsite(Hoek.callStack()[0]);
+        //if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
         // make sure the url fields have "http://"
         //request.payload[0].url = internals.correctUrl(request.payload[0].url);
@@ -264,7 +264,7 @@ internals.read = {
 
     handler: function(request, reply) {
 
-        request.server.methods.utils.logCallsite(Hoek.callStack()[0]);
+        if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
         // in this endpoint the only search condition is built-in in the param of the url
 
@@ -307,8 +307,7 @@ internals.create = {
 
     handler: function(request, reply) {
 
-        var utils = request.server.methods.utils;
-        utils.logCallsite(Hoek.callStack()[0]);
+        if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
         // make sure the url fields have "http://"
         request.payload[0].url = internals.correctUrl(request.payload[0].url);
@@ -360,9 +359,7 @@ internals.update = {
     handler: function(request, reply) {
 console.log("update: \n", request.payload[0]);
 
-        ///Utils.logCallsite(Hoek.callStack()[0]);
-        var utils = request.server.methods.utils;
-        utils.logCallsite(Hoek.callStack()[0]);
+        if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
         // make sure the url fields have "http://"
         request.payload[0].url = internals.correctUrl(request.payload[0].url);
@@ -436,8 +433,7 @@ internals.delete = {
 
     handler: function(request, reply) {
 
-        ///Utils.logCallsite(Hoek.callStack()[0]);
-        request.server.methods.utils.logCallsite(Hoek.callStack()[0]);
+        if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
         // in this endpoint the only search condition is built-in in the param of the url
 

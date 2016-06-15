@@ -1,3 +1,5 @@
+"use strict";
+
 var Sendgrid = require('sendgrid-promise');
 
 var internals = {};

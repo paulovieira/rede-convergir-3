@@ -1,9 +1,12 @@
+"use strict";
+
 var Hoek = require("hoek");
-var _ = require("underscore");
-var _s = require("underscore.string");
+//var _ = require("underscore");
+//var _s = require("underscore.string");
 var Boom = require("boom");
-var Embed = require("./embed-video-temp");
 var Moment = require("moment");
+var Embed = require("./embed-video-temp");
+var Utils = require("./utils")
 
 
 var internals = {};
@@ -50,9 +53,7 @@ internals.keys = ["id", "name", "typeId", "typeOther", "slug", "description", "l
 exports.readInitiativesSlim = {
 	method: function(request, reply){
 
-		///Utils.logCallsite(Hoek.callStack()[0]);
-		var utils = request.server.methods.utils;
-		utils.logCallsite(Hoek.callStack()[0]);
+		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
 		var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 		Seneca.actAsync({
@@ -89,9 +90,7 @@ exports.readInitiativeBySlug = {
 
 	method: function(request, reply){
 
-		///Utils.logCallsite(Hoek.callStack()[0]);
-		var utils = request.server.methods.utils;
-		utils.logCallsite(Hoek.callStack()[0]);
+		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
 		var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 		Seneca.actAsync({
@@ -143,7 +142,7 @@ exports.readInitiativeBySlug = {
 
 // 	method: function(request, reply){
 
-// 		Utils.logCallsite(Hoek.callStack()[0]);
+// 		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
 // 		Seneca.actAsync({
 // 		        role: "definitions",
@@ -168,9 +167,7 @@ exports.readDefinitions2 = {
 
 	method: function(request, reply){
 
-		///Utils.logCallsite(Hoek.callStack()[0]);
-		var utils = request.server.methods.utils;
-		utils.logCallsite(Hoek.callStack()[0]);
+		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
 		var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 		Seneca.actAsync({

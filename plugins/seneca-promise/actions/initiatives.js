@@ -4,9 +4,7 @@
 var Hoek = require("hoek");
 var Boom = require("boom");
 //var _ = require("underscore");
-//var _s = require("underscore.string");
-var slug = require("slug");
-//var ChangeCase = require("change-case-keys");
+var _s = require("underscore.string");
 var Utils = require("../../../util/utils");
 var Db = require("../../../database");
 
@@ -67,7 +65,7 @@ internals.initiativesReadTest = function(args, done){
 
     // TODO: add cache with catbox-memory here
 
-    ///Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
     var data = [{hello: "world from action"}];
     return done(null, data);
@@ -90,7 +88,7 @@ internals.initiativesRead = function(args, done){
 
     // TODO: add cache with catbox-memory here
 
-    ///Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
     Db.func("initiatives_read", JSON.stringify(args.searchConditions))
         .then(function(data) {
@@ -108,7 +106,7 @@ internals.initiativesRead = function(args, done){
 /*
 internals.initiativesCreate = function(args, done){
 
-    Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
     // TODO: make sure the slug is unique
     if(!args.data.slug){
@@ -163,17 +161,13 @@ internals.initiativesCreate = function(args, done){
 
 internals.initiativesUpsert = function(args, done){
 
-    ///Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
+
     var data = Utils.changeCase(args.data, "underscored");
 
     if(!data.slug){
-        //data.slug = _s.slugify(data.name);
-        data.slug = slug(data.name, {lower: true});
+        data.slug = _s.slugify(data.name);
     }
-
-    
-    //ChangeCase(data, "underscored");
-    //console.log("data: ", data);
     
     // 1) create/update the resources with the payload data (which is in data)
     Db.func("initiatives_upsert", JSON.stringify(data))
@@ -235,7 +229,7 @@ internals.initiativesUpsert = function(args, done){
 
 internals.initiativesDelete = function(args, done){
 
-    ///Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 debugger;
     
     // 1) delete the resource with the id param 

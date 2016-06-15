@@ -17,9 +17,7 @@ debugger;
             privacy: "public",
             expiresIn: 3600000
         },
-        cors: {
-            methods: ["GET"]
-        },
+        cors: true,
         auth: false                
     };
 

@@ -1,40 +1,51 @@
-var Path = require("path");
-var Config = require('nconf');
-var _ = require("underscore");
+'use strict';
+
+var Path = require('path');
+//var Config = require('nconf');
+var _ = require('underscore');
 var _s = require('underscore.string');
-var Purdy = require("purdy");
-var Shell = require("shelljs");
+var Purdy = require('purdy');
+var Shell = require('shelljs');
 
 var internals = {};
+internals.server = {};
 
 internals.sgrColors = {
-    "reset": "\x1b[0m",
-    "black": "\x1b[30m",
-    "red": "\x1b[31m",
-    "green": "\x1b[32m",
-    "yellow": "\x1b[33m",
-    "blue": "\x1b[34m",
-    "magenta": "\x1b[35m",
-    "cyan": "\x1b[36m",
-    "white": "\x1b[37m",
+
+    'reset': '\x1b[0m',
+
+    'black': '\x1b[30m',
+    'red': '\x1b[31m',
+    'green': '\x1b[32m',
+    'yellow': '\x1b[33m',
+    'blue': '\x1b[34m',
+    'magenta': '\x1b[35m',
+    'cyan': '\x1b[36m',
+    'white': '\x1b[37m',
 
     bold: {
-        "black": "\x1b[30;1m",
-        "red": "\x1b[31;1m",
-        "green": "\x1b[32;1m",
-        "yellow": "\x1b[33;1m",
-        "blue": "\x1b[34;1m",
-        "magenta": "\x1b[35;1m",
-        "cyan": "\x1b[36;1m",
-        "white": "\x1b[37;1m",
+        'black': '\x1b[30;1m',
+        'red': '\x1b[31;1m',
+        'green': '\x1b[32;1m',
+        'yellow': '\x1b[33;1m',
+        'blue': '\x1b[34;1m',
+        'magenta': '\x1b[35;1m',
+        'cyan': '\x1b[36;1m',
+        'white': '\x1b[37;1m',
     }
 };
 
 internals.purdyOptions = {
-    path: true
+    path: true,  // prints result with a path (To be used with Hoek.reach())
+    depth: 4  // how many times to recurse while formatting the object
 };
 
-exports.sendEmail = require("./send-email");
+exports.registerServer = function(server){
+
+    internals.server = server;
+};
+
+exports.sendEmail = require('./send-email');
 
 exports.logCallsite = function logCallsite(callsiteObj) {
 
@@ -46,24 +57,25 @@ exports.logCallsite = function logCallsite(callsiteObj) {
     var dirName = Path.dirname(callsiteObj[0]);
     var baseName = Path.basename(callsiteObj[0]);
 
-    var output = colors.bold.cyan + (funcName || "anonymous") + "()" + colors.reset +
-        " (" + dirName + "/" + colors.bold.cyan + baseName + colors.reset +
-        ":" + colors.bold.green + lineNumber + colors.reset + ")";
+    var output = colors.bold.cyan + (funcName || 'anonymous') + '()' + colors.reset +
+        ' (' + dirName + '/' + colors.bold.cyan + baseName + colors.reset +
+        ':' + colors.bold.green + lineNumber + colors.reset + ')';
 
-    //server.log(["stack"], output);
-
-    return output;
+    internals.server.log(['stack'], output);
 };
 
-exports.log = function log(){
+exports.logObj = function logObj(){
+
+    var colors = internals.sgrColors;
 
     if(_.isObject(arguments[0])){
         Purdy(arguments[0], internals.purdyOptions);
     }
-
-    if(_.isString(arguments[0]) && arguments.length > 1){
-        Purdy(arguments[0] + ":");
+    else if(_.isString(arguments[0]) && arguments.length > 1){
+        console.log(colors.bold.cyan + '---' + colors.reset);
+        console.log(colors.bold.cyan + arguments[0] + colors.reset);
         Purdy(arguments[1], internals.purdyOptions);
+        console.log(colors.bold.cyan + '---' + colors.reset + '\n');
     }
 };
 
@@ -74,25 +86,30 @@ exports.shellExec = function(commands){
 
     commands.forEach(function(command){
 
-        console.log("[shelljs] Executing command: " + command);
+        console.log('[shelljs] Executing command: ' + command);
         output = Shell.exec(command, {silent: true});
 
         if(output.code!==0){
-            console.log("");
-            var message = "The following command did not finish:\n" + command;
+            console.log('');
+            var message = 'The following command did not finish:\n' + command;
             throw new Error(message);
         }
     });
 };
 
+
+// piggy-back on the .clone method from Hoek@4; we just change the
+// keys of new (cloned) object by calling a function from underscore.string
+// (which should be "underscored")
+
 exports.changeCase = function changeCase(obj, methodName){
 
     var method = _s[methodName];
     if (!method) {
-        throw new Error("The method '" + methodName + "'' doesn't exist in underscore.string");
+        throw new Error('The method "' + methodName + '" doesn\'t exist in underscore.string');
     }
 
-    // piggy-back on the .clone method from Hoek@2.16.3
+    // the .clone method from Hoek@4
     function clone(obj, seen) {
 
         if (typeof obj !== 'object' ||
@@ -101,15 +118,15 @@ exports.changeCase = function changeCase(obj, methodName){
             return obj;
         }
 
-        seen = seen || { orig: [], copy: [] };
+        seen = seen || new Map();
 
-        var lookup = seen.orig.indexOf(obj);
-        if (lookup !== -1) {
-            return seen.copy[lookup];
+        const lookup = seen.get(obj);
+        if (lookup) {
+            return lookup;
         }
 
-        var newObj;
-        var cloneDeep = false;
+        let newObj;
+        let cloneDeep = false;
 
         if (!Array.isArray(obj)) {
             if (Buffer.isBuffer(obj)) {
@@ -122,7 +139,7 @@ exports.changeCase = function changeCase(obj, methodName){
                 newObj = new RegExp(obj);
             }
             else {
-                var proto = Object.getPrototypeOf(obj);
+                const proto = Object.getPrototypeOf(obj);
                 if (proto &&
                     proto.isImmutable) {
 
@@ -139,14 +156,13 @@ exports.changeCase = function changeCase(obj, methodName){
             cloneDeep = true;
         }
 
-        seen.orig.push(obj);
-        seen.copy.push(newObj);
+        seen.set(obj, newObj);
 
         if (cloneDeep) {
-            var keys = Object.getOwnPropertyNames(obj);
-            for (var i = 0, il = keys.length; i < il; ++i) {
-                var key = keys[i];
-                var descriptor = Object.getOwnPropertyDescriptor(obj, key);
+            const keys = Object.getOwnPropertyNames(obj);
+            for (let i = 0; i < keys.length; ++i) {
+                const key = keys[i];
+                const descriptor = Object.getOwnPropertyDescriptor(obj, key);
                 if (descriptor &&
                     (descriptor.get ||
                      descriptor.set)) {
@@ -163,8 +179,8 @@ exports.changeCase = function changeCase(obj, methodName){
     }
 
     return clone(obj);
-
 };
+
 
 exports.getErrMsg = function getErrMsg(err){
 
@@ -174,47 +190,17 @@ exports.getErrMsg = function getErrMsg(err){
 
     // if this is an error generated by pg, the following properties should be
     // present in the err object and contain useful information
-    var msg = "\n\n-----------------------  pg error  -----------------------\n";
-    msg = msg + (err.toString      ? "\ndescription: " + err.toString()         : "");
-    msg = msg + (err.detail        ? "\ndetail: " + err.detail                  : "");
-    msg = msg + (err.code          ? "\ncode: " + err.code                      : "");
-    msg = msg + (err.table         ? "\ntable: " + err.schema + "." + err.table : "");
-    msg = msg + (err.column        ? "\ncolumn: " + err.column                  : "");
-    msg = msg + (err.hint          ? "\nhint: " + err.hint                      : "");
-    msg = msg + (err.where         ? "\nwhere: " + err.where                    : "");
-    msg = msg + (err.internalQuery ? "\ninternalQuery: " + err.internalQuery    : "");
-    msg += "\n--------------------------------------------------------\n\n";
+    var msg = '\n\n-----------------------  pg error  -----------------------\n';
+    msg = msg + (err.toString      ? '\ndescription: ' + err.toString()         : '');
+    msg = msg + (err.detail        ? '\ndetail: ' + err.detail                  : '');
+    msg = msg + (err.code          ? '\ncode: ' + err.code                      : '');
+    msg = msg + (err.table         ? '\ntable: ' + err.schema + '.' + err.table : '');
+    msg = msg + (err.column        ? '\ncolumn: ' + err.column                  : '');
+    msg = msg + (err.hint          ? '\nhint: ' + err.hint                      : '');
+    msg = msg + (err.where         ? '\nwhere: ' + err.where                    : '');
+    msg = msg + (err.internalQuery ? '\ninternalQuery: ' + err.internalQuery    : '');
+    msg += '\n--------------------------------------------------------\n\n';
 
     return msg;
-};
-
-exports.register = function(server, options, next){
-
-    server.method({
-        name: "utils.logCallsite",
-        method: function(callsiteObj){
-
-            var output = exports.logCallsite(callsiteObj);
-            server.log(["stack"], output);
-            return output;
-        }
-    });
-
-    server.method({
-        name: "utils.log", 
-        method: exports.log
-    });
-
-    server.method({
-        name: "utils.changeCase", 
-        method: exports.changeCase
-    });
-
-    return next();
-};
-
-exports.register.attributes = {
-    name: Path.parse(__dirname).name,
-    dependencies: []
 };
 

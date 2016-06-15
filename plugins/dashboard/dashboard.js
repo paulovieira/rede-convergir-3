@@ -73,7 +73,7 @@ exports.register = function(server, options, next){
 
     if(process.env.NODE_ENV==="production"){
         internals.auth = {
-            strategy: "session-memory",
+            strategy: "session-cache",
             mode: "try"
         };
     }
@@ -119,9 +119,11 @@ exports.register = function(server, options, next){
                 privacy: "public",
                 expiresIn: 3600000
             },
+/*
             cors: {
                 methods: ["GET"]
             },
+*/
             auth: false,
         }
     });
@@ -204,5 +206,5 @@ internals.addNunjucksGlobals = function(env){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "inert", "hapi-auth-session-memory"]
+    dependencies: ["vision", "inert", "hapi-auth-session-cache"]
 };

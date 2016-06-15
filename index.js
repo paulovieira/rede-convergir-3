@@ -1,16 +1,26 @@
 require('./config/load');
 
 var Config = require('nconf');
-var Hoek = require("hoek");
-var Glue = require("glue");
+var Hoek = require('hoek');
+var Glue = require('glue');
 var Chalk = require('chalk');
-var Db = require("./database");
+var Db = require('./database');
+var Utils = require('./util/utils');
 
-process.title = Config.get("applicationTitle");
+process.title = Config.get('applicationTitle');
 
 var manifest = {
 
     server: {
+
+        cache: {
+            name: "sessionCache",
+            engine: require("catbox-memory"),
+                        
+            // other specific options for this cache client
+            partition: "sessionCachePartition"
+        },
+
         //  default connections configuration
         connections: {
 
@@ -43,8 +53,134 @@ var manifest = {
         }
     ],
 
-    plugins: [
+    registrations: [
 
+/*
+        {
+            plugin: {
+                register: "...",
+                options: require("./config/plugins/...")
+            },
+            options: {}
+        },
+*/
+
+        {
+            plugin: {
+                register: "good",
+                options: require("./config/plugins/good")
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "blipp",
+                options: require("./config/plugins/blipp")
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "inert",
+                options: {}
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "vision",
+                options: {}
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "hapi-auth-cookie",
+                options: {}
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "hapi-qs",
+                options: {}
+            },
+            options: {}
+        },
+
+        // dependencies: ["inert"]
+        {
+            plugin: {
+                register: "./plugins/hapi-public/hapi-public.js",
+                options: require("./config/plugins/hapi-public")
+            },
+            options: {}
+        },
+
+        // dependencies: ["hapi-auth-cookie"]
+        {
+            plugin: {
+                register: "hapi-auth-session-memory",
+                options: require("./config/plugins/hapi-auth-session-memory")
+            },
+            options: {}
+        },
+
+        // dependencies: ["vision", "hapi-auth-session-memory"]
+        //   this is where we configure the views manager (using nunjucks) and declare the routes that
+        //   return a view; note that reply.view is only available inside the plugin
+        {
+            plugin: {
+                register: "./plugins/routes-views/routes-views.js",
+                options: {}
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "./plugins/routes-api/routes-api.js",
+                options: {}
+            },
+            options: {
+                routes: {  
+                    prefix: Config.get("apiPrefix:v1")  
+                }
+            }
+        },
+
+        {
+            plugin: {
+                register: "./plugins/seneca-promise/seneca-promise.js",
+                options: {}
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "./plugins/initiatives/initiatives.js",
+                options: {}
+            },
+            options: {}
+        },
+
+        {
+            plugin: {
+                register: "./plugins/dashboard/dashboard.js",
+                options: {}
+            },
+            options: {}
+        },
+
+
+
+/*
         {
             "good": require("./config/plugins/good")
         },
@@ -83,6 +219,9 @@ var manifest = {
             "./plugins/hapi-public/hapi-public.js": require("./config/plugins/hapi-public")
         },
 
+
+
+
         // dependencies: ["hapi-auth-cookie"]
         {
             "hapi-auth-session-memory": require("./config/plugins/hapi-auth-session-memory")
@@ -120,19 +259,24 @@ var manifest = {
                 options: {}
             }]
         }
-
+*/
     ]
 };
 
 // TODO: remove good console if not in production
-var options = {
+var glueOptions = {
     relativeTo: __dirname,
-    prePlugins: function(server, next){
+    preRegister: function(server, next){
+        console.log("called prior to registering plugins with the server")
+        next();
+    },
+    preConnections: function(server, next){
+        console.log("called prior to adding connections to the server")
         next();
     }
 };
 
-Glue.compose(manifest, options, function (err, server) {
+Glue.compose(manifest, glueOptions, function (err, server) {
 
     Hoek.assert(!err, 'Failed registration of one or more plugins: ' + err);
 
@@ -140,6 +284,9 @@ Glue.compose(manifest, options, function (err, server) {
     server.start(function(err) {
 
         Hoek.assert(!err, 'Failed server start: ' + err);
+
+        // make the server object available for the methods in the ./util/utils module
+        Utils.registerServer(server);
         
         // show some informations about the server
         console.log(Chalk.green('================='));

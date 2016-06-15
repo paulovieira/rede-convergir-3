@@ -1,3 +1,5 @@
+"use strict";
+
 var Joi = require("joi");
 var Hoek = require("hoek");
 var Boom = require("boom");
@@ -5,7 +7,7 @@ var _s = require('underscore.string');
 var _ = require('underscore');
 var Config = require('nconf');
 var Nunjucks = require('hapi-nunjucks');
-//var ChangeCase = require('change-case-keys');
+var Utils = require('./utils');
 
 
 var internals = {};
@@ -43,14 +45,16 @@ internals.generalParamValidation = function(value, options, next, paramNameSingu
 
 exports.ids = function(value, options, next) {
 
-    //Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
+
     var idSchema = Joi.number().integer().min(0);
     return internals.generalParamValidation(value, options, next, "id","ids", idSchema);
 };
 
 exports.mapsIds = function(value, options, next) {
 
-    //Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
+
     var nameSchema = Joi.string().min(1);
     return internals.generalParamValidation(value, options, next, "id","ids", nameSchema);
 };
@@ -61,7 +65,7 @@ old version!
 
 exports.ids = function(value, options, next) {
 
-    Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
     value.ids = _s.trim(value.ids, ",").split(",");
 
@@ -92,7 +96,7 @@ exports.ids = function(value, options, next) {
 */
 exports.payload = function(value, options, next, schema, overrideJoiOptions) {
 
-    //Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
     if (_.isObject(value) && !_.isArray(value)) {
         value = [value];

@@ -123,9 +123,6 @@ Fecha.i18n = {
 require("./plugin");
 
 
-
-
-
 if (NODE_ENV === "dev") {
     window.$ = $;
     window._ = _;

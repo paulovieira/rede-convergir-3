@@ -21,14 +21,15 @@ var InitiativesC = Backbone.Collection.extend({
 var initiativesC = new InitiativesC();
 
 // epoch time (1970.01.01)
-initiativesC.lastFetch = new Date(0).getTime();
+initiativesC.lastFetch = 0;
 
 
 
 module.exports.definitions = window.definitions;
-module.exports.InitiativesM = InitiativesM;
-module.exports.InitiativesC = InitiativesC;
+//module.exports.InitiativesM = InitiativesM;
+//module.exports.InitiativesC = InitiativesC;
 module.exports.initiativesC = initiativesC;
+
 
 module.exports.getStateModelClass = function(allowedValues){
 
@@ -53,7 +54,7 @@ module.exports.getStateModelClass = function(allowedValues){
 
 }
 if(NODE_ENV==="dev"){
-    window.InitiativesM = InitiativesM;
-    window.InitiativesC = InitiativesC;
+//    window.InitiativesM = InitiativesM;
+//    window.InitiativesC = InitiativesC;
     window.initiativesC = initiativesC;
 }

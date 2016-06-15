@@ -24,7 +24,7 @@ var InitiativesMainState = Mn.State.extend({
 
     viewEvents: {
         "change:moderationStatus": function(filterData){
-
+debugger;
             this.set(filterData);
         }
     },
@@ -112,17 +112,11 @@ var InitiativesMain = Mn.LayoutView.extend({
                     .then(function(){
 
                         if(Date.now() - Entities.initiativesC.lastFetch > THIRTY_SECONDS){
+                            Entities.initiativesC.lastFetch = new Date().getTime();
                             return Entities.initiativesC.fetch();    
                         }
-
-                        return false;
-                    })
-                    .then(function(collectionHasFetched){
-
-                        if(collectionHasFetched){
-                            Entities.initiativesC.lastFetch = new Date().getTime();    
-                        }
                     });
+
 
             var p2 = Q.delay(300);
 
@@ -130,10 +124,10 @@ var InitiativesMain = Mn.LayoutView.extend({
 
             Q.all([p1, p2])
             .then(function(){
-
+//debugger;
                 var initiatives = _.filter(Entities.initiativesC.toJSON(), function(obj){
-
-                    return _.contains(selectedModerationStatus, obj.moderationStatusId)
+                    //debugger;
+                    return _.contains(selectedModerationStatus, obj.moderationStatusId);
                 });
 
                 self.channel.request("showView", {
@@ -170,7 +164,7 @@ var InitiativesMain = Mn.LayoutView.extend({
                 moderation_status_001_pending: true,
                 moderation_status_002_approved: true,
                 moderation_status_003_rejected: false,
-                dummy: Date.now()
+                //dummy: Date.now()
             },
         });
 

@@ -1,5 +1,4 @@
-module.exports = [{
-    options: { 
-        showAuth: true 
-    }
-}];
+module.exports = { 
+	showAuth: true,
+	showStart: true
+};

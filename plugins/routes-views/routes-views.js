@@ -8,9 +8,10 @@ var Db = require("../../database");
 var JSON5 = require("json5");
 var Nunjucks = require("hapi-nunjucks");
 //var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
-var Pre = require("../../util/prerequisites");
 var Boom = require("boom");
 var _ = require("underscore");
+var Pre = require("../../util/prerequisites");
+var Utils = require("../../util/utils");
 
 var internals = {};
 /*
@@ -141,7 +142,7 @@ exports.register = function(server, options, next){
         config: {
             handler: function(request, reply) {
 
-                request.server.methods.utils.log("request.params", request.params);
+                if(global.NODE_ENV==="dev"){  Utils.logObj("request.params", request.params)  }
 
                 // we couldn't fetch any data for the given slug
                 if(request.pre.initiative.length === 0){
@@ -150,7 +151,8 @@ exports.register = function(server, options, next){
 
                 var definitionsById = {};
 
-                console.log("request.pre.definitions: ", request.pre.definitions)
+                //if(global.NODE_ENV==="dev"){  Utils.logObj("request.pre.definitions", request.pre.definitions)  }
+
                 definitionsById.initiativeStatus = _.indexBy(request.pre.definitions.initiativeStatus, "id");
                 definitionsById.type = _.indexBy(request.pre.definitions.type, "id");
                 definitionsById.scope = _.indexBy(request.pre.definitions.scope, "id");
@@ -430,7 +432,7 @@ exports.register = function(server, options, next){
             },
 
             auth: {
-                strategy: "session-memory",
+                strategy: "session-cache",
                 mode: "try"
             },
 
@@ -569,5 +571,5 @@ internals.addNunjucksGlobals = function(env){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "hapi-auth-session-memory"]
+    dependencies: ["vision", "hapi-auth-session-cache"]
 };

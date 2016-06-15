@@ -1,3 +1,5 @@
+"use strict";
+
 /*
 this is the "embed-video" package in npm
 https://github.com/alanshaw/embed-video

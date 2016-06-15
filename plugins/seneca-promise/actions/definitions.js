@@ -4,7 +4,6 @@ var Hoek = require("hoek");
 var Boom = require("boom");
 //var _ = require("underscore");
 //var _s = require("underscore.string");
-//var ChangeCase = require("change-case-keys");
 var Utils = require("../../../util/utils");
 var Db = require("../../../database");
 
@@ -28,7 +27,7 @@ internals.definitionsRead = function(args, done){
 
     // TODO: add cache with catbox-memory here
 
-    ///Utils.logCallsite(Hoek.callStack()[0]);
+    if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
     Db.func("definitions_read", JSON.stringify(args.searchConditions))
         .then(function(data) {

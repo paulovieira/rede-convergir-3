@@ -85,25 +85,7 @@ exports.register = function(server, options, next){
 
     // ok
 
-    // this is now being served from the "initiatives" plugin (client/initiatives/initiatives.js)
-/*
-    server.route({
-        path: "/dashboard",
-        method: "GET",
-        config: {
-            handler: function(request, reply) {
 
-                console.log("request.auth: ", JSON.stringify(request.auth));
-                var context = {};
-                return reply.view(Path.join(__dirname, "templates/dashboard.html"), {ctx: context});
-            },
-            auth: {
-                strategy: "session-memory",
-                mode: "try"
-            },
-        }
-    });
-*/
 
     // this is now being served from the "initiatives" plugin (client/initiatives/initiatives.js)
 /*
@@ -432,7 +414,7 @@ exports.register = function(server, options, next){
             },
 
             auth: {
-                strategy: "session-cache",
+                strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
                 mode: "try"
             },
 
@@ -571,5 +553,5 @@ internals.addNunjucksGlobals = function(env){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "hapi-auth-session-cache"]
+    dependencies: ["vision", "hapi-auth-session"]
 };

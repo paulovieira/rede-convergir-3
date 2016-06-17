@@ -7,8 +7,26 @@ internals.validUser = Config.get("dashboard:user");
 internals.validPassword = Config.get("dashboard:password");
 
 module.exports = {
-    cache: "sessionCachex",
-    segment: "sessionCacheSegment",
+
+    policy: {
+        cache: "pg-cache",
+        segment: "sessions",
+        expiresIn: 1000*15
+    },
+
+    strategy: {
+        name: "session-cache",
+        mode: false,
+        cookieOptions: {
+            password: Config.get("hapi:ironPassword"),
+            isSecure: false,
+            clearInvalid: true,
+            appendNext: true,
+            redirectOnTry: true,
+            redirectTo: "/login",
+            //ttl: internals["3 hours"],            
+        }
+    },
 
     loginPath: "/login",
     logoutPath: "/logout",
@@ -47,10 +65,5 @@ debugger;
 
     // strategy options - see hapi-auth-cookie and the options to server.auth.strategy
     // in the main docs; if some option is not given, the defaults will be used
-    ironPassword: Config.get("hapi:ironPassword"),
-    isSecure: false,
-    clearInvalid: true,
-    appendNext: true,
-    redirectOnTry: true,
-    //ttl: internals["3 hours"],
+
 };

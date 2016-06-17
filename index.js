@@ -13,13 +13,25 @@ var manifest = {
 
     server: {
 
-        cache: {
-            name: "sessionCache",
-            engine: require("catbox-memory"),
-                        
-            // other specific options for this cache client
-            partition: "sessionCachePartition"
-        },
+        cache: [
+            // {
+            //     name: "memory-cache",
+            //     engine: require("catbox-memory"),
+                            
+            //     // other specific options for this cache client
+            //     partition: "sessionCachePartition",
+            // },
+            {
+                name: "pg-cache",
+                //engine: require("catbox-postgres"),
+                engine: require("../catbox-postgres"),
+                            
+                // other specific options for this cache client
+                partition: "rede_convergir_dev",
+                user: Config.get("db:postgres:username"),
+                password: Config.get("db:postgres:password")
+            },
+        ],
 
         //  default connections configuration
         connections: {
@@ -125,13 +137,14 @@ var manifest = {
         // dependencies: ["hapi-auth-cookie"]
         {
             plugin: {
-                register: "hapi-auth-session-memory",
-                options: require("./config/plugins/hapi-auth-session-memory")
+                //register: "hapi-auth-session",
+                register: "../hapi-auth-session",
+                options: require("./config/plugins/hapi-auth-session")
             },
             options: {}
         },
 
-        // dependencies: ["vision", "hapi-auth-session-memory"]
+        // dependencies: ["vision", "hapi-auth-session"]
         //   this is where we configure the views manager (using nunjucks) and declare the routes that
         //   return a view; note that reply.view is only available inside the plugin
         {
@@ -176,90 +189,8 @@ var manifest = {
                 options: {}
             },
             options: {}
-        },
-
-
-
-/*
-        {
-            "good": require("./config/plugins/good")
-        },
-
-        {
-            "blipp": require("./config/plugins/blipp")
-        },
-
-        {
-            "inert": [{
-                options: {}
-            }]
-        },
-
-        {
-            "vision": [{
-                options: {}
-            }]
-        },
-
-        // dependencies: []        
-        {
-            "./util/utils.js": [{
-                options: {}
-            }]
-        },
-
-        {
-            "hapi-auth-cookie": [{
-                options: {}
-            }]
-        },
-
-        // dependencies: ["inert"]
-        {
-            "./plugins/hapi-public/hapi-public.js": require("./config/plugins/hapi-public")
-        },
-
-
-
-
-        // dependencies: ["hapi-auth-cookie"]
-        {
-            "hapi-auth-session-memory": require("./config/plugins/hapi-auth-session-memory")
-
-        },
-
-        // dependencies: ["vision", "hapi-auth-session-memory"]
-        //   this is where we configure the views manager (using nunjucks) and declare the routes that
-        //   return a view; note that reply.view is only available inside the plugin
-        {   
-            "./plugins/routes-views/routes-views.js": [{
-                options: {}
-            }]
-        },
-
-
-        {   
-            "./plugins/routes-api/routes-api.js": require("./config/plugins/routes-api")
-        },
-
-        {
-            "./plugins/seneca-promise/seneca-promise.js": [{
-                options: {}
-            }]
-        },
-
-        {   
-            "./plugins/initiatives/initiatives.js": [{
-                options: {}
-            }]
-        },
-
-        {   
-            "./plugins/dashboard/dashboard.js": [{
-                options: {}
-            }]
         }
-*/
+
     ]
 };
 

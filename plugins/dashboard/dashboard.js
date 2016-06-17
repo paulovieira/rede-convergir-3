@@ -72,8 +72,9 @@ exports.register = function(server, options, next){
     });
 
     if(process.env.NODE_ENV==="production"){
+
         internals.auth = {
-            strategy: "session-cache",
+            strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
             mode: "try"
         };
     }
@@ -206,5 +207,5 @@ internals.addNunjucksGlobals = function(env){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "inert", "hapi-auth-session-cache"]
+    dependencies: ["vision", "inert", "hapi-auth-session"]
 };

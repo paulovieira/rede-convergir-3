@@ -11,7 +11,7 @@ module.exports = {
     policy: {
         cache: "pg-cache",
         segment: "sessions",
-        expiresIn: 1000*15
+        expiresIn: 1000*60 
     },
 
     strategy: {
@@ -24,6 +24,7 @@ module.exports = {
             appendNext: true,
             redirectOnTry: true,
             redirectTo: "/login",
+
             //ttl: internals["3 hours"],            
         }
     },
@@ -55,15 +56,15 @@ debugger;
             return next(Boom.unauthorized("/login?auth-fail-reason=" + authFailed));
         }
 
-        // if we arrive here, the username and password match
-        var loginData = {
+        // if we arrive here, the username and password match;
+
+        // define the session object (to be stored in the internal cache used by the 
+        // hapi-auth-session plugin)
+        var session = {
             user: user
         };
 
-        return next(undefined, loginData);
+        return next(undefined, session);
     },
-
-    // strategy options - see hapi-auth-cookie and the options to server.auth.strategy
-    // in the main docs; if some option is not given, the defaults will be used
 
 };

@@ -14,22 +14,14 @@ var manifest = {
     server: {
 
         cache: [
-            // {
-            //     name: "memory-cache",
-            //     engine: require("catbox-memory"),
-                            
-            //     // other specific options for this cache client
-            //     partition: "sessionCachePartition",
-            // },
             {
-                name: "pg-cache",
-                //engine: require("catbox-postgres"),
-                engine: require("../catbox-postgres"),
+                name: 'pg-cache',
+                engine: require('../catbox-postgres'),
                             
                 // other specific options for this cache client
-                partition: "rede_convergir_dev",
-                user: Config.get("db:postgres:username"),
-                password: Config.get("db:postgres:password")
+                partition: Config.get('db:postgres:database'),
+                user: Config.get('db:postgres:username'),
+                password: Config.get('db:postgres:password')
             },
         ],
 

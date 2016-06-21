@@ -36,7 +36,7 @@ exports.register = function(server, options, next){
 
     // the build commands (webpack + grunt ) should always be executed
     // in production mode 
-    if(process.env.NODE_ENV==="production"){
+    if(Config.get('env')==="production"){
         internals.build();    
     }
 
@@ -48,7 +48,7 @@ exports.register = function(server, options, next){
     var env = Nunjucks.configure(Config.get("rootDir"), { 
         autoescape: false,
         watch: false,
-        noCache: process.env.NODE_ENV === "production" ? true : false,
+        noCache: Config.get('env') === "production" ? true : false,
         pluginName: pluginName,
         // throwOnUndefined: false,
     });
@@ -71,7 +71,7 @@ exports.register = function(server, options, next){
         }
     });
 
-    if(process.env.NODE_ENV==="production"){
+    if(Config.get('env')==="production" || true){
 
         internals.auth = {
             strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
@@ -93,7 +93,12 @@ exports.register = function(server, options, next){
                     definitions: request.pre.definitions,
                 };
 
-                console.log("context: ", context); 
+                // this shouldn't happen
+                if(!request.auth.isAuthenticated){
+                    reply(Boom.badImplementation())
+                }
+
+                //console.log("context: ", context); 
                 return reply.view(Path.join(__dirname, "templates/dashboard.html"), { ctx: context });
             },
             auth: internals.auth,
@@ -184,25 +189,22 @@ internals.addNunjucksFilters = function(env){
 
 internals.addNunjucksGlobals = function(env){
 
-    env.addGlobal("NODE_ENV", process.env.NODE_ENV);
+    env.addGlobal("NODE_ENV", Config.get('env'));
     env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
     env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
     
-    
-    var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
-    var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
+    if(Config.get('env')==='production'){
 
+        var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
+        var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
 
-    if(!libBuild.length){
-        throw Boom.badImplementation("libBuild is missing");
+        if(!libBuild.length || !appBuild.length){
+            throw Boom.badImplementation("libBuild or appBuild is missing");
+        }
+
+        env.addGlobal("libBuild", Path.parse(libBuild[0]).base);
+        env.addGlobal("appBuild", Path.parse(appBuild[0]).base);
     }
-    if(!appBuild.length){
-        throw Boom.badImplementation("appBuild is missing");
-    }
-
-    env.addGlobal("libBuild",       Path.parse(libBuild[0]).base);
-    env.addGlobal("appBuild",       Path.parse(appBuild[0]).base);
-
 };
 
 exports.register.attributes = {

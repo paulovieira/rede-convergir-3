@@ -93,11 +93,6 @@ exports.register = function(server, options, next){
                     definitions: request.pre.definitions,
                 };
 
-                // this shouldn't happen
-                if(!request.auth.isAuthenticated){
-                    reply(Boom.badImplementation())
-                }
-
                 //console.log("context: ", context); 
                 return reply.view(Path.join(__dirname, "templates/dashboard.html"), { ctx: context });
             },
@@ -105,6 +100,13 @@ exports.register = function(server, options, next){
             pre: [
                 [/*Pre.readInitiativesSlim,*/ Pre.readDefinitions2]
             ],
+
+            plugins: {
+                "hapi-auth-cookie": {
+                    // url to redirect if the authenticatio fails (missing cookie)
+                    redirectTo: "/login"
+                }
+            }
         }
     });
 

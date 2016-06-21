@@ -6,26 +6,48 @@ var internals = {};
 internals.validUser = Config.get("dashboard:user");
 internals.validPassword = Config.get("dashboard:password");
 
+internals['10 seconds'] = 10*1000;
+internals['1 minute'] = 60*1000;
+internals['1 day'] = 24*60*60*1000;
+internals['30 days'] = 30*24*60*60*1000;
+internals['1 year'] = 365*24*60*60*1000;
+
 module.exports = {
 
     policy: {
-        cache: "pg-cache",
-        segment: "sessions",
-        expiresIn: 1000*60 
+        cache: 'pg-cache',
+        segment: 'sessions',
+        expiresIn: internals['1 year']
+        //expiresIn: internals['10 seconds']
     },
 
     strategy: {
-        name: "session-cache",
+        name: 'session-cache',
         mode: false,
         cookieOptions: {
-            password: Config.get("hapi:ironPassword"),
+            password: Config.get('hapi:ironPassword'),
             isSecure: false,
-            clearInvalid: true,
-            appendNext: true,
-            redirectOnTry: true,
-            redirectTo: "/login",
 
-            //ttl: internals["3 hours"],            
+            // erase the cookie if the session has expired or some other error has happened
+            clearInvalid: true,
+
+            // if auth mode is 'try' and if the validation fails (no cookie, for instance), will send a 
+            // 302 response using reply.redirect(); the url should be given in the route configuration, in 
+            // the option 'plugins.["hapi-auth-cookie"].redirectTo'; 
+            // if 'redirectTo' is missing, it has no effect (that is, hapi will reply normally, as if the route 
+            // had auth === false);
+
+            // note: if auth mode is 'optional', it works the same way (but it seems to be a bug in hapi-auth-cookie)
+            redirectOnTry: true,
+
+            //appendNext: true,
+
+            // use a long ttl for the cookie; it will be actually cleared when the session data from the cache has expired;
+            // this happens in the 'validateFunc' (from hapi-auth-session) for 2 reasons: 
+            // a) we calling calling the callback to validateFunc with false as the 2nd arg
+            // b) the clearInvalid option is true
+            ttl: internals['1 year']
+            //ttl: internals['10 seconds']
         }
     },
 

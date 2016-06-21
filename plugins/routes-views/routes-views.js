@@ -401,9 +401,8 @@ exports.register = function(server, options, next){
             handler: function(request, reply) {
                 debugger;
                 
-                //request.auth.isAuthenticated = true;
                 if (request.auth.isAuthenticated) {
-                    return reply.redirect("/dashboard");
+                    return reply.redirect(require("../../config/plugins/hapi-auth-session").successRedirectTo);
                 }
 
                 var context = {
@@ -417,7 +416,7 @@ exports.register = function(server, options, next){
                 strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
                 mode: "try"
             },
-
+/*
             plugins: {
 
                 // disable the redirectTo option for this route (given to the hapi auth cookie), otherwise
@@ -426,7 +425,7 @@ exports.register = function(server, options, next){
                     redirectTo: false
                 }
             }
-
+*/
         }
 
     });

@@ -17,8 +17,8 @@ module.exports = {
     policy: {
         cache: 'pg-cache',
         segment: 'sessions',
-        expiresIn: internals['1 year']
-        //expiresIn: internals['10 seconds']
+        //expiresIn: internals['1 day']
+        expiresIn: internals['10 seconds']
     },
 
     strategy: {

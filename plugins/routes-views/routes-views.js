@@ -430,6 +430,7 @@ exports.register = function(server, options, next){
 
     });
 
+
     // server.route({
     //     path: "/temp",
     //     method: "GET",

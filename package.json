@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/paulovieira/rede-convergir-3#readme",
   "dependencies": {
+    "bell": "^7.9.0",
     "bell-on-bundler-error-plugin": "^1.0.8",
     "blipp": "^2.3.0",
     "bluebird": "^3.0.2",

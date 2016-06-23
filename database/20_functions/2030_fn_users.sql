@@ -20,13 +20,12 @@ RETURNS TABLE(
 	bio TEXT,
 	url TEXT,
 	photo TEXT,
-	session_history JSONB,
+	--session_history JSONB,
 	pw_hash TEXT,
 	created_at timestamptz,
-	recover TEXT,
-	recover_valid_until timestamptz
---	user_texts JSON,  -- join with the users_texts CTE
---	user_groups JSON   -- join with the users_groups CTE
+	updated_at timestamptz,
+	recover_code TEXT,
+	recover_code_expiration timestamptz
 )
 AS
 $BODY$
@@ -50,6 +49,9 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
 				FROM users u
 				WHERE true ';
 	
+	-- input_obj must have the 'id' or 'email' keys to be used in the where clause;
+	-- if not all the rows will be returned
+
 	-- criteria: id
 	IF input_obj->>'id' IS NOT NULL THEN
 		command = command || format(' AND id = %L ', input_obj->>'id');
@@ -78,9 +80,8 @@ LANGUAGE plpgsql;
 EXAMPLES:
 
 insert into users values
-	(default, 'paulovieira@gmail.com', 'paulo', 'vieira', default, 'my bio', 'my url', 'my photo', default, 'pw hash', default),
-
-	(default, 'dummy@gmail.com', 'dummy', 'last name', default, 'my dummy bio', 'my dummy url', 'my dummy photo', default, 'pw dummy hash', default)
+	(default, 'paulovieira@gmail.com', default, default, default, default, default, default, 'pw_hash', default, default, 'recover_code', default)
+	(default, 'dummy@gmail.com', default, default, default, default, default, default, 'pw_hash_2', default, default, 'recover_code_2', default)
 
 
 select * from  users_read('{"id": 2}');
@@ -100,6 +101,7 @@ $BODY$
 DECLARE
 	upserted_row users%ROWTYPE;
 	current_row users%ROWTYPE;
+    n INT;  
 
 	-- fields to be used in WHERE clause
 	_id INT;
@@ -109,47 +111,53 @@ DECLARE
 	_first_name TEXT;
 	_last_name TEXT;
 	_country_code TEXT;
-	_pw_hash TEXT;
 	_bio TEXT;
 	_url TEXT;
 	_photo TEXT;
+	_pw_hash TEXT;
 	_recover_code TEXT;
 	_recover_code_expiration TIMESTAMPTZ;
 BEGIN
 
 	
-	SELECT (input_obj->>'id')::int INTO _id;
+	_id   := (input_obj->>'id')::int;
 
 	-- for tables with surrogate primary key (serial),
 	-- if an id is not given, the intention is to create/insert a new row; 
 	-- otherwise, the intention is always to update an existing row; in other words
 	-- we can't insert a new row with a pre-defined id
 	IF _id IS NULL THEN
-		SELECT nextval(pg_get_serial_sequence('users', 'id')) INTO _id;		
+		_id := nextval(pg_get_serial_sequence('users', 'id'));
 	ELSE
 		-- add an explicit row lock
 		SELECT * FROM users where id = _id FOR UPDATE INTO current_row;
+        GET DIAGNOSTICS n := ROW_COUNT;
 
-		IF current_row.id IS NULL THEN
-			RETURN;
-		END IF;
+        IF n = 0 THEN
+            RAISE EXCEPTION USING 
+                    ERRCODE = 'no_data_found',
+                    MESSAGE = 'row with id ' || _id ||' does not exist';
+        END IF;
+
 	END IF;
 
 	--raise notice 'current: %s', current_row.email;
 	--raise notice 'to be inserted or updated: %s', COALESCE(input_obj->>'email', current_row.email);
 
-	SELECT COALESCE(input_obj->>'email',      current_row.email)      INTO _email;
-	SELECT COALESCE(input_obj->>'first_name', current_row.first_name) INTO _first_name;
-	SELECT COALESCE(input_obj->>'last_name',  current_row.last_name)  INTO _last_name;
-	SELECT COALESCE(input_obj->>'country_code',current_row.country_code, 'PT')  INTO _country_code;
-	SELECT COALESCE(input_obj->>'bio',        current_row.bio)        INTO _bio;
-	SELECT COALESCE(input_obj->>'url',        current_row.url)        INTO _url;
-	SELECT COALESCE(input_obj->>'photo',      current_row.photo)      INTO _photo;
-	SELECT COALESCE(input_obj->>'pw_hash',    current_row.pw_hash)    INTO _pw_hash;
-	SELECT COALESCE(input_obj->>'recover_code',            current_row.recover_code)    INTO _recover_code;
-	SELECT COALESCE( (input_obj->>'recover_code_expiration')::timestamptz, current_row.recover_code_expiration)    INTO _recover_code_expiration;
-
-	-- todo: add entry to the session history
+	_email        :=  COALESCE(input_obj->>'email',         current_row.email);
+	_first_name   :=  COALESCE(input_obj->>'first_name',    current_row.first_name);
+	_last_name    :=  COALESCE(input_obj->>'last_name',     current_row.last_name);
+	_country_code :=  COALESCE(input_obj->>'country_code',  current_row.country_code,  get_default('users', 'country_code'));
+	_bio          :=  COALESCE(input_obj->>'bio',           current_row.bio);
+	_url          :=  COALESCE(input_obj->>'url',           current_row.url);
+	_photo        :=  COALESCE(input_obj->>'photo',         current_row.photo);
+	_pw_hash      :=  COALESCE(input_obj->>'pw_hash',       current_row.pw_hash);
+	_recover_code :=  COALESCE(input_obj->>'recover_code',  current_row.recover_code);
+	_recover_code_expiration :=  COALESCE(
+									(input_obj->>'recover_code_expiration')::TIMESTAMPTZ,  
+									current_row.recover_code_expiration, 
+									get_default('users', 'recover_code_expiration')::timestamptz
+								);
 
 	INSERT INTO users(
 		id,
@@ -161,6 +169,7 @@ BEGIN
 		url,
 		photo,
 		pw_hash,
+		updated_at,
 		recover_code,
 		recover_code_expiration
 		)
@@ -174,6 +183,7 @@ BEGIN
 		_url,
 		_photo,
 		_pw_hash,
+		NOW(),
 		_recover_code,
 		_recover_code_expiration
 		)
@@ -186,6 +196,7 @@ BEGIN
 		url = EXCLUDED.url,
 		photo = EXCLUDED.photo,
 		pw_hash = EXCLUDED.pw_hash,
+		updated_at = NOW(),
 		recover_code = EXCLUDED.recover_code,
 		recover_code_expiration = EXCLUDED.recover_code_expiration
 	RETURNING 
@@ -211,8 +222,6 @@ to create a new row, the id property should be missing
 
 select * from users_upsert('{
 	"email": "abc@abc.com",
-	"first_name": "paulo",
-	"last_name": "vieira",
 	"pw_hash": "xyz"
 }');
 
@@ -235,29 +244,24 @@ select * from users_upsert('{
 DROP FUNCTION IF EXISTS users_delete(json);
 
 CREATE FUNCTION users_delete(input_obj json)
-RETURNS TABLE(deleted_id int) AS
+RETURNS SETOF users AS
 $$
 DECLARE
 	deleted_row users%ROWTYPE;
 
-	-- fields to be used in WHERE clause
-	_id INT;
 BEGIN
 
-	-- extract values to be used in the WHERE clause
-	SELECT (input_obj->>'id')::int INTO _id;
+    -- if the row does not exist an exception will be thrown with error code P0002
+    -- (query returned no rows); this happens automatically because we are
+    -- using STRICT INTO ("the query must return exactly one row or a run-time error will
+    -- be reported" - http://www.postgresql.org/docs/9.5/static/plpgsql-statements.html)
 
 	DELETE FROM users
-	WHERE id = _id
+	WHERE id = (input_obj->>'id')::int
 	RETURNING *
-	INTO deleted_row;
+	INTO STRICT deleted_row;
 
-	deleted_id   := deleted_row.id;
-
-	IF deleted_row.id IS NOT NULL THEN
-		SELECT deleted_row.id INTO deleted_id;
-		RETURN NEXT;
-	END IF;
+	RETURN NEXT deleted_row;
 
 RETURN;
 END;

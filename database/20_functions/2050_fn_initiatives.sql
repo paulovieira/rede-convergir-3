@@ -150,6 +150,9 @@ FOR input_obj IN ( select json_array_elements(input) ) LOOP
             ON i.id = target_cte.initiative_id
             WHERE true ';
 
+    -- input_obj must have the 'id', 'slug', 'type_id' or 'moderation_status_id' keys to be used in the where clause;
+    -- if not all the rows will be returned
+
 	-- criteria: id
 	IF input_obj->>'id' IS NOT NULL THEN
 		command := command || format(' AND i.id = %L', input_obj->>'id');

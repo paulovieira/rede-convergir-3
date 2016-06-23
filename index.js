@@ -137,17 +137,16 @@ var manifest = {
         // dependencies: ["hapi-auth-cookie"]
         {
             plugin: {
-                //register: "hapi-auth-session",
                 register: "../hapi-auth-session",
                 options: require("./config/plugins/hapi-auth-session")
             },
             options: {}
         },
 
-        // dependencies: ["bell", "hapi-auth-cookie"]
+        // dependencies: ["bell", "hapi-auth-session"]
         {
             plugin: {
-                register: "./plugins/third-party-auth/third-party-auth.js",
+                register: "./plugins/routes-oauth/routes-oauth.js",
                 options: {}
             },
             options: {}

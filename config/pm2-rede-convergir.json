@@ -2,7 +2,8 @@
   "name": "rede-convergir",
   "script": "index.js",
   "args": [
-    "--production"
+    "--production",
+    "--good-console=false"
   ],
   "env": {
   },

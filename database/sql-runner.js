@@ -11,11 +11,11 @@ var Psql = require("psql-wrapper");
 
 var internals = {};
 
-internals.createTables = function(){
+internals.createTablesAndFunction = function(){
 
 	// the order in the array returned by glob is lexicographic, so we can define the order
 	// that the scripts will run by simply pre-pending numbers in the filename
-	Glob.sync("database/10_*/*.sql").forEach(function(scriptPath){
+	Glob.sync("database/*(10|20)_*/*.sql").forEach(function(scriptPath){
 
 		try{
 			Psql({ file: scriptPath });
@@ -28,20 +28,6 @@ internals.createTables = function(){
 
 };
 
-internals.createFunctions = function(){
-
-	Glob.sync("database/20_*/*.sql").forEach(function(scriptPath){
-
-		try{
-			Psql({ file: scriptPath });
-		}
-		catch(err){
-			process.exit();
-		}
-
-	});
-
-};
 
 
 // below are scripts to insert initial data; the upsert functionality available in postgres 9.5 is used;
@@ -153,8 +139,7 @@ Psql.configure({
 	username: Config.get("db:postgres:username")
 });
 
-internals.createTables();
-internals.createFunctions();
+internals.createTablesAndFunction();
 
 internals.insertInitialData.countries();
 internals.insertInitialData.definitions();

@@ -206,11 +206,11 @@ var manifest = {
 var glueOptions = {
     relativeTo: __dirname,
     preRegister: function(server, next){
-        console.log("called prior to registering plugins with the server")
+        console.log("[glue]: executing preRegister (called prior to registering plugins with the server)")
         next();
     },
     preConnections: function(server, next){
-        console.log("called prior to adding connections to the server")
+        console.log("[glue]: executing preConnections (called prior to adding connections to the server)")
         next();
     }
 };
@@ -234,7 +234,7 @@ Glue.compose(manifest, glueOptions, function (err, server) {
         console.log('port: ' + server.info.port);
         console.log("process.env.NODE_ENV: ", process.env.NODE_ENV);
 
-        Db.query("SELECT * FROM version()")
+        Db.query("SELECT version()")
             .then(function(result){
                 console.log("database: ", result[0].version);
                 console.log(Chalk.green('================='));

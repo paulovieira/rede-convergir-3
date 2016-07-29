@@ -16,7 +16,8 @@ var manifest = {
         cache: [
             {
                 name: 'pg-cache',
-                engine: require('../catbox-postgres'),
+                //engine: require('../catbox-postgres'),
+                engine: require('catbox-postgres'),
                             
                 // other specific options for this cache client
                 partition: Config.get('db:postgres:database'),

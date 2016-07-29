@@ -469,7 +469,8 @@
         trigger: "hover"  // avoid show the tooltip on focus
     });
 
-    RC.streetsLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {});
+
+    RC.streetsLayer = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.jpg', {});
     
     RC.satelliteLayer = L.featureGroup([
         L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"),

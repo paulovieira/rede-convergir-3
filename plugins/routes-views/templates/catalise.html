@@ -266,6 +266,7 @@
 <script src="/public/lib/leaflet/leaflet-label-9c431d/leaflet.label-src.js"></script>
 <script src="/public/lib/leaflet/leaflet-awesome-markers-af0bfc/leaflet.awesome-markers.js"></script>
 <script src="/public/lib/leaflet/leaflet-panel-layers-97f018/leaflet-panel-layers.src.js"></script>
+<script src="/public/lib/leaflet/leaflet-mq-r8cRGv.js"></script>
 
 
 
@@ -630,7 +631,8 @@ Catalise.baseLayers = [
     {
         active: true,
         name: "Estradas",
-        layer: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {})
+        //layer: L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {})
+        layer: MQ.mapLayer()
     },
     {
         name: "Satélite",

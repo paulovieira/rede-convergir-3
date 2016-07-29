@@ -138,7 +138,7 @@ var manifest = {
         // dependencies: ["hapi-auth-cookie"]
         {
             plugin: {
-                register: "../hapi-auth-session",
+                register: "hapi-auth-session",
                 options: require("./config/plugins/hapi-auth-session")
             },
             options: {}

@@ -5,8 +5,8 @@ var Hoek = require("hoek");
 var Boom = require("boom");
 //var _ = require("underscore");
 var _s = require("underscore.string");
-var Utils = require("../../../util/utils");
-var Db = require("../../../database");
+var Utils = require("../util/utils");
+var Db = require("../database");
 
 
 var internals = {};

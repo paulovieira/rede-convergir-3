@@ -416,11 +416,11 @@ exports.register = function(server, options, next){
                 strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
                 mode: "try"
             },
+
+            // make sure we disable plugins["hapi-auth-cookie"].redirectTo for this route
+            // otherwise we end up with infinite redirect loop (302 respose)
 /*
             plugins: {
-
-                // disable the redirectTo option for this route (given to the hapi auth cookie), otherwise
-                // we get and infinite redirect loop
                 "hapi-auth-cookie": {
                     redirectTo: false
                 }

@@ -10,8 +10,11 @@ var _s = require("underscore.string");
 var Promise = require('bluebird');
 var CsvStringify = Promise.promisify(require("csv-stringify"));
 var Config = require('nconf');
+var Seneca = require('seneca').instance;
 var Validate = require("../../util/validate");
 var Utils = require("../../util/utils");
+
+
 
 var internals = {};
 
@@ -183,8 +186,6 @@ internals.readAll = {
             searchConditions["type_id"] = request.query.typeId;
         }
 
-
-        var Seneca = request.server.plugins["seneca-promise"]["seneca"];
         Seneca.actAsync({
                 role: "initiatives", 
                 cmd: "read",
@@ -272,7 +273,6 @@ internals.read = {
         // array of objects ready to used in the postgres functions; 
         // TODO: this array should be stored somewhere else
 console.log("request.params.ids: ", request.params.ids);
-        var Seneca = request.server.plugins["seneca-promise"]["seneca"];
         Seneca.actAsync({
                 role: "initiatives",
                 cmd: "read",
@@ -313,7 +313,6 @@ internals.create = {
         request.payload[0].url = internals.correctUrl(request.payload[0].url);
         request.payload[0].videoUrl = internals.correctUrl(request.payload[0].videoUrl);
 
-        var Seneca = request.server.plugins["seneca-promise"]["seneca"];
         Seneca.actAsync({
                 role: "initiatives",
                 cmd: "upsert",
@@ -365,7 +364,6 @@ console.log("update: \n", request.payload[0]);
         request.payload[0].url = internals.correctUrl(request.payload[0].url);
         request.payload[0].videoUrl = internals.correctUrl(request.payload[0].videoUrl);
 
-        var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 
         var previousData = [];
         Seneca.actAsync({
@@ -437,7 +435,6 @@ internals.delete = {
 
         // in this endpoint the only search condition is built-in in the param of the url
 
-        var Seneca = request.server.plugins["seneca-promise"]["seneca"];
         Seneca.actAsync({
                 role: "initiatives",
                 cmd: "delete",

@@ -1,15 +1,15 @@
 //var Fs = require("fs");
-var Path = require("path");
-var Config = require("nconf");
 //var Hoek = require("hoek");
 //var Joi = require("joi");
 //var JSON5 = require("json5");
-var Nunjucks = require("hapi-nunjucks");
 //var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
-var Pre = require("../../util/prerequisites");
-var Boom = require("boom");
 //var _ = require("underscore");
+var Path = require("path");
+var Config = require("nconf");
+var Nunjucks = require("hapi-nunjucks");
+var Boom = require("boom");
 var Glob = require("glob");
+var Pre = require("../../util/prerequisites");
 var Utils = require("../../util/utils");
 
 
@@ -71,14 +71,14 @@ exports.register = function(server, options, next){
         }
     });
 
-    if(Config.get('env')==="production" || true){
+    // authentication strategy configuration
+    internals.auth = {
+        strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
+        mode: "try"
+    };
 
-        internals.auth = {
-            strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
-            mode: "try"
-        };
-    }
-    else{
+    // TODO - remove
+    if(Config.get('env')==="dev" && false){
         internals.auth = false;
     }
 
@@ -102,11 +102,14 @@ exports.register = function(server, options, next){
             ],
 
             plugins: {
-                "hapi-auth-cookie": {
-                    // url to redirect if the authenticatio fails (missing cookie)
-                    redirectTo: "/login"
+                'hapi-auth-cookie': {
+                    // url to redirect unauthenticated requests (missing or invalid cookie);
+                    // this is an option from hapi-auth-cookie
+                    redirectTo: '/login'
                 }
             }
+
+
         }
     });
 

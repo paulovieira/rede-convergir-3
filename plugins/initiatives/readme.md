@@ -1,6 +1,6 @@
 The "initiatives" client-side application is bundled with webpack. We also need grunt to pre-compile the templates (with nunjucks): 
 
-IMPORTANTE: at the moment this app is still bundled with the old method (grunt only via static_extract -> concat -> uglify -> compress). The migration to webpack will be done in the "app2" directory.
+IMPORTANT: at the moment this app is still bundled with the old method (grunt only via static_extract -> concat -> uglify -> compress). The migration to webpack will be done in the "app2" directory.
 
 In dev mode run (in the root dir of the project):
 ```bash

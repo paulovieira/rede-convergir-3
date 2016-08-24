@@ -1,4 +1,18 @@
-CREATE TABLE IF NOT EXISTS users(
+DO $$
+
+DECLARE
+patch_exists int := _v.register_patch('premiere', 'initial database design');
+
+BEGIN
+
+IF patch_exists THEN
+    RETURN;
+END IF;
+
+/* the actual code to change to the database starts here */
+
+
+CREATE TABLE users(
 	id serial primary key,
 	email text unique not null,
 			first_name text,
@@ -19,6 +33,10 @@ CREATE TABLE IF NOT EXISTS users(
     --CONSTRAINT session_history_must_be_array   CHECK (jsonb_typeof(session_history) = 'array')
 );
 
-SELECT audit.audit_table('users');
 
 -- NOTE: the table contains a dummy user; it is used for events that don't below to any registered user/initiative;
+
+END;
+$$;
+
+SELECT audit.audit_table('users');

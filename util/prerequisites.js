@@ -1,18 +1,16 @@
-"use strict";
+'use strict';
 
-var Hoek = require("hoek");
-//var _ = require("underscore");
-//var _s = require("underscore.string");
-var Boom = require("boom");
-var Moment = require("moment");
-var Embed = require("./embed-video-temp");
-var Utils = require("./utils")
+const Hoek = require('hoek');
+const Boom = require('boom');
+const Moment = require('moment');
+const Seneca = require('seneca').instance;
+const Embed = require('./embed-video-temp');
+const Utils = require('./utils');
 
-
-var internals = {};
+const internals = {};
 
 internals.getEmbeddedUrl = function(url){
-		
+
 	var url = Embed(url, {
 		query: {
 			rel: 0,  // whether to show related videos at the end 
@@ -55,7 +53,6 @@ exports.readInitiativesSlim = {
 
 		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
-		var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 		Seneca.actAsync({
 		        role: "initiatives",
 		        cmd: "read",
@@ -92,7 +89,6 @@ exports.readInitiativeBySlug = {
 
 		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
-		var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 		Seneca.actAsync({
 		        role: "initiatives",
 		        cmd: "read",
@@ -169,7 +165,6 @@ exports.readDefinitions2 = {
 
 		if(global.NODE_ENV==="dev"){  Utils.logCallsite(Hoek.callStack()[1]);  }
 
-		var Seneca = request.server.plugins["seneca-promise"]["seneca"];
 		Seneca.actAsync({
 		        role: "definitions",
 		        cmd: "read",

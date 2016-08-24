@@ -15,7 +15,7 @@ internals.createTablesAndFunction = function(){
 
 	// the order in the array returned by glob is lexicographic, so we can define the order
 	// that the scripts will run by simply pre-pending numbers in the filename
-	Glob.sync("database/*(10|20)_*/*.sql").forEach(function(scriptPath){
+	Glob.sync("database/*(00|10|20)_*/*.sql").forEach(function(scriptPath){
 
 		try{
 			Psql({ file: scriptPath });

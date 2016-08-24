@@ -1,4 +1,17 @@
-CREATE TABLE IF NOT EXISTS initiatives(
+DO $$
+
+DECLARE
+patch_exists int := _v.register_patch('premiere', 'initial database design');
+
+BEGIN
+
+IF patch_exists THEN
+    RETURN;
+END IF;
+
+/* the actual code to change to the database starts here */
+
+CREATE TABLE initiatives(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
@@ -38,6 +51,10 @@ CREATE TABLE IF NOT EXISTS initiatives(
     CONSTRAINT coordinates_must_be_array CHECK (jsonb_typeof(coordinates) = 'array'),
     CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence)   = 'array')
 );
+
+END;
+$$;
+
 
 SELECT audit.audit_table('initiatives');
 

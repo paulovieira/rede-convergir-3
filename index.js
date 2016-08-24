@@ -1,11 +1,14 @@
 require('./config/load');
-
 var Config = require('nconf');
+
 var Hoek = require('hoek');
 var Glue = require('glue');
 var Chalk = require('chalk');
 var Db = require('./database');
 var Utils = require('./util/utils');
+
+// create seneca instance and load actions
+require('./actions');
 
 process.title = Config.get('applicationTitle');
 
@@ -60,7 +63,7 @@ var manifest = {
 
     registrations: [
 
-/*
+/* TEMPLATE
         {
             plugin: {
                 register: "...",
@@ -176,14 +179,7 @@ var manifest = {
             }
         },
 
-        {
-            plugin: {
-                register: "./plugins/seneca-promise/seneca-promise.js",
-                options: {}
-            },
-            options: {}
-        },
-
+        // route for the client side app
         {
             plugin: {
                 register: "./plugins/initiatives/initiatives.js",
@@ -227,7 +223,7 @@ Glue.compose(manifest, glueOptions, function (err, server) {
 
         // make the server object available for the methods in the ./util/utils module
         Utils.registerServer(server);
-        
+
         // show some informations about the server
         console.log(Chalk.green('================='));
         console.log("Hapi version: " + server.version);

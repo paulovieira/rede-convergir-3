@@ -24,7 +24,7 @@ In the root dir of the project:
 ```bash
 
 # start the hapi server
-export NODE_ENV=dev; nodemon;
+export NODE_ENV=dev; nodemon index.js --dev;
 
 # in second terminal start webpack-dev-server (in "inline mode")
 export NODE_ENV=dev; webpack-dev-server --config ./plugins/dashboard/webpack.config.js --inline  --port 8081
@@ -34,7 +34,7 @@ We can open the "dashboard" board being served by hapi: http://redeconvergir.dev
 
 The browser will reload on every change.
 
-wThe bundle files (`lib.js` and `app.js`) will be created in-memory only and are served directly to the browser.
+The bundle files (`lib.js` and `app.js`) will be created in-memory only and are served directly to the browser.
 
 Note that the port and path of the bundles are not the same as the ones configured in the Hapi server. The bundles are being served by an Express server created by Webpack. In this case we have:
 

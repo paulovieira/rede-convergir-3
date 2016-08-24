@@ -1,4 +1,19 @@
-CREATE TABLE IF NOT EXISTS events(
+DO $$
+
+DECLARE
+patch_exists int := _v.register_patch('premiere', 'initial database design');
+
+BEGIN
+
+IF patch_exists THEN
+    RETURN;
+END IF;
+
+
+/* the actual code to change to the database starts here */
+
+
+CREATE TABLE events(
 	id serial primary key,
 	user_id int REFERENCES users(id) ON DELETE SET NULL,  -- might be the dummy user 
 	initiative_id int REFERENCES initiatives(id) ON DELETE SET NULL,  -- might be the dummy initive
@@ -24,5 +39,9 @@ CREATE TABLE IF NOT EXISTS events(
 	CONSTRAINT files_must_be_array         CHECK (jsonb_typeof(files) = 'array'),
 	CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array')
 );
+
+END;
+$$;
+
 
 SELECT audit.audit_table('events');

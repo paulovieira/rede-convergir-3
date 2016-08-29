@@ -400,32 +400,37 @@ exports.register = function(server, options, next){
 
             handler: function(request, reply) {
                 debugger;
-                
+                console.log("/login-1")
                 if (request.auth.isAuthenticated) {
-                    return reply.redirect(require("../../config/plugins/hapi-auth-session").successRedirectTo);
+                    return reply('You are being redirected...')
+                        .redirect(require('../../config/plugins/hapi-auth-cookie-cache').loginRedirectTo);
                 }
 
                 var context = {
                     query: request.query
                 };
 
+                console.log("/login-2")
                 return reply.view(Path.join(__dirname, "templates/login.html"), {ctx: context});
             },
 
             auth: {
-                strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
-                mode: "try"
+                strategy: 'cookie-cache',
+                mode: 'try'
             },
 
-            // make sure we disable plugins["hapi-auth-cookie"].redirectTo for this route
-            // otherwise we end up with infinite redirect loop (302 respose)
-/*
+            // make sure this setting is undefined otherwise the execution won't
+            // reach the route handler;
+            // in fact it doesn
+            // make sense to have the redirectTo option here because this page isn't private;
+            // if the user sends an authentication cookie but is invalid, we still want the execution
+            // to reach the handler (proceed to show the page)
             plugins: {
-                "hapi-auth-cookie": {
-                    redirectTo: false
+                'hapi-auth-cookie': {
+                    redirectTo: undefined
                 }
             }
-*/
+
         }
 
     });
@@ -553,5 +558,5 @@ internals.addNunjucksGlobals = function(env){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "hapi-auth-session"]
+    dependencies: ["vision", "hapi-auth-cookie-cache"]
 };

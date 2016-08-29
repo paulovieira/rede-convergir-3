@@ -73,8 +73,9 @@ exports.register = function(server, options, next){
 
     // authentication strategy configuration
     internals.auth = {
-        strategy: require("../../config/plugins/hapi-auth-session").strategy.name,
-        mode: "try"
+        strategy: 'cookie-cache',
+        mode: 'try'
+        //mode: 'optional'
     };
 
     // TODO - remove
@@ -87,7 +88,7 @@ exports.register = function(server, options, next){
         method: "GET",
         config: {
             handler: function(request, reply) {
-
+                debugger;
                 console.log("request.auth: ", JSON.stringify(request.auth));
                 var context = {
                     definitions: request.pre.definitions,
@@ -100,7 +101,7 @@ exports.register = function(server, options, next){
             pre: [
                 [/*Pre.readInitiativesSlim,*/ Pre.readDefinitions2]
             ],
-
+            /*
             plugins: {
                 'hapi-auth-cookie': {
                     // url to redirect unauthenticated requests (missing or invalid cookie);
@@ -108,7 +109,7 @@ exports.register = function(server, options, next){
                     redirectTo: '/login'
                 }
             }
-
+*/
 
         }
     });
@@ -214,5 +215,5 @@ internals.addNunjucksGlobals = function(env){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "inert", "hapi-auth-session"]
+    dependencies: ["vision", "inert", "hapi-auth-cookie-cache"]
 };

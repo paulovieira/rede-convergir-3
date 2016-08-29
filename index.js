@@ -7,6 +7,9 @@ var Chalk = require('chalk');
 var Db = require('./database');
 var Utils = require('./util/utils');
 
+
+var Boom = require('boom'); // to be removed
+
 // create seneca instance and load actions
 require('./actions');
 
@@ -141,13 +144,13 @@ var manifest = {
         // dependencies: ["hapi-auth-cookie"]
         {
             plugin: {
-                register: "hapi-auth-session",
-                options: require("./config/plugins/hapi-auth-session")
+                register: "hapi-auth-cookie-cache",
+                options: require("./config/plugins/hapi-auth-cookie-cache")
             },
             options: {}
         },
 
-        // dependencies: ["bell", "hapi-auth-session"]
+        // dependencies: ["bell", "hapi-auth-cookie-cache"]
         {
             plugin: {
                 register: "./plugins/routes-oauth/routes-oauth.js",
@@ -156,7 +159,7 @@ var manifest = {
             options: {}
         },
 
-        // dependencies: ["vision", "hapi-auth-session"]
+        // dependencies: ["vision", "hapi-auth-cookie-cache"]
         //   this is where we configure the views manager (using nunjucks) and declare the routes that
         //   return a view; note that reply.view is only available inside the plugin
         {
@@ -218,6 +221,15 @@ Glue.compose(manifest, glueOptions, function (err, server) {
 
     // start the server and finish the initialization process
     server.start(function(err) {
+
+
+        // server.ext('onPreAuth', function (request, reply) {
+
+        //     var err = Boom.unauthorized(null, 'cookie');
+        //     return reply(err);
+        // });
+
+
 
         Hoek.assert(!err, 'Failed server start: ' + err);
 

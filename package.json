@@ -46,7 +46,7 @@
     "grunt-static-timestamp": "^0.1.4",
     "hapi": "^13.4.1",
     "hapi-auth-cookie": "^6.1.1",
-    "hapi-auth-session": "paulovieira/hapi-auth-session",
+    "hapi-auth-cookie-cache": "paulovieira/hapi-auth-cookie-cache",
     "hapi-nunjucks": "paulovieira/hapi-nunjucks",
     "hapi-qs": "^1.1.0",
     "hoek": "^4.0.1",

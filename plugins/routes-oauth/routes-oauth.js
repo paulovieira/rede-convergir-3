@@ -114,7 +114,7 @@ exports.register = function(server, options, next){
                 // todo: place the raw data in some property, and define a session object with 
                 // the same structure, independently of how the authentication was done
                 var session = request.auth.credentials;
-                var sessionCache = server.plugins['hapi-auth-session']['sessionCache'];
+                var sessionCache = server.plugins['hapi-auth-cookie-cache']['cookieCache'];
 
                 sessionCache.set(
 
@@ -175,7 +175,7 @@ exports.register = function(server, options, next){
                 // todo: place the raw data in some property, and define a session object with 
                 // the same structure, independently of how the authentication was done
                 var session = request.auth.credentials;
-                var sessionCache = server.plugins['hapi-auth-session']['sessionCache'];
+                var sessionCache = server.plugins['hapi-auth-cookie-cache']['cookieCache'];
 
                 sessionCache.set(
 
@@ -224,5 +224,5 @@ exports.register = function(server, options, next){
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the directory
-    dependencies: ["bell", "hapi-auth-session"]
+    dependencies: ["bell", "hapi-auth-cookie-cache"]
 };

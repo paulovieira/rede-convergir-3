@@ -1,10 +1,10 @@
 ## TODO:
--delete the contents in the _temp dir_
--save the compiled chunks in the _temp dir
--for each file, check parent directory (build) if there exists a previous chunk with the same prefix
+-delete the contents in the temp dir_
+-save the compiled chunks in the temp dir
+-for each file, check parent directory (_build_) if there exists a previous chunk with the same prefix
     - if yes and the prefix is the same, skip
-    - if yes and the prefix is different, update (delete from build and copy from _temp to build)
-    - if not, copy from _temp to build
+    - if yes and the prefix is different, update (delete from _build_ and copy from temp to _build_)
+    - if not, copy from temp to _build_
     -  _
 
 ### Dashboard client side app

@@ -30,6 +30,7 @@
     "csv-stringify": "^1.0.2",
     "exports-loader": "^0.6.3",
     "fecha": "^2.1.0",
+    "file-janitor": "0.0.1",
     "file-loader": "^0.8.5",
     "fs-extra": "^0.26.2",
     "glob": "^5.0.15",

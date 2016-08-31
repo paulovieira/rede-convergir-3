@@ -5,10 +5,14 @@
 //var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
 //var _ = require("underscore");
 var Path = require("path");
+var ChildProcess = require('child_process');
+var Fs = require('fs-extra');
 var Config = require("nconf");
+
 var Nunjucks = require("hapi-nunjucks");
 var Boom = require("boom");
 var Glob = require("glob");
+var FileJanitor = require('file-janitor');
 var Pre = require("../../util/prerequisites");
 var Utils = require("../../util/utils");
 
@@ -23,16 +27,51 @@ internals.clientAppRelDir = "plugins/dashboard/app";
 
 internals.build = function(commands){
 
-    var webpackConfig = Path.join(Config.get("rootDir"), "plugins/dashboard/webpack.config.js");
-    var gruntfile = Path.join(Config.get("rootDir"), "plugins/dashboard/grunt.config.js");
+    const webpackConfig = Path.join(__dirname, "webpack.config.js");
+    const buildCommand = `webpack --display-chunks --display-modules --config ${ webpackConfig}`;
 
-    var buildCommands = [
-        `webpack --config ${ webpackConfig}`,
-        `grunt --base ${ Config.get("rootDir") } --gruntfile ${ gruntfile }`
-    ];
+    try{
 
-    Utils.shellExec(buildCommands);
-    process.stdout.write("Build successful!");
+        // webpack chunks will be created in app/_build/temp
+        Fs.removeSync(Path.join(__dirname, 'app/_build/temp/*'));
+        ChildProcess.execSync(buildCommand);
+
+        // copy the js chunks to app/_build; FileJanitor will copy only if there are new files
+        // (and will clean the old ones)
+/*
+        FileJanitor.clean({
+            source: [Path.join(__dirname, 'app/_build/temp/*.js')],
+            destination: Path.join(__dirname, 'app/_build'),
+            separator: '.',
+            deleteOld: true
+        });
+*/
+  
+        // now copy the remaining assets (images, fonts, etc)
+        // TODO: how to implement something similar to FileJanitor for these assests? they don't have a prefix...
+        // TODO: if we create an asset with the same name but it has a different timestamp, will the server
+        // still send an empty 'not changed' response?
+        //const extensions = ['js', 'png', 'eot', 'woff2', 'gif', 'svg', 'woff', 'ttf'];
+
+        const oldFiles = Glob.sync(Path.join(__dirname, 'app/_build/*'))
+        oldFiles.forEach(function(file){
+
+            if(Fs.statSync(file).isFile()){
+                Fs.removeSync(file);
+            }
+        });
+
+        const newFiles = Glob.sync(Path.join(__dirname, 'app/_build/temp/*'))
+        newFiles.forEach(function(file){
+
+            Fs.copySync(file, Path.join(__dirname, 'app/_build', Path.basename(file)), { preserveTimestamps: true });
+        });
+    }
+    catch(err){
+        throw err;
+    }
+
+    process.stdout.write("Dashboard client app: build successful!");
 };
 
 exports.register = function(server, options, next){
@@ -210,13 +249,20 @@ internals.addNunjucksGlobals = function(env){
     
     if(Config.get('env')==='production'){
 
-        var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
-        var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
+        //var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
+        //var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
 
-        if(!libBuild.length || !appBuild.length){
-            throw Boom.badImplementation("libBuild or appBuild is missing");
+        var manifest = Glob.sync(Path.join(__dirname, "app/_build/manifest.*.min.js"));
+        var libBuild = Glob.sync(Path.join(__dirname, "app/_build/lib.*.min.js"));
+        var appBuild = Glob.sync(Path.join(__dirname, "app/_build/app.*.min.js"));
+
+
+        if(!manifest.length || !libBuild.length || !appBuild.length){
+            throw Boom.badImplementation("dashboard client app: manifest, libBuild or appBuild are missing");
         }
 
+        // dynamic <script src='{{ ... }}')>
+        env.addGlobal("manifest", Path.parse(manifest[0]).base);
         env.addGlobal("libBuild", Path.parse(libBuild[0]).base);
         env.addGlobal("appBuild", Path.parse(appBuild[0]).base);
     }

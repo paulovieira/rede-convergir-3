@@ -4,6 +4,7 @@ var $ = require("jquery");
 var Mn = require("backbone.marionette");
 var Radio = require("backbone.radio");
 var Entities = require("../../common/entities");
+//var Entities = require("../../common/entitiesx");
 
 
 var InitiativesList = Mn.LayoutView.extend({

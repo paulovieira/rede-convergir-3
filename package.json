@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/paulovieira/rede-convergir-3#readme",
   "dependencies": {
-    "bell": "^7.9.0",
+    "bell": "^8.1.1",
     "bell-on-bundler-error-plugin": "^1.0.8",
     "blipp": "^2.3.0",
     "bluebird": "^3.0.2",
@@ -23,6 +23,8 @@
     "catbox-postgres": "paulovieira/catbox-postgres",
     "chalk": "^1.1.1",
     "cheerio": "^0.20.0",
+    "chunk-manifest-webpack-plugin": "^0.1.0",
+    "compression-webpack-plugin": "^0.3.1",
     "config": "^1.16.0",
     "css-loader": "^0.23.1",
     "csv-stringify": "^1.0.2",
@@ -79,6 +81,7 @@
     "url-loader": "^0.5.7",
     "vision": "^4.1.0",
     "webpack": "^1.12.14",
+    "webpack-md5-hash": "0.0.5",
     "wreck": "^8.0.0"
   },
   "devDependencies": {

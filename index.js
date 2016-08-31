@@ -150,6 +150,7 @@ var manifest = {
             options: {}
         },
 
+
         // dependencies: ["bell", "hapi-auth-cookie-cache"]
         {
             plugin: {

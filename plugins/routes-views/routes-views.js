@@ -415,21 +415,24 @@ exports.register = function(server, options, next){
             },
 
             auth: {
-                strategy: 'cookie-cache',
+                strategy: require('../../config/plugins/hapi-auth-cookie-cache').strategyName,
                 mode: 'try'
             },
 
-            // make sure this setting is undefined otherwise the execution won't
-            // reach the route handler;
-            // in fact it doesn
-            // make sense to have the redirectTo option here because this page isn't private;
-            // if the user sends an authentication cookie but is invalid, we still want the execution
-            // to reach the handler (proceed to show the page)
+            // avoid the redirectTo option (here and in the options for the scheme); 
+            // the redirection can be handled directly in the handler
+
+            // in fact it doesn't make sense to have the redirectTo option here because this 
+            // page isn't private; if the user sends an authentication cookie but is invalid, 
+            // we still want the execution to reach the handler (proceed to show the page)
+
+            /* 
             plugins: {
                 'hapi-auth-cookie': {
-                    redirectTo: undefined
+                    redirectTo: ...
                 }
             }
+            */
 
         }
 

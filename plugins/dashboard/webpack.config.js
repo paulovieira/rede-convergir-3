@@ -1,6 +1,10 @@
 var Path = require("path");
 var webpack = require("webpack");
+
 var BellOnBundlerErrorPlugin = require('bell-on-bundler-error-plugin');
+var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
+var Md5HashPlugin = require('webpack-md5-hash');
+var CompressionPlugin = require("compression-webpack-plugin");
 
 // we assume webpack will be executed from the rootDir
 var rootDir = Path.resolve(__dirname, "../..");
@@ -15,7 +19,7 @@ var config = {
         app: Path.resolve(appDir, "index.js"),
 
         // "explicit vendor chunk (split your code into vendor and application);"
-        // we must list here the modules that will be place in _build/temp/lib.js
+        // we must list here the modules that will be placed in _build/temp/lib.js
         // more info at:
         // https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
         lib: [
@@ -52,7 +56,12 @@ var config = {
         // directly to the browser (available at /public/app.js in this case)
         path: Path.resolve(appDir, "_build/temp"),
 
-        filename: process.env.NODE_ENV === "dev" ? "app.js" : "app.min.js",
+        //filename: process.env.NODE_ENV === "dev" ? "app.js" : "app.[chunkhash].min.js",
+        filename: process.env.NODE_ENV === "dev" ? "[name].[chunkhash].js" : "[name].[chunkhash].min.js",
+
+        // is 'chunkFilename' necessary? it was taken from this example:
+        // https://github.com/webpack/webpack/tree/master/examples/chunkhash
+        chunkFilename: "[chunkhash].js", 
 
         // In dev mode: Webpack Dev Server uses publicPath to determine the path where
         // the output files are expected to be served from
@@ -72,9 +81,10 @@ var config = {
     plugins: [
 
         new webpack.optimize.CommonsChunkPlugin({
-            name: "lib",
+            names: ["lib", "manifest"]
+            //name: "lib",
             //filename: "lib.js"
-            filename: process.env.NODE_ENV === "dev" ? "lib.js" : "lib.min.js",
+            //filename: process.env.NODE_ENV === "dev" ? "lib.js" : "lib.[chunkhash].min.js",
         }),
         new webpack.DefinePlugin({
             NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'dev')
@@ -82,7 +92,30 @@ var config = {
         // new webpack.ProvidePlugin({
         //     "window.xyzw": "jquery"
         // }),
-        new BellOnBundlerErrorPlugin()
+        new BellOnBundlerErrorPlugin(),
+
+        
+        // use the filename as the module id (instead of a numeric index);
+        // an alternative is to use a hash of the filename (in webpack 2 only)
+        //new webpack.NamedModulesPlugin(),
+        //new HashedModuleIdsPlugin()
+
+
+        // new ChunkManifestPlugin({
+        //   filename: "manifest.json",
+        //   manifestVariable: "webpackManifest"
+        // })
+
+        // plugin to add a md5 hash to name of the file (use this plugin instead 
+        // of the standard webpack chunkhash) 
+        //new Md5HashPlugin(),
+
+        // new CompressionPlugin({
+        //     asset: "[path].gz[query]",
+        //     algorithm: "gzip",
+        //     test: /\.js$/,
+        //     minRatio: 0.8
+        // })
     ],
 
 
@@ -236,7 +269,7 @@ if (process.env.NODE_ENV === "dev") {
     );
 }
 else if (process.env.NODE_ENV === "production") {
-
+    /*
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -244,6 +277,7 @@ else if (process.env.NODE_ENV === "production") {
             }
         })
     );
+*/
 }
 
 

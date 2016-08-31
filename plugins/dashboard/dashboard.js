@@ -15,6 +15,9 @@ var Utils = require("../../util/utils");
 
 var internals = {};
 
+// the path of the page that has the form for the login data
+internals.loginPath = '/login';
+
 // directory of the client-app (relative to the root dir)
 internals.clientAppRelDir = "plugins/dashboard/app";
 
@@ -73,9 +76,8 @@ exports.register = function(server, options, next){
 
     // authentication strategy configuration
     internals.auth = {
-        strategy: 'cookie-cache',
+        strategy: require('../../config/plugins/hapi-auth-cookie-cache').strategyName,
         mode: 'try'
-        //mode: 'optional'
     };
 
     // TODO - remove
@@ -90,6 +92,12 @@ exports.register = function(server, options, next){
             handler: function(request, reply) {
                 debugger;
                 console.log("request.auth: ", JSON.stringify(request.auth));
+
+                if(!request.auth.isAuthenticated){
+                    return reply('You are being redirected...').redirect(internals.loginPath);
+                }
+
+
                 var context = {
                     definitions: request.pre.definitions,
                 };
@@ -101,15 +109,16 @@ exports.register = function(server, options, next){
             pre: [
                 [/*Pre.readInitiativesSlim,*/ Pre.readDefinitions2]
             ],
-            /*
+
+            // avoid the redirectTo option (here and in the options for the scheme); 
+            // the redirection can be handled directly in the handler
+            /* 
             plugins: {
                 'hapi-auth-cookie': {
-                    // url to redirect unauthenticated requests (missing or invalid cookie);
-                    // this is an option from hapi-auth-cookie
-                    redirectTo: '/login'
+                    redirectTo: ...
                 }
             }
-*/
+            */
 
         }
     });

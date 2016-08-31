@@ -1,3 +1,11 @@
+## TODO:
+-delete the contents in the _temp dir_
+-save the compiled chunks in the _temp dir
+-for each file, check parent directory (build) if there exists a previous chunk with the same prefix
+    - if yes and the prefix is the same, skip
+    - if yes and the prefix is different, update (delete from build and copy from _temp to build)
+    - if not, copy from _temp to build
+    -  _
 
 ### Dashboard client side app
 
@@ -47,7 +55,7 @@ http://localhost:8081/WEBPACK_DEV_SERVER/app.js
 If we want to actually inspect the contents of the bundles with a text editor, we should execute the normal webpack command:
 
 ```bash
-webpack --config ./plugins/dashboard/webpack.config.js --watch
+webpack --watch  --display-chunks --display-modules --config ./plugins/dashboard/webpack.config.js 
 ```
 
 In this case the bundle files will be created in the path given in the "output" section of the webpack config
@@ -69,7 +77,7 @@ We also need to run grunt to have the static_timestamp task executed.
 export NODE_ENV=production; node index.js;
 
 # in another terminal execute normal webpack
-export NODE_ENV=production; webpack --config ./plugins/dashboard/webpack.config.js
+export NODE_ENV=production; webpack --display-chunks --display-modules --config ./plugins/dashboard/webpack.config.js 
 
 # in a 3rd terminal run grunt to execute the static_timestamp task
 grunt --base ./ --gruntfile ./plugins/dashboard/grunt.config.js

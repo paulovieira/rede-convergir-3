@@ -29,6 +29,7 @@ Mn.register([
 /**/
 menuPlugin.start({
     region: new Mn.Region({ el: $("div.container") }),
+    regiony: new Mn.Region({ el: $("div.container") }),
 });
 
 

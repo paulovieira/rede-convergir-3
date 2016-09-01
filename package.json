@@ -86,6 +86,8 @@
     "wreck": "^8.0.0"
   },
   "devDependencies": {
+    "eslint-config-hapi": "^10.0.0",
+    "eslint-plugin-hapi": "^4.0.0",
     "webpack-dev-server": "^1.14.1"
   }
 }

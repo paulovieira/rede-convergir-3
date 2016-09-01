@@ -1,15 +1,7 @@
-## TODO:
--delete the contents in the temp dir_
--save the compiled chunks in the temp dir
--for each file, check parent directory (_build_) if there exists a previous chunk with the same prefix
-    - if yes and the prefix is the same, skip
-    - if yes and the prefix is different, update (delete from _build_ and copy from temp to _build_)
-    - if not, copy from temp to _build_
-    -  _
 
-### Dashboard client side app
+## Dashboard client app
 
-Make sure `webpack` and `webpack-dev-server` are installed **locally**, as well as the webpack loaders and plugins that will be used (no need to do manually install in our case because they are in package.json already)
+Make sure `webpack` and `webpack-dev-server` are installed **locally**, as well as the webpack loaders and plugins that will be used (no need to do a  manual install because these modules are already in package.json `dependencies`):
 
 ```sh
 npm install \
@@ -20,7 +12,8 @@ npm install \
     nunjucks-loader \
     style-loader \
     url-loader \
-    bell-on-bundler-error-plugin
+    bell-on-bundler-error-plugin \
+    compression-webpack-plugin
 ```
 
 
@@ -32,35 +25,40 @@ In the root dir of the project:
 ```bash
 
 # start the hapi server
-export NODE_ENV=dev; nodemon index.js --dev;
+export NODE_ENV=dev; 
+nodemon index.js --dev;
 
 # in second terminal start webpack-dev-server (in "inline mode")
-export NODE_ENV=dev; webpack-dev-server --config ./plugins/dashboard/webpack.config.js --inline  --port 8081
+export NODE_ENV=dev;
+webpack-dev-server --inline  --port 8081 --config ./plugins/dashboard/webpack.config.js 
 ```
 
-We can open the "dashboard" board being served by hapi: http://redeconvergir.dev/dashboard
-
+We can open the "dashboard" page being served by hapi (in dev mode authentication has been disabled): http://redeconvergir.dev/dashboard
 The browser will reload on every change.
 
-The bundle files (`lib.js` and `app.js`) will be created in-memory only and are served directly to the browser.
+The bundle/chunks (`manifest.js`, `lib.js` and `app.js`) will be created in-memory only and are served directly to the browser.
 
 Note that the port and path of the bundles are not the same as the ones configured in the Hapi server. The bundles are being served by an Express server created by Webpack. In this case we have:
 
+```
+http://localhost:8081/WEBPACK_DEV_SERVER/manifest.js
 http://localhost:8081/WEBPACK_DEV_SERVER/lib.js
 http://localhost:8081/WEBPACK_DEV_SERVER/app.js
-
- - "WEBPACK_DEV_SERVER" is defined in the "publicPath" option in the webpack configuration;
- - the port is defined as a command line argument ("--port 8081")
-
-If we want to actually inspect the contents of the bundles with a text editor, we should execute the normal webpack command:
-
-```bash
-webpack --watch  --display-chunks --display-modules --config ./plugins/dashboard/webpack.config.js 
 ```
 
-In this case the bundle files will be created in the path given in the "output" section of the webpack config
+ - the `/WEBPACK_DEV_SERVER` path is defined in the `output.publicPath` option in the webpack configuration;
+ - the port is defined as a command line argument (`--port 8081`)
 
-If there are any problems with webpack-dev-server, check more info here:
+If we want to actually open a bundle with a text editor, we should execute the regular `webpack` command (instead of `webpack-dev-server`)
+
+```bash
+export NODE_ENV=dev;
+webpack --watch --display-chunks --display-modules --config ./plugins/dashboard/webpack.config.js 
+```
+
+In this case the bundle files will be created in the path given in the `output.path`  option. This is actually the command used in production mode (except for the `--watch` option)
+
+If there are any problems with `webpack-dev-server`, see more info here:
 
 "Combining with an existing server."
 "You can run two servers side-by-side: The webpack-dev-server and your backend server."
@@ -68,21 +66,21 @@ http://webpack.github.io/docs/webpack-dev-server.html
 
 #### Production mode 
 
-In production mode, just run the normal webpack command (this is actually done when the Hapi server starts). The webpack configuration adds the UglifyJsPlugin in production mode.
+In production mode, just run the regular webpack command above. This command is run by `child_process` everytime the server restarts in production mode.
 
-We also need to run grunt to have the static_timestamp task executed.
+The webpack configuration adds a couple more plugins in production mode:
+- UglifyJsPlugin
+- CompressionPlugin
+- 
 
 ```bash
 # start the hapi server
 export NODE_ENV=production; node index.js;
 
-# in another terminal execute normal webpack
-export NODE_ENV=production; webpack --display-chunks --display-modules --config ./plugins/dashboard/webpack.config.js 
-
-# in a 3rd terminal run grunt to execute the static_timestamp task
-grunt --base ./ --gruntfile ./plugins/dashboard/grunt.config.js
+# in another terminal execute regular webpack
+export NODE_ENV=production; 
+webpack --display-chunks --display-modules --config ./plugins/dashboard/webpack.config.js 
 ```
 
-
-READ: http://www.christianalfoni.com/articles/2014_12_13_Webpack-and-react-is-awesome
+More details: http://www.christianalfoni.com/articles/2014_12_13_Webpack-and-react-is-awesome
 (setting up a workflow with webpack)

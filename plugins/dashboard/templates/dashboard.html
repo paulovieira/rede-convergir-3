@@ -35,11 +35,13 @@
 
     {% if NODE_ENV == 'dev' %}
 
+    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/manifest.js"></script>
     <script src="http://localhost:8081/WEBPACK_DEV_SERVER/lib.js"></script>
-    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/app.js"></script>
+    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/dashboard-app.js"></script>
 
     {% else %}
 
+    <script src="/dashboard-app/_build/{{ manifest }}"></script>
     <script src="/dashboard-app/_build/{{ libBuild }}"></script>
     <script src="/dashboard-app/_build/{{ appBuild }}"></script>
 

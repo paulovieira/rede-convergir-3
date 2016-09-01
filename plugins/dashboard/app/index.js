@@ -29,9 +29,9 @@ Mn.register([
 /**/
 menuPlugin.start({
     region: new Mn.Region({ el: $("div.container") }),
-    regiony: new Mn.Region({ el: $("div.container") }),
+    regionw: new Mn.Region({ el: $("div.container") }),
 });
-
+console.log("ddd");
 
 // it's better to call history.start only at the end to make sure that the  
 // initial hash (if present in the url bar) will actually be processed;

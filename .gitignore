@@ -17,7 +17,7 @@ coverage.*
 
 # configuration files (contain sensitive data - passwords, api keys, etc)
 
-plugins/**/_build/**/*
+plugins/**/_build*
 config/dev.js
 config/production.js
 config/sendgrid-key.txt

@@ -1,9 +1,3 @@
-//var Fs = require("fs");
-//var Hoek = require("hoek");
-//var Joi = require("joi");
-//var JSON5 = require("json5");
-//var Nunjucks = require("/home/pvieira/github/hapi-nunjucks/index.js");
-//var _ = require("underscore");
 var Path = require("path");
 var ChildProcess = require('child_process');
 var Fs = require('fs-extra');
@@ -12,9 +6,8 @@ var Config = require("nconf");
 var Nunjucks = require("hapi-nunjucks");
 var Boom = require("boom");
 var Glob = require("glob");
-var FileJanitor = require('file-janitor');
 var Pre = require("../../util/prerequisites");
-var Utils = require("../../util/utils");
+//var Utils = require("../../util/utils");
 
 
 var internals = {};
@@ -22,57 +15,7 @@ var internals = {};
 // the path of the page that has the form for the login data
 internals.loginPath = '/login';
 
-// directory of the client-app (relative to the root dir)
-internals.clientAppRelDir = "plugins/dashboard/app";
 
-internals.build = function(commands){
-
-    const webpackConfig = Path.join(__dirname, "webpack.config.js");
-    const buildCommand = `webpack --display-chunks --display-modules --config ${ webpackConfig}`;
-
-    try{
-
-        // webpack chunks will be created in app/_build/temp
-        Fs.removeSync(Path.join(__dirname, 'app/_build/temp/*'));
-        ChildProcess.execSync(buildCommand);
-
-        // copy the js chunks to app/_build; FileJanitor will copy only if there are new files
-        // (and will clean the old ones)
-/*
-        FileJanitor.clean({
-            source: [Path.join(__dirname, 'app/_build/temp/*.js')],
-            destination: Path.join(__dirname, 'app/_build'),
-            separator: '.',
-            deleteOld: true
-        });
-*/
-  
-        // now copy the remaining assets (images, fonts, etc)
-        // TODO: how to implement something similar to FileJanitor for these assests? they don't have a prefix...
-        // TODO: if we create an asset with the same name but it has a different timestamp, will the server
-        // still send an empty 'not changed' response?
-        //const extensions = ['js', 'png', 'eot', 'woff2', 'gif', 'svg', 'woff', 'ttf'];
-
-        const oldFiles = Glob.sync(Path.join(__dirname, 'app/_build/*'))
-        oldFiles.forEach(function(file){
-
-            if(Fs.statSync(file).isFile()){
-                Fs.removeSync(file);
-            }
-        });
-
-        const newFiles = Glob.sync(Path.join(__dirname, 'app/_build/temp/*'))
-        newFiles.forEach(function(file){
-
-            Fs.copySync(file, Path.join(__dirname, 'app/_build', Path.basename(file)), { preserveTimestamps: true });
-        });
-    }
-    catch(err){
-        throw err;
-    }
-
-    process.stdout.write("Dashboard client app: build successful!");
-};
 
 exports.register = function(server, options, next){
 
@@ -162,13 +105,14 @@ exports.register = function(server, options, next){
         }
     });
 
+    // route for the client app build
     server.route({
         path: "/dashboard-app/{anyPath*}",
         method: "GET",
         config: {
             handler: {
                 directory: { 
-                    path: Path.join(Config.get("rootDir"), internals.clientAppRelDir),
+                    path: Path.join(__dirname, 'app'),
                     index: false,
                     listing: false,
                     showHidden: false,
@@ -246,29 +190,73 @@ internals.addNunjucksGlobals = function(env){
     env.addGlobal("NODE_ENV", Config.get('env'));
     env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
     env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
-    
-    if(Config.get('env')==='production'){
 
-        //var libBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.lib.min.js"));
-        //var appBuild = Glob.sync(Path.join(Config.get("rootDir"), internals.clientAppRelDir, "_build/*.app.min.js"));
+    // insert dynamic script tags (the 'src' changes because the chunks
+    // produced by webpack have a hash in the filename; this applies only 
+    // production mode
+    env.addGlobal("manifest", Path.basename(internals.manifest));
+    env.addGlobal("libBuild", Path.basename(internals.libBuild));
+    env.addGlobal("appBuild", Path.basename(internals.appBuild));
 
-        var manifest = Glob.sync(Path.join(__dirname, "app/_build/manifest.*.min.js"));
-        var libBuild = Glob.sync(Path.join(__dirname, "app/_build/lib.*.min.js"));
-        var appBuild = Glob.sync(Path.join(__dirname, "app/_build/app.*.min.js"));
+};
 
 
-        if(!manifest.length || !libBuild.length || !appBuild.length){
-            throw Boom.badImplementation("dashboard client app: manifest, libBuild or appBuild are missing");
+// call webpack to build the client side application; the chuncks will be saved to
+// app/_buildTemp and have a hashname; we then copy all of them to app/build;
+
+// TODO: make sure that server-side caching is working well with these static files 
+// even when the file is the same (and has the same name), but the timestamp changes;
+// if not we have have use FileJanitor to copy from app/buildTemp to app/build only when
+// the file has actually changed
+
+internals.build = function(){
+
+    try{
+
+        const webpackConfig = Path.join(__dirname, "webpack.config.js");
+        const buildCommand = `webpack --display-chunks --display-modules --config ${ webpackConfig }`;
+        const buildDir = Path.join(__dirname, 'app/_build');
+        const buildDirTemp = Path.join(__dirname, 'app/_buildTemp');
+
+        Fs.ensureDirSync(buildDirTemp);
+        Fs.removeSync(Path.join(buildDirTemp, '*'));
+
+        Fs.ensureDirSync(buildDir);
+        Fs.removeSync(Path.join(buildDir, '*'));
+
+        ChildProcess.execSync(buildCommand);
+
+        Glob.sync(Path.join(buildDirTemp, '*')).forEach(function (file){
+
+            Fs.copySync(
+                file, 
+                Path.join(buildDir, Path.basename(file)), 
+                { preserveTimestamps: true }
+            );
+        });
+
+        internals.manifest = Glob.sync(Path.join(buildDir, "manifest.*.min.js"));
+        internals.libBuild = Glob.sync(Path.join(buildDir, "lib.*.min.js"));
+        internals.appBuild = Glob.sync(Path.join(buildDir, "dashboard-app.*.min.js"));
+
+
+        if(internals.manifest.length !== 1 || 
+            internals.libBuild.length !== 1 || 
+            internals.appBuild.length !== 1){
+            throw Boom.badImplementation("Dashboard client app: manifest, libBuild or appBuild are missing");
         }
 
-        // dynamic <script src='{{ ... }}')>
-        env.addGlobal("manifest", Path.parse(manifest[0]).base);
-        env.addGlobal("libBuild", Path.parse(libBuild[0]).base);
-        env.addGlobal("appBuild", Path.parse(appBuild[0]).base);
     }
+    catch(err){
+        throw err;
+    }
+
+    process.stdout.write("Dashboard client app: build successful!");
 };
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
     dependencies: ["vision", "inert", "hapi-auth-cookie-cache"]
 };
+
+

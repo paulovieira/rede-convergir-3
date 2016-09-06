@@ -10,8 +10,7 @@ IF patch_exists THEN
 END IF;
 
 
-/* the actual code to change to the database starts here */
-
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE events_definitions(
 	id            serial unique not null,
@@ -20,6 +19,8 @@ CREATE TABLE events_definitions(
 
 	primary key(event_id, definition_id)
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

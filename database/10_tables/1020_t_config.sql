@@ -9,13 +9,15 @@ IF patch_exists THEN
     RETURN;
 END IF;
 
-/* the actual code to change to the database starts here */
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE config( 
 	--id SERIAL PRIMARY KEY,
 	key TEXT PRIMARY KEY,
 	value JSONB NOT NULL
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

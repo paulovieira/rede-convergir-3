@@ -9,7 +9,7 @@ IF patch_exists THEN
     RETURN;
 END IF;
 
-/* the actual code to change to the database starts here */
+/*** BEGIN CODE FOR CHANGES  ***/
 
 
 CREATE TABLE users(
@@ -35,6 +35,8 @@ CREATE TABLE users(
 
 
 -- NOTE: the table contains a dummy user; it is used for events that don't below to any registered user/initiative;
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

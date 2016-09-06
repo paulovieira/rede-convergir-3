@@ -1,3 +1,13 @@
+0) BACKUP!
+
+1) install versioning manually
+
+0020_pg_versioning.sql
+
+
+2) manually the insert initial patches
+
+
 
 INSERT INTO _v.patches (
     patch_name,

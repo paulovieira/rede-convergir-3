@@ -9,8 +9,8 @@ IF patch_exists THEN
     RETURN;
 END IF;
 
-/* the actual code to change to the database starts here */
 
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE definitions(
 	--id serial primary key,
@@ -19,6 +19,7 @@ CREATE TABLE definitions(
 	description jsonb not null
 );
 
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

@@ -213,11 +213,10 @@ internals.addNunjucksGlobals = function(env){
 internals.build = function(){
 
     try{
+        Fs.removeSync(Path.join(internals.buildDir));
+
         const webpackConfig = Path.join(__dirname, "webpack.config.js");
         const buildCommand = `webpack --display-chunks --display-modules --config ${ webpackConfig }`;
-        
-        Fs.ensureDirSync(internals.buildDir);
-        Fs.removeSync(Path.join(internals.buildDir, '*'));
         ChildProcess.execSync(buildCommand);
     }
     catch(err){

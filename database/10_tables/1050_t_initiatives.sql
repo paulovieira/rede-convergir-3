@@ -9,7 +9,7 @@ IF patch_exists THEN
     RETURN;
 END IF;
 
-/* the actual code to change to the database starts here */
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE initiatives(
     id SERIAL PRIMARY KEY,
@@ -51,6 +51,8 @@ CREATE TABLE initiatives(
     CONSTRAINT coordinates_must_be_array CHECK (jsonb_typeof(coordinates) = 'array'),
     CONSTRAINT influence_must_be_array   CHECK (jsonb_typeof(influence)   = 'array')
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

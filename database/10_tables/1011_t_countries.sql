@@ -10,13 +10,15 @@ IF patch_exists THEN
 END IF;
 
 
-/* the actual code to change to the database starts here */
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE countries (
     name TEXT NOT NULL,
     code TEXT PRIMARY KEY,
     id integer NOT NULL
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

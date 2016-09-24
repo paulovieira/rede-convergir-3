@@ -10,7 +10,7 @@ IF patch_exists THEN
 END IF;
 
 
-/* the actual code to change to the database starts here */
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE initiatives_definitions(
 	id            serial unique not null,
@@ -19,6 +19,8 @@ CREATE TABLE initiatives_definitions(
 
 	primary key(initiative_id, definition_id)
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

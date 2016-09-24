@@ -10,13 +10,14 @@ IF patch_exists THEN
 END IF;
 
 
-/* the actual code to change to the database starts here */
-
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE log(
 	id    serial unique not null,
 	data  jsonb not null
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

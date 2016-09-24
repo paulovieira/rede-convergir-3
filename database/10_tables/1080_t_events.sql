@@ -10,8 +10,7 @@ IF patch_exists THEN
 END IF;
 
 
-/* the actual code to change to the database starts here */
-
+/*** BEGIN CODE FOR CHANGES  ***/
 
 CREATE TABLE events(
 	id serial primary key,
@@ -39,6 +38,8 @@ CREATE TABLE events(
 	CONSTRAINT files_must_be_array         CHECK (jsonb_typeof(files) = 'array'),
 	CONSTRAINT coordinates_must_be_array   CHECK (jsonb_typeof(coordinates) = 'array')
 );
+
+/*** END CODE FOR CHANGES  ***/
 
 END;
 $$;

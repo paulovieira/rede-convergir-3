@@ -7,8 +7,10 @@ Make sure `webpack` and `webpack-dev-server` are installed **locally**, as well 
 npm install \
     webpack  \
     webpack-dev-server  \
-    css-loader exports-loader \
-    imports-loader file-loader \
+    css-loader \
+    exports-loader \
+    imports-loader \
+    file-loader \
     nunjucks-loader \
     style-loader \
     url-loader \

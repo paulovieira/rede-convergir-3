@@ -12,7 +12,7 @@ var InitiativesList = Mn.LayoutView.extend({
     initialize: function(options){
         //debugger;
     },
-
+    
     template: require('./initiatives-list.html'),
 
     className: "js-initiatives-list",
@@ -29,7 +29,7 @@ var InitiativesList = Mn.LayoutView.extend({
             var initiativeM = Entities.initiativesC.get(initiativeId);
 
             if(!initiativeM){
-                throw new Error("there is no model with id " + initiativeId + " in the initiatives collection");
+                throw new Error("there is no model with id " + initiativeId + " in the initiatives collection ");
             }
 
             // this.channel.request("showView", {

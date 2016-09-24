@@ -14,7 +14,7 @@ var internals = {};
 
 // the path of the page that has the form for the login data
 internals.loginPath = '/login';
-
+internals.buildDir = Path.join(__dirname, 'app/_build');
 
 
 exports.register = function(server, options, next){
@@ -38,6 +38,7 @@ exports.register = function(server, options, next){
         // throwOnUndefined: false,
     });
 
+    internals.findChunkNames();
     internals.addNunjucksFilters(env);
     internals.addNunjucksGlobals(env);
 
@@ -201,8 +202,8 @@ internals.addNunjucksGlobals = function(env){
 };
 
 
-// call webpack to build the client side application; the chuncks will be saved to
-// app/_buildTemp and have a hashname; we then copy all of them to app/build;
+// call webpack to build the client side application; the chunks will be saved to
+// app/_build and have a hashname; 
 
 // TODO: make sure that server-side caching is working well with these static files 
 // even when the file is the same (and has the same name), but the timestamp changes;
@@ -212,40 +213,12 @@ internals.addNunjucksGlobals = function(env){
 internals.build = function(){
 
     try{
-
         const webpackConfig = Path.join(__dirname, "webpack.config.js");
         const buildCommand = `webpack --display-chunks --display-modules --config ${ webpackConfig }`;
-        const buildDir = Path.join(__dirname, 'app/_build');
-        const buildDirTemp = Path.join(__dirname, 'app/_buildTemp');
-
-        Fs.ensureDirSync(buildDirTemp);
-        Fs.removeSync(Path.join(buildDirTemp, '*'));
-
-        Fs.ensureDirSync(buildDir);
-        Fs.removeSync(Path.join(buildDir, '*'));
-
+        
+        Fs.ensureDirSync(internals.buildDir);
+        Fs.removeSync(Path.join(internals.buildDir, '*'));
         ChildProcess.execSync(buildCommand);
-
-        Glob.sync(Path.join(buildDirTemp, '*')).forEach(function (file){
-
-            Fs.copySync(
-                file, 
-                Path.join(buildDir, Path.basename(file)), 
-                { preserveTimestamps: true }
-            );
-        });
-
-        internals.manifest = Glob.sync(Path.join(buildDir, "manifest.*.min.js"));
-        internals.libBuild = Glob.sync(Path.join(buildDir, "lib.*.min.js"));
-        internals.appBuild = Glob.sync(Path.join(buildDir, "dashboard-app.*.min.js"));
-
-
-        if(internals.manifest.length !== 1 || 
-            internals.libBuild.length !== 1 || 
-            internals.appBuild.length !== 1){
-            throw Boom.badImplementation("Dashboard client app: manifest, libBuild or appBuild are missing");
-        }
-
     }
     catch(err){
         throw err;
@@ -254,9 +227,31 @@ internals.build = function(){
     process.stdout.write("Dashboard client app: build successful!");
 };
 
-exports.register.attributes = {
-    name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "inert", "hapi-auth-cookie-cache"]
+internals.findChunkNames = function(){
+
+    if (Config.get('env') === 'production'){
+
+        internals.manifest = Glob.sync(Path.join(internals.buildDir, "manifest.*.min.js"));
+        internals.libBuild = Glob.sync(Path.join(internals.buildDir, "lib.*.min.js"));
+        internals.appBuild = Glob.sync(Path.join(internals.buildDir, "dashboard-app.*.min.js"));
+
+        if (internals.manifest.length !== 1 || 
+            internals.libBuild.length !== 1 || 
+            internals.appBuild.length !== 1){
+            throw Boom.badImplementation("Dashboard client app: manifest, libBuild or appBuild are missing");
+        }
+    }
+    else {
+        // chunk names given in webpack configuration 
+        internals.manifest = ['manifest.js'];
+        internals.libBuild = ['lib.js'];
+        internals.appBuild = ['dashboard-app.js'];
+    }
+
 };
 
+exports.register.attributes = {
+    name: Path.parse(__dirname).name,  // use the name of the file
+    dependencies: ["vision", "hapi-auth-cookie-cache", "hapi-public"]
+};
 

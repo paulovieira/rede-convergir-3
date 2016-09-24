@@ -19,7 +19,7 @@ var config = {
         'dashboard-app': Path.join(appDir, "index.js"),
 
         // "explicit vendor chunk (split your code into vendor and application);"
-        // we must list here the modules that will be placed in _buildTemp/lib.js
+        // we must list here the modules that will be placed in _build/lib.js
         // more info at:
         // https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
         lib: [
@@ -54,10 +54,11 @@ var config = {
         // the bundle file won't actually be
         // created; instead, the bundle will be created in-memory only and served
         // directly to the browser (available at /public/app.js in this case)
-        path: Path.join(appDir, "_buildTemp"),
+        path: Path.join(appDir, "_build"),
 
         //filename: process.env.NODE_ENV === "dev" ? "app.js" : "app.[chunkhash].min.js",
-        filename: process.env.NODE_ENV === "dev" ? "[name].js" : "[name].[chunkhash].min.js",
+        filename: process.env.NODE_ENV === "dev" ? "[name].js" : 
+                                                    "[name].[chunkhash].min.js",
 
         // is 'chunkFilename' necessary? it was taken from this example:
         // https://github.com/webpack/webpack/tree/master/examples/chunkhash
@@ -72,11 +73,9 @@ var config = {
         // resources that have not been bundled (such as fonts and images), but that
         // have been copied to the directory where the bundle is;
         // note that we run a grunt task after webpack that moves the resources from
-        // _buildTemp to _build
-        publicPath: process.env.NODE_ENV === "dev" ? 
-                        //"http://localhost:8081/WEBPACK_DEV_SERVER" : 
-                        "/WEBPACK_DEV_SERVER" : 
-                        "/dashboard-app/_build/"
+        // _build to _build
+        publicPath: process.env.NODE_ENV === "dev" ? "http://localhost:8081/WEBPACK_DEV_SERVER/" :
+                                                    "/dashboard-app/_build/"
     },
 
     plugins: [
@@ -191,11 +190,13 @@ var config = {
         },
         { 
             // inline base64 URLs for images that are <= 1k; direct URLs for the others 
-            // (the files will be copied to the output dir: _buildTemp)
+            // (the files will be copied to the output dir: _build)
             test: /\.(png|jpg|gif)$/,
             loader: 'url-loader',
             query: {
-                limit: 1024
+                limit: 1024,
+                name: process.env.NODE_ENV === "dev" ? 'images/[name].[ext]' : 
+                                                        'images/[name].[hash].[ext]'
             }
         },
         {
@@ -203,7 +204,9 @@ var config = {
             test: /\.(woff|woff2|ttf|eot|svg)$/,
             loader: 'url-loader',
             query: {
-                limit: 1
+                limit: 1,
+                name: process.env.NODE_ENV === "dev" ? 'fonts/[name].[ext]' :
+                                                        'fonts/[name].[hash].[ext]'
             }
         },
         {

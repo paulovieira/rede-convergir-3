@@ -23,7 +23,6 @@
     "catbox-postgres": "paulovieira/catbox-postgres",
     "chalk": "^1.1.1",
     "cheerio": "^0.20.0",
-    "chunk-manifest-webpack-plugin": "^0.1.0",
     "compression-webpack-plugin": "^0.3.1",
     "config": "^1.16.0",
     "css-loader": "^0.23.1",
@@ -82,7 +81,6 @@
     "url-loader": "^0.5.7",
     "vision": "^4.1.0",
     "webpack": "^1.12.14",
-    "webpack-md5-hash": "0.0.5",
     "wreck": "^8.0.0"
   },
   "devDependencies": {

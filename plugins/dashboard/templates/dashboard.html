@@ -33,21 +33,9 @@
         window.definitions = {{ ctx.definitions | stringify}};
     </script>
 
-    {% if NODE_ENV == 'dev' %}
-
-    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/{{ manifest }}"></script>
-    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/{{ libBuild }}"></script>
-    <script src="http://localhost:8081/WEBPACK_DEV_SERVER/{{ appBuild }}"></script>
-
-    {% else %}
-
-    <script src="/dashboard-app/_build/{{ manifest }}"></script>
-    <script src="/dashboard-app/_build/{{ libBuild }}"></script>
-    <script src="/dashboard-app/_build/{{ appBuild }}"></script>
-
-    {% endif %}
-
-
+    <script src="{{ urlChunk }}/{{ manifest }}"></script>
+    <script src="{{ urlChunk }}/{{ libChunk }}"></script>
+    <script src="{{ urlChunk }}/{{ appChunk }}"></script>
 
 
 

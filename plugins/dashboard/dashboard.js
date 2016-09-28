@@ -38,7 +38,6 @@ exports.register = function(server, options, next){
         // throwOnUndefined: false,
     });
 
-    internals.findChunkNames();
     internals.addNunjucksFilters(env);
     internals.addNunjucksGlobals(env);
 
@@ -188,16 +187,24 @@ internals.addNunjucksFilters = function(env){
 
 internals.addNunjucksGlobals = function(env){
 
-    env.addGlobal("NODE_ENV", Config.get('env'));
-    env.addGlobal("pluginTemplatesPath", Path.join(__dirname, "templates"));
-    env.addGlobal("commonTemplatesPath", Path.join(Config.get("rootDir"), "templates"));
+    env.addGlobal('NODE_ENV', Config.get('env'));
+    env.addGlobal('pluginTemplatesPath', Path.join(__dirname, 'templates'));
+    env.addGlobal('commonTemplatesPath', Path.join(Config.get('rootDir'), 'templates'));
 
-    // insert dynamic script tags (the 'src' changes because the chunks
-    // produced by webpack have a hash in the filename; this applies only 
-    // production mode
-    env.addGlobal("manifest", Path.basename(internals.manifest));
-    env.addGlobal("libBuild", Path.basename(internals.libBuild));
-    env.addGlobal("appBuild", Path.basename(internals.appBuild));
+    // in production mode the attribute in <script scr=...> changes 
+    // because the chunks produced by webpack have a hash in the filename
+    const chunks = internals.findChunkNames();
+
+    env.addGlobal('manifest', Path.basename(chunks.manifest));
+    env.addGlobal('libChunk', Path.basename(chunks.lib));
+    env.addGlobal('appChunk', Path.basename(chunks.app));
+
+    if (Config.get('env') === 'production'){
+        env.addGlobal('urlChunk', '/dashboard-app/_build');
+    }
+    else {
+        env.addGlobal('urlChunk', 'http://localhost:8081/WEBPACK_DEV_SERVER');
+    }
 
 };
 
@@ -226,31 +233,35 @@ internals.build = function(){
     process.stdout.write("Dashboard client app: build successful!");
 };
 
-internals.findChunkNames = function(){
+internals.findChunkNames = function (){
+
+    const chunks = {};
 
     if (Config.get('env') === 'production'){
 
-        internals.manifest = Glob.sync(Path.join(internals.buildDir, "manifest.*.min.js"));
-        internals.libBuild = Glob.sync(Path.join(internals.buildDir, "lib.*.min.js"));
-        internals.appBuild = Glob.sync(Path.join(internals.buildDir, "dashboard-app.*.min.js"));
+        chunks.manifest = Glob.sync(Path.join(internals.buildDir, 'manifest.*.min.js'));
+        chunks.lib = Glob.sync(Path.join(internals.buildDir, 'lib.*.min.js'));
+        chunks.app = Glob.sync(Path.join(internals.buildDir, 'dashboard-app.*.min.js'));
 
-        if (internals.manifest.length !== 1 || 
-            internals.libBuild.length !== 1 || 
-            internals.appBuild.length !== 1){
-            throw Boom.badImplementation("Dashboard client app: manifest, libBuild or appBuild are missing");
+        if (chunks.manifest.length !== 1 || 
+            chunks.lib.length !== 1 || 
+            chunks.app.length !== 1){
+            throw Boom.badImplementation('Dashboard client app: manifest, lib chunk or app chunk are missing');
         }
     }
     else {
         // chunk names given in webpack configuration 
-        internals.manifest = ['manifest.js'];
-        internals.libBuild = ['lib.js'];
-        internals.appBuild = ['dashboard-app.js'];
+        chunks.manifest = ['manifest.js'];
+        chunks.lib = ['lib.js'];
+        chunks.app = ['dashboard-app.js'];
     }
+
+    return chunks;
 
 };
 
 exports.register.attributes = {
     name: Path.parse(__dirname).name,  // use the name of the file
-    dependencies: ["vision", "hapi-auth-cookie-cache", "hapi-public"]
+    dependencies: ['vision', 'hapi-auth-cookie-cache', 'hapi-public']
 };
 

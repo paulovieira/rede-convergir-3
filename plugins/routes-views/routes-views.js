@@ -221,14 +221,18 @@ exports.register = function(server, options, next){
                         .then(function(){
 
                             var pdfs = [
-                                "catalise-guia-praticas-web.pdf",
-                                "catalise-caderno-recomendacoes-web.pdf"
+                                'catalise-guia-praticas-web.pdf',
+                                'catalise-caderno-recomendacoes-web.pdf',
+                                'catalise-relatorio-cientifico.pdf'
                             ];
 
                             var selectQuery = `
                               select data->>'resource' as resource, count(data->>'resource') 
                                 from log 
-                                where data->>'type'='download' and (data->>'resource'='${ pdfs[0] }' or data->>'resource'='${ pdfs[1] }')
+                                where data->>'type'='download' and 
+                                    (data->>'resource'='${ pdfs[0] }' or 
+                                    data->>'resource'='${ pdfs[1] }' or 
+                                    data->>'resource'='${ pdfs[2] }')
                                 group by data->>'resource';
                             `;
                             return Db.query(selectQuery);

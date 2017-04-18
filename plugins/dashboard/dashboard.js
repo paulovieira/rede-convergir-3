@@ -195,9 +195,9 @@ internals.addNunjucksGlobals = function(env){
     // because the chunks produced by webpack have a hash in the filename
     const chunks = internals.findChunkNames();
 
-    env.addGlobal('manifest', Path.basename(chunks.manifest));
-    env.addGlobal('libChunk', Path.basename(chunks.lib));
-    env.addGlobal('appChunk', Path.basename(chunks.app));
+    env.addGlobal('manifest', Path.basename(chunks.manifest[0]));
+    env.addGlobal('libChunk', Path.basename(chunks.lib[0]));
+    env.addGlobal('appChunk', Path.basename(chunks.app[0]));
 
     if (Config.get('env') === 'production'){
         env.addGlobal('urlChunk', '/dashboard-app/_build');
